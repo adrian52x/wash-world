@@ -1,0 +1,26 @@
+# Node modules
+/node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Build output
+/dist
+/build
+
+# Environment files
+.env*
+!.env.example
+
+# Coverage
+/coverage
+
+# OS files
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
