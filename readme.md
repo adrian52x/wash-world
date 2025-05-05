@@ -25,3 +25,8 @@ pnpm add expo-router
 
 cd ../..
 pnpm install
+
+
+Add stuff
+pnpm add <package-name> --filter backend
+pnpm add <package-name> --filter frontend
