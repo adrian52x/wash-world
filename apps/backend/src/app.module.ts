@@ -24,6 +24,6 @@ import { dbConfig } from 'data-source';
     LocationsModule,
   ],
   controllers: [AppController, LocationsController],
-  providers: [AppService, UsersService, WashesService],
+  providers: [AppService, WashesService],
 })
 export class AppModule {}
