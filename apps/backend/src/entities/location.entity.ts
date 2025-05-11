@@ -5,7 +5,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Location {
   @PrimaryGeneratedColumn()
   location_id: number;
-  
+
   @Column()
   @IsNotEmpty()
   address: string;

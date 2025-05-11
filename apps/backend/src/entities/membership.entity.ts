@@ -1,4 +1,10 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { IsNotEmpty, IsPositive } from 'class-validator';
 
@@ -11,7 +17,7 @@ export class Membership {
   @IsNotEmpty()
   @IsPositive()
   price: number;
-  
+
   @OneToOne(() => WashType)
   @JoinColumn({ name: 'wash_type_id' })
   washType: WashType;
