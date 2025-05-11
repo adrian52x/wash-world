@@ -11,6 +11,7 @@ import { hashPassword } from 'src/utils/password.utils';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { LoginResponse } from 'src/utils/types';
 
 @Injectable()
 export class AuthService {
@@ -35,7 +36,7 @@ export class AuthService {
     return user;
   }
 
-  async login(user: LoginDto): Promise<any> {
+  async login(user: LoginDto): Promise<LoginResponse> {
     try {
       const validatedUser = await this.validateUser(user.email, user.password);
       const payload = { id: validatedUser.id, email: validatedUser.email };
