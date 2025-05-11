@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -12,6 +12,7 @@ import { LocationsController } from './modules/locations/locations.controller';
 import { LocationsModule } from './modules/locations/locations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from 'data-source';
+import { LoggerMiddleware } from 'logger/logger.middleware';
 
 @Module({
   imports: [
@@ -26,4 +27,9 @@ import { dbConfig } from 'data-source';
   controllers: [AppController, LocationsController],
   providers: [AppService, WashesService],
 })
-export class AppModule {}
+
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
