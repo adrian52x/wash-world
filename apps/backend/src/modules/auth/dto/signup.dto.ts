@@ -1,6 +1,6 @@
-import { IsEmail, IsString, MinLength } from 'class-validator'; // Validation decorators
+import { IsEmail, IsString, MinLength } from 'class-validator'; 
 
-export class CreateUserDto {
+export class SignUpDTO {
   @IsString()
   @MinLength(3)
   username: string;

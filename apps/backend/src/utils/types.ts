@@ -1,11 +1,11 @@
-import { Role } from 'src/users/entity/user-role.enum';
+import { Role } from 'src/utils/enums';
 
-export interface LoginResponse {
+export type LoginResponse = {
   user: {
     id: number;
     email: string;
     username: string;
     role: Role;
-    access_token: string;
+    accessToken: string;
   };
 }

@@ -3,12 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { ErrorMessages } from 'src/constants/error-messages';
-import { UsersService } from 'src/users/users.service';
-import { CreateUserDto } from './dto/register.dto';
-import { User } from 'src/users/entity/user.entity';
+import { ErrorMessages } from 'src/utils/error-messages';
+import { UsersService } from 'src/modules/users/users.service';
+import { SignUpDTO } from './dto/signup.dto';
+import { User } from 'src/entities/user.entity';
 import { hashPassword } from 'src/utils/password.utils';
-import { LoginDto } from './dto/login.dto';
+import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { LoginResponse } from 'src/utils/types';
@@ -30,13 +30,13 @@ export class AuthService {
     const isMatch: boolean = await bcrypt.compare(password, user.password); //compare is async
 
     if (!isMatch) {
-      throw new BadRequestException(ErrorMessages.INVALID_CREDS);
+      throw new BadRequestException(ErrorMessages.INVALID_CREDENTIALS);
     }
 
     return user;
   }
 
-  async login(user: LoginDto): Promise<LoginResponse> {
+  async login(user: LoginDTO): Promise<LoginResponse> {
     try {
       const validatedUser = await this.validateUser(user.email, user.password);
       const payload = { id: validatedUser.id, email: validatedUser.email };
@@ -54,11 +54,11 @@ export class AuthService {
       if (error instanceof BadRequestException) {
         throw error;
       }
-      throw new BadRequestException(ErrorMessages.INVALID_CREDS);
+      throw new BadRequestException(ErrorMessages.INVALID_CREDENTIALS);
     }
   }
 
-  async register(user: CreateUserDto): Promise<any> {
+  async register(user: SignUpDTO): Promise<any> {
     try {
       // Check for existing user
       const existingUser = await this.usersService.findOneByEmail(user.email);
@@ -75,7 +75,7 @@ export class AuthService {
 
       if (!newUser) {
         throw new InternalServerErrorException(
-          ErrorMessages.UNKNOW_REGISTER_ERROR,
+          ErrorMessages.UNKNOWN_REGISTER_ERROR,
         );
       }
 
@@ -93,7 +93,7 @@ export class AuthService {
       console.error('Registration error:', error);
       // generic message to client
       throw new InternalServerErrorException(
-        ErrorMessages.UNKNOW_REGISTER_ERROR,
+        ErrorMessages.UNKNOWN_REGISTER_ERROR,
       );
     }
   }

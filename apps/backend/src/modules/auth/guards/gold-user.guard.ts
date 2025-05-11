@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Role } from '../../users/entity/user-role.enum';
+import { Role } from '../../../utils/enums';
 
 @Injectable()
 export class GoldUserGuard implements CanActivate {

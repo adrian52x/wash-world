@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Role } from 'src/users/entity/user-role.enum';
+import { Role } from 'src/utils/enums';
 
 type PayloadDto = {
   id: number;
