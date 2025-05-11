@@ -1,6 +1,8 @@
 // to decide on later user-role.enum
 export enum Role {
   User = 'user',
+  GoldUser = 'gold',
   PremiumUser = 'premium',
-  Admin = 'admin',
+  BrilliantUser = 'brilliant',
+  // AdminUser = 'admin',
 }
