@@ -38,18 +38,24 @@ export class AuthService {
     return user;
   }
 
-  async login(userDto: LoginDTO): Promise<{accessToken: string}> {
+  async login(userDto: LoginDTO): Promise<{ accessToken: string }> {
     this.logger.log('auth: login');
 
     try {
-      const validatedUser = await this.validateUser(userDto.email, userDto.password);
-      const payload = { userId: validatedUser.user_id, email: validatedUser.email, role: validatedUser.role };
+      const validatedUser = await this.validateUser(
+        userDto.email,
+        userDto.password,
+      );
+      const payload = {
+        userId: validatedUser.user_id,
+        email: validatedUser.email,
+        role: validatedUser.role,
+      };
       const accessToken = this.jwtService.sign(payload);
 
       return {
         accessToken: accessToken,
       };
-
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw error;
@@ -58,7 +64,7 @@ export class AuthService {
     }
   }
 
-  async signup(user: SignUpDTO): Promise<{accessToken: string}> {
+  async signup(user: SignUpDTO): Promise<{ accessToken: string }> {
     this.logger.log('Executing register functionality');
 
     try {
@@ -86,7 +92,6 @@ export class AuthService {
         email: user.email,
         password: user.password,
       });
-
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw error;

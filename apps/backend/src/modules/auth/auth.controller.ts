@@ -12,7 +12,9 @@ export class AuthController {
   @ApiOperation({ summary: 'User signup' })
   @ApiResponse({ status: 200, description: 'Signup successful' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async register(@Body() loginDto: SignUpDTO): Promise<{accessToken: string}> {
+  async register(
+    @Body() loginDto: SignUpDTO,
+  ): Promise<{ accessToken: string }> {
     return await this.authService.signup(loginDto);
   }
 
@@ -20,7 +22,7 @@ export class AuthController {
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async login(@Body() loginDto: LoginDTO): Promise<{accessToken: string}> {
+  async login(@Body() loginDto: LoginDTO): Promise<{ accessToken: string }> {
     return this.authService.login(loginDto);
   }
 }

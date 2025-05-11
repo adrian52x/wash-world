@@ -1,4 +1,4 @@
-import { Role } from "src/utils/enums";
+import { Role } from 'src/utils/enums';
 
 export class UserDTO {
   username: string;
@@ -6,5 +6,5 @@ export class UserDTO {
   address: string;
   phoneNumber: string;
   licensePlate: string;
-  role: Role
+  role: Role;
 }

@@ -22,7 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: PayloadDto) {
-
     const user = await this.usersService.findById(payload.userId);
     if (!user) {
       throw new UnauthorizedException();
@@ -31,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return {
       userId: payload.userId,
       email: payload.email,
-      role: user.role
+      role: user.role,
     };
   }
 }

@@ -11,18 +11,18 @@ import { User } from 'src/entities/user.entity';
 //TODO: We could have a better place for this function
 function mapToUserDTO(user: User): UserDTO {
   return {
-      username: user.username,
-      email: user.email,
-      address: user.address,
-      phoneNumber: user.phone_number,
-      licensePlate: user.license_plate,
-      role: user.role,
+    username: user.username,
+    email: user.email,
+    address: user.address,
+    phoneNumber: user.phone_number,
+    licensePlate: user.license_plate,
+    role: user.role,
   };
 }
 
 @Injectable()
 export class UsersService {
-    private readonly logger = new Logger(UsersService.name);
+  private readonly logger = new Logger(UsersService.name);
 
   constructor(
     @InjectRepository(User)
@@ -46,13 +46,15 @@ export class UsersService {
       throw new NotFoundException('No users found');
     }
 
-    return users.map((user) => (mapToUserDTO(user)));
+    return users.map((user) => mapToUserDTO(user));
   }
 
   async findById(userId: number): Promise<UserDTO> {
     this.logger.log(`users: findById`);
 
-    const user = await this.userRepository.findOne({ where: { user_id: userId } });
+    const user = await this.userRepository.findOne({
+      where: { user_id: userId },
+    });
     if (!user) throw new NotFoundException('User not found');
 
     return mapToUserDTO(user);
@@ -62,7 +64,7 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-    async updateUser(
+  async updateUser(
     userId: number,
     updateUserDto: UpdateUserDto,
   ): Promise<UserDTO> {
@@ -73,11 +75,11 @@ export class UsersService {
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
+
       if (updateUserDto.password) {
         updateUserDto.password = await hashPassword(updateUserDto.password);
       }
-  
+
       const updatedUser = {
         username: updateUserDto.username,
         address: updateUserDto.address,
@@ -85,22 +87,26 @@ export class UsersService {
         license_plate: updateUserDto.licensePlate,
         role: updateUserDto.role,
       };
-  
+
       await trx.update(User, userId, updatedUser);
-  
-      const updatedUserEntity = await trx.findOne(User, { where: { user_id: userId } });
+
+      const updatedUserEntity = await trx.findOne(User, {
+        where: { user_id: userId },
+      });
       if (!updatedUserEntity) {
         throw new NotFoundException('User not found');
       }
-  
+
       return mapToUserDTO(updatedUserEntity);
     });
   }
 
   async remove(userId: number): Promise<void> {
     this.logger.log(`users: remove`);
-    
-    const user = await this.userRepository.findOne({ where: { user_id: userId } });
+
+    const user = await this.userRepository.findOne({
+      where: { user_id: userId },
+    });
     if (!user) throw new NotFoundException('User not found');
 
     await this.userRepository.delete(userId);
