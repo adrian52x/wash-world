@@ -12,8 +12,8 @@ export const dbConfig: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   autoLoadEntities: true,
   synchronize: true, // Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['dist/migrations/*{.ts,.js}'],
+  entities: ['dist/src/entities/*.entity{.ts,.js}'],
+  migrations: ['dist/src/migrations/*{.ts,.js}'],
 };
 
 const datasource = new DataSource(dbConfig as DataSourceOptions);
