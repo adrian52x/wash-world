@@ -1,7 +1,8 @@
-import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -19,23 +20,25 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  findOne(@Param('id') userId: number) {
-    return this.usersService.findById(userId);
+  @UseGuards(JwtAuthGuard)
+  usersCurrentSession(@Req() req) {
+    return this.usersService.findById(req.user.userId);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async update(@Param('id') userId: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(userId, updateUserDto);
+  @UseGuards(JwtAuthGuard)
+  async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateUser(req.user.userId, updateUserDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  remove(@Param('id') userId: number) {
-    return this.usersService.remove(userId);
+  remove(@Req() req) {
+    return this.usersService.remove(req.user.userId);
   }
 }

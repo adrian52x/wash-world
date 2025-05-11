@@ -1,13 +1,20 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Role } from '../../../utils/enums';
 
 @Injectable()
 export class GoldUserGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // ExecutionContext gives access to request details
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    return user?.role === Role.GoldUser;
+    if (!user) {
+      throw new ForbiddenException('User not authenticated');
+    }
+
+    if (user.role !== Role.GoldUser) {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    return true;
   }
 }
