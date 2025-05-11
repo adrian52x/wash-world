@@ -1,20 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Role } from 'src/utils/enums';
+import * as dotenv from 'dotenv';
+import { UsersService } from 'src/modules/users/users.service';
+
+dotenv.config();
 
 type PayloadDto = {
-  id: number;
+  userId: number;
   email: string;
-  role: Role;
 };
 
-// token validation and payload extraction
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private readonly usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -23,10 +22,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: PayloadDto) {
+
+    const user = await this.usersService.findById(payload.userId);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
     return {
-      id: payload.id,
+      id: payload.userId,
       email: payload.email,
-      // role: payload.role, // not good practice - from christian's slides
+      role: user.role
     };
   }
 }

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { ErrorMessages } from 'src/utils/error-messages';
 import { UsersService } from 'src/modules/users/users.service';
@@ -11,23 +12,24 @@ import { hashPassword } from 'src/utils/password.utils';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { LoginResponse } from 'src/utils/types';
+import { Role } from 'src/utils/enums';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 
-  // to validate the user when logging in
   async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.usersService.findOneByEmail(email);
+    const user = await this.usersService.findByEmail(email);
 
     if (!user) {
       throw new BadRequestException(ErrorMessages.USER_NOT_FOUND);
     }
-    const isMatch: boolean = await bcrypt.compare(password, user.password); //compare is async
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       throw new BadRequestException(ErrorMessages.INVALID_CREDENTIALS);
@@ -36,20 +38,18 @@ export class AuthService {
     return user;
   }
 
-  async login(user: LoginDTO): Promise<LoginResponse> {
+  async login(userDto: LoginDTO): Promise<{accessToken: string}> {
+    this.logger.log('auth: login');
+
     try {
-      const validatedUser = await this.validateUser(user.email, user.password);
+      const validatedUser = await this.validateUser(userDto.email, userDto.password);
       const payload = { id: validatedUser.user_id, email: validatedUser.email };
       const accessToken = this.jwtService.sign(payload);
 
-      const userWithoutPassword = {
-        ...JSON.parse(JSON.stringify(validatedUser)),
-        password: undefined,
-        access_token: accessToken,
-      };
       return {
-        user: userWithoutPassword,
+        accessToken: accessToken,
       };
+
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw error;
@@ -58,18 +58,21 @@ export class AuthService {
     }
   }
 
-  async register(user: SignUpDTO): Promise<any> {
+  async signup(user: SignUpDTO): Promise<{accessToken: string}> {
+    this.logger.log('Executing register functionality');
+
     try {
-      // Check for existing user
-      const existingUser = await this.usersService.findOneByEmail(user.email);
+      const existingUser = await this.usersService.findByEmail(user.email);
+
       if (existingUser) {
         throw new BadRequestException(ErrorMessages.EMAIL_EXISTS);
       }
 
-      // Hash password and create user
       const hashedPassword = await hashPassword(user.password);
+
       const newUser = await this.usersService.create({
         ...user,
+        role: Role.RegularUser,
         password: hashedPassword,
       });
 
@@ -79,19 +82,18 @@ export class AuthService {
         );
       }
 
-      // make login handle token generation and response formatting
       return this.login({
         email: user.email,
         password: user.password,
       });
+
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw error;
       }
 
-      // for debugging
       console.error('Registration error:', error);
-      // generic message to client
+
       throw new InternalServerErrorException(
         ErrorMessages.UNKNOWN_REGISTER_ERROR,
       );
