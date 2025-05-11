@@ -12,7 +12,7 @@ export class LoggerMiddleware implements NestMiddleware {
     console.log(`Endpoint: ${method} ${originalUrl}`);
     console.log(`Path: ${path}`);
     console.log(`Base URL: ${baseUrl}`);
-  
+
     const originalSend = res.send;
     res.send = function (body) {
       console.log(`Response status: ${res.statusCode}`);
