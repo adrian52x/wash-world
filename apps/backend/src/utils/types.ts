@@ -8,4 +8,4 @@ export type LoginResponse = {
     role: Role;
     accessToken: string;
   };
-}
+};
