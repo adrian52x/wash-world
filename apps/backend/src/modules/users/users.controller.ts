@@ -24,7 +24,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
+  @Get()
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -33,7 +33,7 @@ export class UsersController {
     return this.usersService.findById(req.user.userId);
   }
 
-  @Patch(':id')
+  @Patch()
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -42,7 +42,7 @@ export class UsersController {
     return this.usersService.updateUser(req.user.userId, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete()
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })

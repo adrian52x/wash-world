@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, IsNull, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from '../utils/enums';
-import { IsEmail, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 
 @Entity('users')
 export class User {
@@ -19,13 +19,13 @@ export class User {
   @IsNotEmpty()
   password: string;
 
-  @Column()
+  @Column({nullable: true})
   address: string;
 
-  @Column()
+  @Column({nullable: true})
   phone_number: string;
 
-  @Column()
+  @Column({nullable: true})
   license_plate: string;
 
   @Column({

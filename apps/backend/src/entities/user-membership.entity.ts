@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Membership } from './membership.entity';
 import { User } from './user.entity';
-import { IsDateString } from 'class-validator';
+import { IsDateString, IsNotEmpty } from 'class-validator';
 
 @Entity('user_memberships')
 export class UserMembership {
@@ -24,10 +24,12 @@ export class UserMembership {
   membership: Membership;
 
   @Column({ type: 'date' })
+  @IsNotEmpty()
   @IsDateString()
   start_date: string;
 
   @Column({ type: 'date', nullable: true })
+  @IsNotEmpty()
   @IsDateString()
   end_date: string;
 }
