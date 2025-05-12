@@ -73,7 +73,7 @@ export class AuthService {
         throw new BadRequestException(ErrorMessages.EMAIL_EXISTS);
       }
 
-      const hashedPassword = await bcrypt.hash(user.password, 10); 
+      const hashedPassword = await bcrypt.hash(user.password, 10);
 
       const newUser = await this.usersService.create({
         ...user,

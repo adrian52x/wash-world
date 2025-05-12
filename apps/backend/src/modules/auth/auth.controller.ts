@@ -12,9 +12,7 @@ export class AuthController {
   @ApiOperation({ summary: 'User signup' })
   @ApiResponse({ status: 200, description: 'Signup successful' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async signup(
-    @Body() signupDto: SignUpDTO,
-  ): Promise<{ accessToken: string }> {
+  async signup(@Body() signupDto: SignUpDTO): Promise<{ accessToken: string }> {
     return await this.authService.signup(signupDto);
   }
 

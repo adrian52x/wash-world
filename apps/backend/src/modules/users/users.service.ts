@@ -77,7 +77,7 @@ export class UsersService {
       }
 
       if (updateUserDto.password) {
-        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10); 
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
 
       const updatedUser = {

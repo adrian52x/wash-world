@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsPositive, IsString, Max, MaxLength } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { OpeningHours } from 'src/utils/types';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -13,7 +19,7 @@ export class Location {
   @MaxLength(255)
   address: string;
 
-  @Column({type: 'varchar', length: 255})
+  @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()
   @IsString()
   @MaxLength(255)

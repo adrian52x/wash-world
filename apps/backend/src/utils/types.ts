@@ -12,4 +12,4 @@ export type LoginResponse = {
 
 export type OpeningHours = {
   [key: string]: string;
-}
+};
