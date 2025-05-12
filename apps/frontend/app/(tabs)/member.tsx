@@ -1,12 +1,15 @@
-import { ScrollView } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ScrollView } from 'react-native';
 
-export default function HomeScreen() {
+export default function MemberScreen() {
   return (
     <ThemedView className="flex-1">
       <ScrollView contentContainerClassName="p-4 space-y-2">
-        <ThemedText type="title">Map to come...</ThemedText>
+        <ThemedText type="title">Member Area</ThemedText>
+        <ThemedText>
+          This app includes example code to help you get started.
+        </ThemedText>
       </ScrollView>
     </ThemedView>
   );
