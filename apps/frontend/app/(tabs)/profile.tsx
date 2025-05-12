@@ -6,7 +6,7 @@ export default function ProfileScreen() {
   return (
     <ThemedView className="flex-1">
       <ScrollView contentContainerClassName="p-4 space-y-2">
-        <ThemedText type="title">Profile stuff</ThemedText>
+        <ThemedText type="header">Profile stuff</ThemedText>
         <ThemedText>
           This app includes example code to help you get started.
         </ThemedText>

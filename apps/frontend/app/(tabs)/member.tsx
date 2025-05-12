@@ -6,7 +6,7 @@ export default function MemberScreen() {
   return (
     <ThemedView className="flex-1">
       <ScrollView contentContainerClassName="p-4 space-y-2">
-        <ThemedText type="title">Member Area</ThemedText>
+        <ThemedText type="header">Member Area</ThemedText>
         <ThemedText>
           This app includes example code to help you get started.
         </ThemedText>

@@ -6,7 +6,7 @@ export default function HomeScreen() {
   return (
     <ThemedView className="flex-1">
       <ScrollView contentContainerClassName="p-4 space-y-2">
-        <ThemedText type="title">Map to come...</ThemedText>
+        <ThemedText type="header">Map to come...</ThemedText>
       </ScrollView>
     </ThemedView>
   );

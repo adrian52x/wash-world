@@ -14,7 +14,12 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'Gilroy-ExtraBold': require('../assets/fonts/Gilroy-ExtraBold.ttf'),
+    'Gilroy-Bold': require('../assets/fonts/Gilroy-Bold.ttf'),
+    'Gilroy-SemiBold': require('../assets/fonts/Gilroy-SemiBold.ttf'),
+    'Gilroy-Regular': require('../assets/fonts/Gilroy-Regular.ttf'),
+    'Gilroy-Medium': require('../assets/fonts/Gilroy-Medium.ttf'),
+    'Gilroy-RegularItalic': require('../assets/fonts/Gilroy-RegularItalic.ttf'),
   });
 
   if (!loaded) {
