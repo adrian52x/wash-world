@@ -13,7 +13,7 @@ export class Membership {
   @PrimaryGeneratedColumn()
   membership_id: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 6, scale: 2 })
   @IsNotEmpty()
   @IsPositive()
   price: number;

@@ -1,31 +1,39 @@
-import { Column, Entity, IsNull, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from '../utils/enums';
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   user_id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()
+  @IsString()
   username: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 255, unique: true })
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()
+  @IsString()
   password: string;
 
-  @Column({nullable: true})
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @IsOptional()
+  @IsString()
   address: string;
 
-  @Column({nullable: true})
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  @IsOptional()
+  @IsString()
   phone_number: string;
 
-  @Column({nullable: true})
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  @IsOptional()
+  @IsString()
   license_plate: string;
 
   @Column({
