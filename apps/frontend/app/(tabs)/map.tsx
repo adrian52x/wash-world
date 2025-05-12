@@ -6,6 +6,7 @@ import washWorldMarker from '../../assets/icons/w-map-marker.png';
 import { CircleX, Navigation as MyLocationIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { fakeLocations } from '@/constants/fakeData';
+import MapSearch from '@/components/MapSearch';
 
 const cphCoordinates = {
     latitude: 55.6761,
@@ -87,6 +88,10 @@ export default function Map() {
 
     return (
         <View style={styles.container}>
+            <MapSearch
+                locations={fakeLocations}
+                onSelect={loc => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+            />
         <MapView
             ref={mapRef}
             style={styles.map}
