@@ -8,7 +8,6 @@ import { ErrorMessages } from 'src/utils/error-messages';
 import { UsersService } from 'src/modules/users/users.service';
 import { SignUpDTO } from './dto/signup.dto';
 import { User } from 'src/entities/user.entity';
-import { hashPassword } from 'src/utils/password.utils';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -74,7 +73,7 @@ export class AuthService {
         throw new BadRequestException(ErrorMessages.EMAIL_EXISTS);
       }
 
-      const hashedPassword = await hashPassword(user.password);
+      const hashedPassword = await bcrypt.hash(user.password, 10);
 
       const newUser = await this.usersService.create({
         ...user,

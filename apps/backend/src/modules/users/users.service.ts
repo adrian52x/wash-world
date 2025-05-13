@@ -3,10 +3,10 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hashPassword } from 'src/utils/password.utils';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { User } from 'src/entities/user.entity';
+import * as bcrypt from 'bcryptjs';
 
 //TODO: We could have a better place for this function
 function mapToUserDTO(user: User): UserDTO {
@@ -77,7 +77,7 @@ export class UsersService {
       }
 
       if (updateUserDto.password) {
-        updateUserDto.password = await hashPassword(updateUserDto.password);
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
 
       const updatedUser = {

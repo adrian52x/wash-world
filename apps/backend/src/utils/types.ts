@@ -9,3 +9,7 @@ export type LoginResponse = {
     accessToken: string;
   };
 };
+
+export type OpeningHours = {
+  [key: string]: string;
+};
