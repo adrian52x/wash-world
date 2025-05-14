@@ -15,14 +15,6 @@ export class UserMembership {
   @PrimaryGeneratedColumn()
   user_membership_id: number;
 
-  @OneToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  @ManyToOne(() => Membership)
-  @JoinColumn({ name: 'membership_id' })
-  membership: Membership;
-
   @Column({ type: 'date' })
   @IsNotEmpty()
   @IsDateString()
@@ -32,4 +24,12 @@ export class UserMembership {
   @IsNotEmpty()
   @IsDateString()
   end_date: string;
+
+  @OneToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @ManyToOne(() => Membership)
+  @JoinColumn({ name: 'membership_id' })
+  membership: Membership;
 }
