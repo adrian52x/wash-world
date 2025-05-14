@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet, Keyboard } from 'react-native';
 import { Location } from '@/types';
 
 type Props = {
@@ -19,7 +19,7 @@ export default function MapSearch({ locations, onSelect }: Props) {
     }
     setResults(
       locations.filter(loc =>
-        loc.title.toLowerCase().includes(text.toLowerCase())
+        loc.address.toLowerCase().includes(text.toLowerCase())
       )
     );
   };
@@ -37,15 +37,20 @@ export default function MapSearch({ locations, onSelect }: Props) {
           style={styles.results}
           data={results}
           keyExtractor={item => item.id.toString()}
+          keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
+                Keyboard.dismiss();
                 onSelect(item);
                 setSearch('');
                 setResults([]);
               }}
             >
-              <Text style={styles.resultItem}>{item.title}</Text>
+              <View style={styles.resultItem}>
+                <Text style={styles.resultTitle}>{item.title}</Text>
+                <Text style={styles.resultAddress}>{item.address}</Text>
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -79,6 +84,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+  },
+  resultTitle: {
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  resultAddress: {
+    fontSize: 13,
+    color: '#666',
   },
 });

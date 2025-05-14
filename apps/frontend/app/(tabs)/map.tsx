@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import * as Location from 'expo-location';
 import washWorldMarker from '../../assets/icons/w-map-marker.png';
 import { CircleX, Navigation as MyLocationIcon } from 'lucide-react-native';
@@ -87,79 +87,77 @@ export default function Map() {
     }
 
     return (
-        <View style={styles.container}>
-            <MapSearch
-                locations={fakeLocations}
-                onSelect={loc => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
-            />
-        <MapView
-            ref={mapRef}
-            style={styles.map}
-            initialRegion={{
-                latitude: userLocation?.latitude ?? cphCoordinates.latitude,
-                longitude: userLocation?.longitude ?? cphCoordinates.longitude,
-                latitudeDelta: cphCoordinates.latitudeDelta,
-                longitudeDelta: cphCoordinates.longitudeDelta,
-            }}
-            showsUserLocation={true}
-        >
-            {fakeLocations.map(loc => (
-            <Marker
-                key={loc.id}
-                coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
-                title={loc.title}
-                onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
-            >
-                <Image
-                source={washWorldMarker}
-                style={
-                    loc.id === clickedLocationId
-                    ? { width: 60, height: 60 }
-                    : { width: 40, height: 40 }
-                }
-                resizeMode="contain"
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+                <MapSearch
+                    locations={fakeLocations}
+                    onSelect={loc => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
                 />
-            </Marker>
-            ))}
-        </MapView>
-        <TouchableOpacity style={styles.locateButton} onPress={focusOnUserLocation}>
-            <MyLocationIcon />
-        </TouchableOpacity>
+                <MapView
+                    ref={mapRef}
+                    style={styles.map}
+                    initialRegion={{
+                        latitude: userLocation?.latitude ?? cphCoordinates.latitude,
+                        longitude: userLocation?.longitude ?? cphCoordinates.longitude,
+                        latitudeDelta: cphCoordinates.latitudeDelta,
+                        longitudeDelta: cphCoordinates.longitudeDelta,
+                    }}
+                    showsUserLocation={true}
+                >
+                    {/* Markers with locations */}
+                    {fakeLocations.map(loc => (
+                    <Marker
+                        key={loc.id}
+                        coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+                        title={loc.title}
+                        onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+                    >
+                        <Image
+                        source={washWorldMarker}
+                        style={
+                            loc.id === clickedLocationId
+                            ? { width: 60, height: 60 }
+                            : { width: 40, height: 40 }
+                        }
+                        resizeMode="contain"
+                        />
+                    </Marker>
+                    ))}
+                </MapView>
 
-        {/* {focusedLocation && (
-            <View style={styles.detailsBox}>
-                <Text style={styles.detailsTitle}>{focusedLocation.title}</Text>
-                <Text style={styles.detailsDesc}>{focusedLocation.longitude}</Text>
-                <TouchableOpacity onPress={() => setClickedLocationId(null)}>
-                    <Text style={styles.closeBtn}>Close</Text>
+                {/* User location button */}
+                <TouchableOpacity style={styles.locateButton} onPress={focusOnUserLocation}>
+                    <MyLocationIcon />
                 </TouchableOpacity>
+
+
+                {/* Details box */}
+                {focusedLocation && (
+                <View style={styles.detailsBox}>
+                    <TouchableOpacity style={styles.closeIcon} onPress={() => setClickedLocationId(null)}>
+                        <CircleX />
+                    </TouchableOpacity>
+                    <Text style={styles.detailsTitle}>{focusedLocation.title}</Text>
+                    <Text style={styles.detailsDesc}>{focusedLocation.openingHours}</Text>
+                    {userLocation && (
+                    <Text style={styles.detailsDesc}>
+                        Distance: {getDistanceFromLatLonInKm(
+                        userLocation.latitude,
+                        userLocation.longitude,
+                        focusedLocation.latitude,
+                        focusedLocation.longitude
+                        ).toFixed(2)} km
+                    </Text>
+                    )}
+                    <TouchableOpacity onPress={() => router.push(`/location/${focusedLocation.id}`)}>
+                        <Text style={styles.seeMoreBtn}>See more</Text>
+                    </TouchableOpacity>
+                </View>
+                )}
+
+
             </View>
-        )}             */}
-        {focusedLocation && (
-        <View style={styles.detailsBox}>
-            <TouchableOpacity style={styles.closeIcon} onPress={() => setClickedLocationId(null)}>
-                <CircleX />
-            </TouchableOpacity>
-            <Text style={styles.detailsTitle}>{focusedLocation.title}</Text>
-            <Text style={styles.detailsDesc}>{focusedLocation.openingHours}</Text>
-            {userLocation && (
-            <Text style={styles.detailsDesc}>
-                Distance: {getDistanceFromLatLonInKm(
-                userLocation.latitude,
-                userLocation.longitude,
-                focusedLocation.latitude,
-                focusedLocation.longitude
-                ).toFixed(2)} km
-            </Text>
-            )}
-            <TouchableOpacity onPress={() => router.push(`/location/${focusedLocation.id}`)}>
-                <Text style={styles.seeMoreBtn}>See more</Text>
-            </TouchableOpacity>
-        </View>
-        )}
-
-
-        </View>        
+        </TouchableWithoutFeedback>        
     );
 }
 
