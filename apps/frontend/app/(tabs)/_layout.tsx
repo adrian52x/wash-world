@@ -6,9 +6,11 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { user } = useAppSelector((state) => state.auth);
 
   return (
     <Tabs
@@ -30,7 +32,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          headerTitle: 'Helloo',
+          headerTitle: `Welcome ${user?.email ?? ''}!`,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="map.fill" color={color} />
           ),

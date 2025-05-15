@@ -9,6 +9,16 @@ interface User {
   email: string;
   role: Role;
 }
+interface SignupRequest {
+  username: string;
+  email: string;
+  password: string;
+}
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
 
 interface AuthState {
   user: User | null;
@@ -27,20 +37,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
-// to type the data of the request
-class SignupRequest {
-  constructor(
-    public username: string,
-    public email: string,
-    public password: string,
-  ) {}
-}
-class LoginRequest {
-  constructor(
-    public email: string,
-    public password: string,
-  ) {}
-}
 
 // Helper to handle token decoding
 const handleAuthSuccess = (token: string) => {
@@ -52,11 +48,16 @@ const handleAuthSuccess = (token: string) => {
   };
 };
 
+// add .env later
+const API_URL = 'http://172.20.10.8:3000'; // when using physical device, get your ip from ipconfig
+//const API_URL = 'http://localhost:3000';  
+
+
 // make the api call here - a register thunk that gets the token
 export const signup = createAsyncThunk(
   'auth/signup',
   async (userData: SignupRequest) => {
-    const response = await fetch('http://localhost:3000/auth/signup', {
+    const response = await fetch(`${API_URL}/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -74,7 +75,7 @@ export const signup = createAsyncThunk(
 export const login = createAsyncThunk(
   'auth/login',
   async (userData: LoginRequest) => {
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
