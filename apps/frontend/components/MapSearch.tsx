@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet, Keyboard } from 'react-native';
+import { View, TextInput, FlatList, TouchableOpacity, Text, Keyboard } from 'react-native';
 import { Location } from '@/types';
 
 type Props = {
@@ -25,16 +25,16 @@ export default function MapSearch({ locations, onSelect }: Props) {
   };
 
   return (
-    <View style={styles.searchContainer} >
+    <View className="absolute top-[110px] left-5 right-5 z-10">
       <TextInput
-        style={styles.input} className="bg-white "
+        className="bg-white rounded-xl px-4 py-2 text-2xl shadow"
         placeholder="Search location..."
         value={search}
         onChangeText={handleSearch}
       />
       {results.length > 0 && (
         <FlatList
-          style={styles.results}
+          className="bg-white rounded-xl mt-2 max-h-40"
           data={results}
           keyExtractor={item => item.id.toString()}
           keyboardShouldPersistTaps="handled"
@@ -47,9 +47,9 @@ export default function MapSearch({ locations, onSelect }: Props) {
                 setResults([]);
               }}
             >
-              <View style={styles.resultItem}>
-                <Text style={styles.resultTitle}>{item.title}</Text>
-                <Text style={styles.resultAddress}>{item.address}</Text>
+              <View className="px-4 py-3 border-b border-gray-200">
+                <Text className="font-bold text-base">{item.title}</Text>
+                <Text className="text-xs text-gray-500">{item.address}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -58,39 +58,3 @@ export default function MapSearch({ locations, onSelect }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  searchContainer: {
-    position: 'absolute',
-    top: 60,
-    left: 20,
-    right: 20,
-    zIndex: 10,
-  },
-  input: {
-    borderRadius: 10,
-    padding: 10,
-    fontSize: 26,
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-  },
-  results: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    marginTop: 4,
-    maxHeight: 150,
-  },
-  resultItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  resultTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  resultAddress: {
-    fontSize: 13,
-    color: '#666',
-  },
-});

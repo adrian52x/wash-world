@@ -7,6 +7,8 @@ import { CircleX, Navigation as MyLocationIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { fakeLocations } from '@/constants/fakeData';
 import MapSearch from '@/components/MapSearch';
+import { LocationDetailsBox } from '@/components/LocationDetailsBox';
+import { MapFilters } from '@/components/MapFilters';
 
 const cphCoordinates = {
     latitude: 55.6761,
@@ -15,10 +17,12 @@ const cphCoordinates = {
     longitudeDelta: 0.0421,
 };
 
+
 export default function Map() {
     const mapRef = useRef<MapView>(null);
     const [clickedLocationId, setClickedLocationId] = useState<number | null>(null);
     const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [filter, setFilter] = useState<string>('auto'); // maybe use redux for this
 
     const router = useRouter();
 
@@ -46,6 +50,13 @@ export default function Map() {
         })();
     }, []);
 
+    // Filter locations based on the selected filter
+    const filteredLocations = fakeLocations.filter(loc =>
+        filter === 'auto'
+            ? loc.autoWashHalls > 0
+            : loc.selfWashHalls > 0
+    );
+
     // Focus on the marker when it is pressed
     const focusOnMarker = (id: number, latitude: number, longitude: number) => {
         setClickedLocationId(id);
@@ -69,30 +80,17 @@ export default function Map() {
         }
     };
 
-    const focusedLocation = fakeLocations.find(loc => loc.id === clickedLocationId);
-
-    function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
-        const R = 6371; // Radius of the earth in km
-        const dLat = ((lat2 - lat1) * Math.PI) / 180;
-        const dLon = ((lon2 - lon1) * Math.PI) / 180;
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos((lat1 * Math.PI) / 180) *
-            Math.cos((lat2 * Math.PI) / 180) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const d = R * c; // Distance in km
-        return d;
-    }
+    const focusedLocation = filteredLocations.find(loc => loc.id === clickedLocationId);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
+            <View>
                 <MapSearch
-                    locations={fakeLocations}
+                    locations={filteredLocations}
                     onSelect={loc => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
                 />
+                {/* Filters below the search bar */}
+                <MapFilters filter={filter} setFilter={setFilter} />
                 <MapView
                     ref={mapRef}
                     style={styles.map}
@@ -105,54 +103,40 @@ export default function Map() {
                     showsUserLocation={true}
                 >
                     {/* Markers with locations */}
-                    {fakeLocations.map(loc => (
-                    <Marker
-                        key={loc.id}
-                        coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
-                        title={loc.title}
-                        onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
-                    >
-                        <Image
-                        source={washWorldMarker}
-                        style={
-                            loc.id === clickedLocationId
-                            ? { width: 60, height: 60 }
-                            : { width: 40, height: 40 }
-                        }
-                        resizeMode="contain"
-                        />
-                    </Marker>
+                    {filteredLocations.map(loc => (
+                        <Marker
+                            key={loc.id}
+                            coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+                            title={loc.title}
+                            onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+                        >
+                            <Image
+                            source={washWorldMarker}
+                            style={
+                                loc.id === clickedLocationId
+                                ? { width: 60, height: 60 }
+                                : { width: 40, height: 40 }
+                            }
+                            resizeMode="contain"
+                            />
+                        </Marker>
                     ))}
                 </MapView>
 
                 {/* User location button */}
-                <TouchableOpacity style={styles.locateButton} onPress={focusOnUserLocation}>
-                    <MyLocationIcon />
+                <TouchableOpacity className="absolute left-2.5 bottom-[100px] bg-white rounded-full p-2 shadow-lg" onPress={focusOnUserLocation}>
+                    <MyLocationIcon width={18} height={18} />
                 </TouchableOpacity>
 
 
                 {/* Details box */}
                 {focusedLocation && (
-                <View style={styles.detailsBox}>
-                    <TouchableOpacity style={styles.closeIcon} onPress={() => setClickedLocationId(null)}>
-                        <CircleX />
-                    </TouchableOpacity>
-                    <Text style={styles.detailsTitle}>{focusedLocation.title}</Text>
-                    <Text style={styles.detailsDesc}>{focusedLocation.openingHours}</Text>
-                    {userLocation && (
-                    <Text style={styles.detailsDesc}>
-                        Distance: {getDistanceFromLatLonInKm(
-                        userLocation.latitude,
-                        userLocation.longitude,
-                        focusedLocation.latitude,
-                        focusedLocation.longitude
-                        ).toFixed(2)} km
-                    </Text>
-                    )}
-                    <TouchableOpacity onPress={() => router.push(`/location/${focusedLocation.id}`)}>
-                        <Text style={styles.seeMoreBtn}>See more</Text>
-                    </TouchableOpacity>
-                </View>
+                    <LocationDetailsBox
+                        location={focusedLocation}
+                        userLocation={userLocation ?? undefined}
+                        onClose={() => setClickedLocationId(null)}
+                        onSeeMore={() => router.push(`/location/${focusedLocation.id}`)}
+                    />
                 )}
 
 
@@ -162,65 +146,9 @@ export default function Map() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-    locateButton: {
-    position: 'absolute',
-    left: 20,
-    bottom: 100,
-    backgroundColor: 'white',
-    borderRadius: 24,
-    padding: 8,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-    detailsBox: {
-    position: 'absolute',
-    bottom: 100,
-    left: '50%',
-    marginLeft: -100,
-    width: 250,
-    height: 120,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  detailsTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  detailsDesc: {
-    fontSize: 13,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  seeMoreBtn: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    zIndex: 2,
-    padding: 4,
-},
+    map: {
+        width: '100%',
+        height: '100%',
+    },
 });
 
