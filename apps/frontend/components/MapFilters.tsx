@@ -12,7 +12,7 @@ const FILTERS = {
 };
 
 export const MapFilters: React.FC<MapFiltersProps> = ({ filter, setFilter }) => (
-  <View className="absolute left-[20px] right-[20px] top-[60px] z-10 flex-row">
+  <View className="absolute left-[20px] right-[20px] top-[10px] z-10 flex-row">
     <TouchableOpacity
         className={`flex-1 px-4 py-3  border border-green-500 ${filter === FILTERS.AUTO ? 'bg-green-500' : 'bg-white'}`}
         onPress={() => setFilter(FILTERS.AUTO)}

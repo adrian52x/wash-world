@@ -43,13 +43,13 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
 
     return (
         <View style={styles.detailsBox}>
-        <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
+        <TouchableOpacity className="absolute top-2 right-2" onPress={onClose}>
             <CircleX size={20} color="#888" />
         </TouchableOpacity>
-        <Text style={styles.detailsTitle}>{location.title}</Text>
-        <Text style={styles.detailsDesc}>{location.openingHours}</Text>
+        <Text className="font-bold text-lg mb-1">{location.title}</Text>
+        <Text className="text-[13px] mb-2 text-center">{location.openingHours}</Text>
         {userLocation && (
-            <Text style={styles.detailsDesc}>
+            <Text className="text-[13px] mb-2 text-center">
             Distance: {getDistanceFromLatLonInKm(
                 userLocation.latitude,
                 userLocation.longitude,
@@ -58,19 +58,20 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
             ).toFixed(2)} km
             </Text>
         )}
-        <TouchableOpacity onPress={onSeeMore}>
-            <Text style={styles.seeMoreBtn}>See more</Text>
+        <TouchableOpacity onPress={onSeeMore} className='flex-row items-center'>
+            <Text className="text-blue-500 font-bold mr-4">See more</Text>
+            <InclinedButton>Test Button</InclinedButton>
         </TouchableOpacity>
 
         {/* Google Maps Button */}
         <TouchableOpacity
-            style={styles.gmapsButton}
+            className="absolute right-[-22px] top-1/2 bg-white rounded-full p-2  "
             onPress={() => {
-            const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
-            Linking.openURL(url);
+          const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
+          Linking.openURL(url);
             }}
         >
-            <MapPinned size={28} color="#4285F4" />
+            <MapPinned size={28} color="green" />
         </TouchableOpacity>
         </View>
     );
@@ -98,43 +99,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     borderWidth: 1,
     borderColor: '#eee',
-  },
-  detailsTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  detailsDesc: {
-    fontSize: 13,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  seeMoreBtn: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 6,
-    right: 8,
-    zIndex: 2,
-    padding: 4,
-  },
-  gmapsButton: {
-    position: 'absolute',
-    right: -36,
-    top: '50%',
-    marginTop: -20,
-    backgroundColor: 'white',
-    borderRadius: 24,
-    padding: 6,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  }
 });

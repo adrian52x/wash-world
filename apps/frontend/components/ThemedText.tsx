@@ -1,35 +1,40 @@
 import { StyleSheet, Text, type TextProps } from 'react-native';
-
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?: 'header' | 'subheader' | 'button' | 'bodytext' | 'caption' | 'light';
 };
 
 export function ThemedText({
   style,
   lightColor,
   darkColor,
-  type = 'default',
+  type = 'bodytext',
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
+  const getTextClasses = () => {
+    switch (type) {
+      case 'header':
+        return 'font-header text-header';
+      case 'subheader':
+        return 'font-subheader text-subheader';
+      case 'button':
+        return 'font-button text-button';
+      case 'caption':
+        return 'font-caption text-caption';
+      case 'light':
+        return 'font-light text-light';
+      default:
+        return 'font-bodytext text-bodytext';
+    }
+  };
+
   return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
-    />
+    <Text className={getTextClasses()} style={[{ color }, style]} {...rest} />
   );
 }
 

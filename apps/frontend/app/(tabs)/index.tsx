@@ -1,80 +1,152 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, View, Image, TouchableOpacity, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import * as Location from 'expo-location';
+import washWorldMarker from '../../assets/icons/w-map-marker.png';
+import { Navigation as MyLocationIcon } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { fakeLocations } from '@/constants/fakeData';
+import MapSearch from '@/components/MapSearch';
+import { LocationDetailsBox } from '@/components/LocationDetailsBox';
+import { MapFilters } from '@/components/MapFilters';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const cphCoordinates = {
+    latitude: 55.6761,
+    longitude: 12.5683,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+};
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{' '}
-          to see changes. Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Text className="text-lightGreen">Step 2: Explore</Text>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">
-            npm run reset-project
-          </ThemedText>{' '}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{' '}
-          directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    const mapRef = useRef<MapView>(null);
+    const [clickedLocationId, setClickedLocationId] = useState<number | null>(null);
+    const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [filter, setFilter] = useState<string>('auto'); // maybe use redux for this
+
+    const router = useRouter();
+
+    // Request location permission and get user location & animate map to user location
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                return;
+            }
+            let location = await Location.getCurrentPositionAsync({});
+            setUserLocation({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            });
+            mapRef.current?.animateToRegion(
+                {
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                },
+                500
+            );
+        })();
+    }, []);
+
+    // Filter locations based on the selected filter
+    const filteredLocations = fakeLocations.filter(loc =>
+        filter === 'auto'
+            ? loc.autoWashHalls > 0
+            : loc.selfWashHalls > 0
+    );
+
+    // Focus on the marker when it is pressed
+    const focusOnMarker = (id: number, latitude: number, longitude: number) => {
+        setClickedLocationId(id);
+        mapRef.current?.animateToRegion({
+            latitude,
+            longitude,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+        }, 500);
+    };
+    
+    // Focus on the user location when the button is pressed
+    const focusOnUserLocation = () => {
+        if (userLocation) {
+            mapRef.current?.animateToRegion({
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+            }, 500);
+        }
+    };
+
+    const focusedLocation = filteredLocations.find(loc => loc.id === clickedLocationId);
+
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View>
+                <MapSearch
+                    locations={filteredLocations}
+                    onSelect={loc => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+                />
+                {/* Filters below the search bar */}
+                <MapFilters filter={filter} setFilter={setFilter} />
+                <MapView
+                    ref={mapRef}
+                    style={styles.map}
+                    initialRegion={{
+                        latitude: userLocation?.latitude ?? cphCoordinates.latitude,
+                        longitude: userLocation?.longitude ?? cphCoordinates.longitude,
+                        latitudeDelta: cphCoordinates.latitudeDelta,
+                        longitudeDelta: cphCoordinates.longitudeDelta,
+                    }}
+                    showsUserLocation={true}
+                >
+                    {/* Markers with locations */}
+                    {filteredLocations.map(loc => (
+                        <Marker
+                            key={loc.id}
+                            coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+                            title={loc.title}
+                            onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+                        >
+                            <Image
+                            source={washWorldMarker}
+                            style={
+                                loc.id === clickedLocationId
+                                ? { width: 60, height: 60 }
+                                : { width: 40, height: 40 }
+                            }
+                            resizeMode="contain"
+                            />
+                        </Marker>
+                    ))}
+                </MapView>
+
+                {/* User location button */}
+                <TouchableOpacity className="absolute left-2.5 bottom-[100px] bg-green-600 rounded-full p-2 shadow-lg" onPress={focusOnUserLocation}>
+                    <MyLocationIcon width={18} height={18} color="white"/>
+                </TouchableOpacity>
+
+
+                {/* Details box */}
+                {focusedLocation && (
+                    <LocationDetailsBox
+                        location={focusedLocation}
+                        userLocation={userLocation ?? undefined}
+                        onClose={() => setClickedLocationId(null)}
+                        onSeeMore={() => router.push(`/location/${focusedLocation.id}`)}
+                    />
+                )}
+
+
+            </View>
+        </TouchableWithoutFeedback>        
+    );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    map: {
+        width: '100%',
+        height: '100%',
+    },
 });

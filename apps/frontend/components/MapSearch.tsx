@@ -25,16 +25,16 @@ export default function MapSearch({ locations, onSelect }: Props) {
   };
 
   return (
-    <View className="absolute top-[110px] left-5 right-5 z-10">
+    <View className="absolute top-[60px] left-[20px] right-[20px] z-10">
       <TextInput
-        className="bg-white rounded-xl px-4 py-2 text-2xl shadow"
+        className="bg-white px-4 py-2 text-xl shadow"
         placeholder="Search location..."
         value={search}
         onChangeText={handleSearch}
       />
       {results.length > 0 && (
         <FlatList
-          className="bg-white rounded-xl mt-2 max-h-40"
+          className="bg-white rounded-b-xl mt-2 max-h-40"
           data={results}
           keyExtractor={item => item.id.toString()}
           keyboardShouldPersistTaps="handled"
