@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common';
-import { Role } from '../../../utils/enums';
+import { RoleEnum } from '../../../utils/enums';
 
 @Injectable()
 export class GoldUserGuard implements CanActivate {
@@ -16,7 +16,7 @@ export class GoldUserGuard implements CanActivate {
       throw new ForbiddenException('User not authenticated');
     }
 
-    if (user.role !== Role.GoldUser) {
+    if (user.role !== RoleEnum.GoldUser) {
       throw new ForbiddenException('Admin access required');
     }
 

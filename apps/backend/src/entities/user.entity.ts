@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Role } from '../utils/enums';
+import { RoleEnum } from '../utils/enums';
 import {
   IsEmail,
   IsEnum,
@@ -44,10 +44,10 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: Role,
-    default: Role.RegularUser,
+    enum: RoleEnum,
+    default: RoleEnum.RegularUser,
   })
   @IsNotEmpty()
-  @IsEnum(Role)
-  role: Role;
+  @IsEnum(RoleEnum)
+  role: RoleEnum;
 }

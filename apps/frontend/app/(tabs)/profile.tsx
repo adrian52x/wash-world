@@ -9,9 +9,7 @@ export default function ProfileScreen() {
       <ScrollView contentContainerClassName="p-4 space-y-2">
         {/* just to test: */}
         <Text>Welcome, {user?.email}</Text>
-        <Text>
-          This app includes example code to help you get started.
-        </Text>
+        <Text>This app includes example code to help you get started.</Text>
       </ScrollView>
     </View>
   );

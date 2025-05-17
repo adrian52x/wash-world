@@ -1,8 +1,19 @@
-// to decide on later user-role.enum
-export enum Role {
+export enum RoleEnum {
   RegularUser = 'REGULAR_USER',
   GoldUser = 'GOLD_USER',
   PremiumUser = 'PREMIUM_USER',
   BrilliantUser = 'BRILLIANT_USER',
-  // Admin = 'ADMIN',
+}
+
+export enum MembershipTypeEnum {
+  Gold = 'GOLD',
+  Premium = 'PREMIUM',
+  Brilliant = 'BRILLIANT',
+}
+
+export enum WashTypeEnum {
+  Gold = 'GOLD',
+  Premium = 'PREMIUM',
+  Brilliant = 'BRILLIANT',
+  SelfWash = 'SELF_WASH',
 }

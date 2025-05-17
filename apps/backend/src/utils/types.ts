@@ -1,11 +1,11 @@
-import { Role } from 'src/utils/enums';
+import { RoleEnum } from 'src/utils/enums';
 
 export type LoginResponse = {
   user: {
     id: number;
     email: string;
     username: string;
-    role: Role;
+    role: RoleEnum;
     accessToken: string;
   };
 };

@@ -11,7 +11,7 @@ import { User } from 'src/entities/user.entity';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { Role } from 'src/utils/enums';
+import { RoleEnum } from 'src/utils/enums';
 
 @Injectable()
 export class AuthService {
@@ -77,7 +77,7 @@ export class AuthService {
 
       const newUser = await this.usersService.create({
         ...user,
-        role: Role.RegularUser,
+        role: RoleEnum.RegularUser,
         password: hashedPassword,
       });
 
