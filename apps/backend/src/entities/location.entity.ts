@@ -30,7 +30,7 @@ export class Location {
   @IsNotEmpty()
   @IsString()
   @MaxLength(255)
-  opening_hours: OpeningHours;
+  opening_hours: string;
 
   @Column({ type: 'int', nullable: true })
   @IsOptional()

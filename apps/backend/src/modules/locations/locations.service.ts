@@ -1,4 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Location } from 'src/entities/location.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { LocationDTO } from './dto/location.dto';
+
+function mapToLocationDTO(location: Location): LocationDTO {
+  return {
+    locationId: location.location_id,
+    name: location.name,
+    address: location.address,
+    openingHours: location.opening_hours,
+    autoWashHalls: location.auto_wash_halls,
+    selfWashHalls: location.self_wash_halls,
+    coordinates: location.coordinates,
+  };
+}
 
 @Injectable()
-export class LocationsService {}
+export class LocationsService {
+  private readonly logger = new Logger(LocationsService.name);
+
+  constructor(
+    @InjectRepository(Location)
+    private readonly locationRepository: Repository<Location>) { }
+
+  async getAll(): Promise<LocationDTO[]> {
+    this.logger.log('locations: getAll');
+
+    const locations = await this.locationRepository.find();
+
+    if (!locations || locations.length === 0) {
+      throw new NotFoundException('No locations found');
+    }
+
+    return locations.map((user) => mapToLocationDTO(user));
+  }
+}
