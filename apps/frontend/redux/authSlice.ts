@@ -49,8 +49,8 @@ const handleAuthSuccess = (token: string) => {
 };
 
 // add .env later
-const API_URL = 'http://172.20.10.8:3000'; // when using physical device, get your ip from ipconfig
-//const API_URL = 'http://localhost:3000';  
+// const API_URL = 'http://172.20.10.8:3000'; // when using physical device, get your ip from ipconfig
+const API_URL = 'http://localhost:3000';  
 
 
 // make the api call here - a register thunk that gets the token

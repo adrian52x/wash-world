@@ -32,7 +32,7 @@ module.exports = {
         header: ['Gilroy-ExtraBold', 'sans-serif'], // Main headlines
         subheader: ['Gilroy-Bold', 'sans-serif'], // Secondary headlines
         button: ['Gilroy-SemiBold', 'sans-serif'], // Button text
-        bodytext: ['Gilroy-Regular', 'sans-serif'], // Main content text
+        bodyText: ['Gilroy-Regular', 'sans-serif'], // Main content text
         caption: ['Gilroy-Medium', 'sans-serif'], // Smaller informative text
         // 'light': ['Gilroy-RegularItalic', 'sans-serif'],   // Special text cases
       },
@@ -40,7 +40,7 @@ module.exports = {
         header: ['32px', { lineHeight: '40px' }], // Large headlines
         subheader: ['24px', { lineHeight: '32px' }], // Secondary headlines
         button: ['16px', { lineHeight: '24px' }], // Button text
-        bodytext: ['16px', { lineHeight: '24px' }], // Main content
+        bodyText: ['16px', { lineHeight: '24px' }], // Main content
         caption: ['14px', { lineHeight: '20px' }], // Small text
         light: ['12px', { lineHeight: '16px' }], // Smallest text
       },
