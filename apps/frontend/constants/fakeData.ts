@@ -56,7 +56,7 @@ export const fakeLocations = [
     openingHours: '07:00 - 22:00',
     autoWashHalls: 2,
     selfWashHalls: 3,
-    latitude: 55.6780,
-    longitude: 12.5730,
+    latitude: 55.678,
+    longitude: 12.573,
   },
 ];

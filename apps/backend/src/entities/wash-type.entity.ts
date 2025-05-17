@@ -1,4 +1,11 @@
-import { IsBoolean, IsNotEmpty, IsPositive, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsPositive,
+  IsString,
+} from 'class-validator';
+import { WashTypeEnum } from 'src/utils/enums';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('wash_types')
@@ -6,10 +13,13 @@ export class WashType {
   @PrimaryGeneratedColumn()
   wash_type_id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({
+    type: 'enum',
+    enum: WashTypeEnum,
+  })
   @IsNotEmpty()
-  @IsString()
-  name: string;
+  @IsEnum(WashTypeEnum)
+  type: WashTypeEnum;
 
   @Column({ type: 'varchar', length: 1024 })
   @IsNotEmpty()

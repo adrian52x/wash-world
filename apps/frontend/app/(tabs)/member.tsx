@@ -5,9 +5,7 @@ export default function MemberScreen() {
     <View className="flex-1">
       <ScrollView contentContainerClassName="p-4 space-y-2">
         <Text>Member Area</Text>
-        <Text>
-          This app includes example code to help you get started.
-        </Text>
+        <Text>This app includes example code to help you get started.</Text>
       </ScrollView>
     </View>
   );

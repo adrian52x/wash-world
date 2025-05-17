@@ -1,4 +1,4 @@
-import { Role } from '../../../utils/enums';
+import { RoleEnum } from '../../../utils/enums';
 
 export class UpdateUserDto {
   username: string;
@@ -6,5 +6,5 @@ export class UpdateUserDto {
   phoneNumber: string;
   licensePlate: string;
   password: string;
-  role: Role;
+  role: RoleEnum;
 }

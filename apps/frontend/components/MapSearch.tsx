@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, FlatList, TouchableOpacity, Text, Keyboard } from 'react-native';
+import {
+  View,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  Keyboard,
+} from 'react-native';
 import { Location } from '@/types';
 
 type Props = {
@@ -18,9 +25,9 @@ export default function MapSearch({ locations, onSelect }: Props) {
       return;
     }
     setResults(
-      locations.filter(loc =>
-        loc.address.toLowerCase().includes(text.toLowerCase())
-      )
+      locations.filter((loc) =>
+        loc.address.toLowerCase().includes(text.toLowerCase()),
+      ),
     );
   };
 
@@ -36,7 +43,7 @@ export default function MapSearch({ locations, onSelect }: Props) {
         <FlatList
           className="bg-white rounded-b-xl mt-2 max-h-40"
           data={results}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => (
             <TouchableOpacity
