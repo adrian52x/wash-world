@@ -20,7 +20,8 @@ export class MembershipsService {
 
   constructor(
     @InjectRepository(MembershipsService)
-    private readonly membershipRepository: Repository<Membership>) { }
+    private readonly membershipRepository: Repository<Membership>,
+  ) {}
 
   async getAll(): Promise<MembershipDTO[]> {
     this.logger.log('memberships: getAll');

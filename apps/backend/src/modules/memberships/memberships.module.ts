@@ -10,4 +10,4 @@ import { Membership } from 'src/entities/membership.entity';
   providers: [MembershipsService],
   exports: [MembershipsService],
 })
-export class MembershipsModule { }
+export class MembershipsModule {}

@@ -18,7 +18,7 @@ try {
 
 const values = [];
 
-locations.forEach(loc => {
+locations.forEach((loc) => {
   const escape = (str) =>
     typeof str === 'string' ? str.replace(/'/g, "''") : String(str);
 
@@ -26,9 +26,12 @@ locations.forEach(loc => {
   const address = escape(loc.address);
   const opening_hours = escape(loc.open_hours);
 
-  const selfWashCount = loc.service_units && loc.service_units.self_wash && loc.service_units.self_wash.total_count
-    ? loc.service_units.self_wash.total_count
-    : 0;
+  const selfWashCount =
+    loc.service_units &&
+    loc.service_units.self_wash &&
+    loc.service_units.self_wash.total_count
+      ? loc.service_units.self_wash.total_count
+      : 0;
 
   const self_wash_halls = selfWashCount === 0 ? 'null' : selfWashCount;
 

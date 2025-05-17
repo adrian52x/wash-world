@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
+import { ErrorMessages } from 'src/utils/error-messages';
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +20,7 @@ export class UsersController {
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
-  @ApiResponse({ status: 404, description: 'Users not found' })
+  @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   findAll() {
     return this.usersService.findAll();
   }
@@ -27,7 +28,7 @@ export class UsersController {
   @Get()
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, description: 'User retrieved successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   @UseGuards(JwtAuthGuard)
   usersCurrentSession(@Req() req) {
     return this.usersService.findById(req.user.userId);
@@ -36,7 +37,7 @@ export class UsersController {
   @Patch()
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   @UseGuards(JwtAuthGuard)
   async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(req.user.userId, updateUserDto);
@@ -45,7 +46,7 @@ export class UsersController {
   @Delete()
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   remove(@Req() req) {
     return this.usersService.remove(req.user.userId);
   }

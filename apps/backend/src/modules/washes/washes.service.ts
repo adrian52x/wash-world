@@ -23,8 +23,8 @@ export class WashesService {
   constructor(
     @InjectRepository(WashesService)
     private readonly washTypeRepository: Repository<WashType>,
-    private readonly washRepository: Repository<Wash>
-  ) { }
+    private readonly washRepository: Repository<Wash>,
+  ) {}
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
     this.logger.log('washTypes: getAll');

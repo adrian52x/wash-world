@@ -11,5 +11,4 @@ import { WashesService } from './washes.service';
   providers: [WashesService],
   exports: [WashesService],
 })
-
-export class WashesModule { }
+export class WashesModule {}

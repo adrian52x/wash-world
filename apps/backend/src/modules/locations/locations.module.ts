@@ -10,4 +10,4 @@ import { LocationsController } from './locations.controller';
   controllers: [LocationsController],
   exports: [LocationsService],
 })
-export class LocationsModule { }
+export class LocationsModule {}

@@ -28,7 +28,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   create(createUserDto: CreateUserDto) {
     this.logger.log('users: create');

@@ -1,4 +1,4 @@
-import { WashTypeEnum } from "src/utils/enums";
+import { WashTypeEnum } from 'src/utils/enums';
 
 export class WashTypeDTO {
   washTypeId: number;

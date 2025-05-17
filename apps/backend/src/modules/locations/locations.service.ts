@@ -23,7 +23,8 @@ export class LocationsService {
 
   constructor(
     @InjectRepository(Location)
-    private readonly locationRepository: Repository<Location>) { }
+    private readonly locationRepository: Repository<Location>,
+  ) {}
 
   async getAll(): Promise<LocationDTO[]> {
     this.logger.log('locations: getAll');
