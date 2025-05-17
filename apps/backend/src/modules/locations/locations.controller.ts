@@ -10,7 +10,7 @@ export class LocationsController {
   @ApiOperation({ summary: 'Get all locations' })
   @ApiResponse({ status: 200, description: 'Locations retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Locations not found' })
-  findAll() {
+  getAll() {
     return this.locationsService.getAll();
   }
 }

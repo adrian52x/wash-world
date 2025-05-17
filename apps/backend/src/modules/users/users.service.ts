@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { User } from 'src/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
+import { ErrorMessages } from 'src/utils/error-messages';
 
 //TODO: We could have a better place for this function
 function mapToUserDTO(user: User): UserDTO {
@@ -27,7 +28,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   create(createUserDto: CreateUserDto) {
     this.logger.log('users: create');
@@ -43,7 +44,7 @@ export class UsersService {
     const users = await this.userRepository.find();
 
     if (!users || users.length === 0) {
-      throw new NotFoundException('No users found');
+      throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
     }
 
     return users.map((user) => mapToUserDTO(user));
@@ -55,7 +56,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { user_id: userId },
     });
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
     return mapToUserDTO(user);
   }
@@ -73,7 +74,7 @@ export class UsersService {
 
       const user = await trx.findOne(User, { where: { user_id: userId } });
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
       }
 
       if (updateUserDto.password) {
@@ -94,7 +95,7 @@ export class UsersService {
         where: { user_id: userId },
       });
       if (!updatedUserEntity) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
       }
 
       return mapToUserDTO(updatedUserEntity);
@@ -107,7 +108,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { user_id: userId },
     });
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
 
     await this.userRepository.delete(userId);
   }

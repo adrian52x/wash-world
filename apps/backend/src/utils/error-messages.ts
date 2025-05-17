@@ -4,4 +4,6 @@ export enum ErrorMessages {
   EMAIL_EXISTS = 'Email already exists',
   USER_NOT_FOUND = 'User not found',
   UNKNOWN_REGISTER_ERROR = 'An error occurred during registration',
+  LOCATIONS_NOT_FOUND = 'Locations not found',
+  MEMBERSHIPS_NOT_FOUND = 'Memberships not found',
 }

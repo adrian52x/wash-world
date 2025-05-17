@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { Location } from 'src/entities/location.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LocationDTO } from './dto/location.dto';
+import { ErrorMessages } from 'src/utils/error-messages';
 
 function mapToLocationDTO(location: Location): LocationDTO {
   return {
@@ -30,9 +31,9 @@ export class LocationsService {
     const locations = await this.locationRepository.find();
 
     if (!locations || locations.length === 0) {
-      throw new NotFoundException('No locations found');
+      throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
     }
 
-    return locations.map((user) => mapToLocationDTO(user));
+    return locations.map((location) => mapToLocationDTO(location));
   }
 }
