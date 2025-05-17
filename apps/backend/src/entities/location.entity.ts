@@ -1,6 +1,7 @@
 import {
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   IsString,
   MaxLength,
@@ -17,30 +18,32 @@ export class Location {
   @IsNotEmpty()
   @IsString()
   @MaxLength(255)
+  name: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(255)
   address: string;
 
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()
   @IsString()
   @MaxLength(255)
-  title: string;
-
-  @Column({ type: 'json' })
   opening_hours: OpeningHours;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
+  @IsOptional()
   @IsInt()
   @IsPositive()
-  auto_wash_halls_count: number;
+  auto_wash_halls: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
+  @IsOptional()
   @IsInt()
   @IsPositive()
-  self_wash_halls_count: number;
+  self_wash_halls: number;
 
-  @Column({ type: 'decimal', precision: 8, scale: 4 })
-  latitude: number;
-
-  @Column({ type: 'decimal', precision: 8, scale: 4 })
-  longitude: number;
+  @Column({ type: 'json' })
+  coordinates: JSON;
 }

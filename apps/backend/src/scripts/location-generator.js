@@ -5,14 +5,14 @@ import * as path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const fooPath = path.join(__dirname, 'foo.txt');
+const fooPath = path.join(__dirname, 'locations.txt');
 const data = fs.readFileSync(fooPath, 'utf8');
 
 let locations = [];
 try {
   locations = JSON.parse(data);
 } catch (e) {
-  console.error('Error parsing JSON from foo.txt:', e);
+  console.error('Error parsing JSON from locations.txt:', e);
   process.exit(1);
 }
 
