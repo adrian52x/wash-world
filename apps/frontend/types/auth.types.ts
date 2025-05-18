@@ -18,7 +18,6 @@ export interface LoginRequest {
 }
 
 export interface AuthState {
-  user: DecodedToken | null;
   token: string | null;
   loading: boolean;
   errormessage: string | null;

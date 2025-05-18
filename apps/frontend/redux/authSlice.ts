@@ -13,7 +13,6 @@ import {
 
 // initial state of auth
 const initialState: AuthState = {
-  user: null,
   token: null,
   loading: false,
   errormessage: null,
@@ -21,22 +20,19 @@ const initialState: AuthState = {
   userSession: null,
 };
 
-// handle token decoding
-const handleAuthSuccess = (token: string) => {
-  const decodedToken = jwtDecode<DecodedToken>(token);
-  return {
-    token,
-    user: decodedToken,
-    isAuthenticated: true,
-  };
-};
+// const handleAuthSuccess = (token: string) => {
+//   return {
+//     token,
+//     isAuthenticated: true,
+//   };
+// };
 
 // to hydrate the user if there's data from the secure store
 export const initializeAuth = createAsyncThunk('auth/initialize', async () => {
   const token = await storage.getToken();
   if (!token) throw new Error('No token found');
 
-  return handleAuthSuccess(token);
+  return { token };
 });
 
 const API_URL =
@@ -112,7 +108,6 @@ const authSlice = createSlice({
     logout: (state) => {
       storage.removeToken();
       state.token = null;
-      state.user = null;
       state.errormessage = null;
       state.isAuthenticated = false;
       state.userSession = null;
@@ -122,9 +117,7 @@ const authSlice = createSlice({
     builder
       //signup
       .addCase(signup.fulfilled, (state, action) => {
-        const auth = handleAuthSuccess(action.payload);
-        state.token = auth.token;
-        state.user = auth.user;
+        state.token = action.payload;
         state.isAuthenticated = true;
         state.errormessage = null;
       })
@@ -135,9 +128,7 @@ const authSlice = createSlice({
       })
       //login
       .addCase(login.fulfilled, (state, action) => {
-        const auth = handleAuthSuccess(action.payload);
-        state.token = auth.token;
-        state.user = auth.user;
+        state.token = action.payload;
         state.isAuthenticated = true;
         state.errormessage = null;
       })
@@ -149,12 +140,10 @@ const authSlice = createSlice({
       //initialiizeAuth
       .addCase(initializeAuth.fulfilled, (state, action) => {
         state.token = action.payload.token;
-        state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(initializeAuth.rejected, (state) => {
         state.token = null;
-        state.user = null;
         state.isAuthenticated = false;
       })
       //fetchUserSession

@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { ScrollView, View, Text, Button } from 'react-native';
 
 export default function ProfileScreen() {
-  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
   // const userSession = useAppSelector(selectUserSession);
