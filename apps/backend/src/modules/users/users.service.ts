@@ -13,6 +13,7 @@ import { UserSessionDTO } from './dto/user-session.dto';
 //TODO: We could have a better place for this function
 function mapToUserDTO(user: User): UserDTO {
   return {
+    userId: user.user_id,
     username: user.username,
     email: user.email,
     address: user.address,

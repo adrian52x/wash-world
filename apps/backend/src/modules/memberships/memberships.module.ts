@@ -3,9 +3,14 @@ import { MembershipsController } from './memberships.controller';
 import { MembershipsService } from './memberships.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Membership } from 'src/entities/membership.entity';
+import { UsersModule } from '../users/users.module';
+import { UserMembership } from 'src/entities/user-membership.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Membership])],
+  imports: [
+    TypeOrmModule.forFeature([Membership, UserMembership]),
+    UsersModule,
+  ],
   controllers: [MembershipsController],
   providers: [MembershipsService],
   exports: [MembershipsService],

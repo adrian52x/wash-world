@@ -4,6 +4,9 @@ import { Membership } from 'src/entities/membership.entity';
 import { Repository } from 'typeorm';
 import { MembershipDTO } from './dto/membership.dto';
 import { ErrorMessages } from 'src/utils/error-messages';
+import { UsersService } from '../users/users.service';
+import { UserMembership } from 'src/entities/user-membership.entity';
+import { UserMembershipDTO } from './dto/user-membership.dto';
 
 function mapToMembershipDTO(membership: Membership): MembershipDTO {
   return {
@@ -14,6 +17,22 @@ function mapToMembershipDTO(membership: Membership): MembershipDTO {
   };
 }
 
+function mapToUserMembershipDTO(
+  userMembership: UserMembership,
+): UserMembershipDTO {
+  return {
+    userMembershipId: userMembership.user_membership_id,
+    startDate: userMembership.start_date,
+    endDate: userMembership.end_date,
+    membership: {
+      membershipId: userMembership.membership.membership_id,
+      type: userMembership.membership.type,
+      price: Number(userMembership.membership.price),
+      washTypeId: userMembership.membership.washType.wash_type_id,
+    },
+  };
+}
+
 @Injectable()
 export class MembershipsService {
   private readonly logger = new Logger(MembershipsService.name);
@@ -21,6 +40,9 @@ export class MembershipsService {
   constructor(
     @InjectRepository(Membership)
     private readonly membershipRepository: Repository<Membership>,
+    @InjectRepository(UserMembership)
+    private readonly userMemberShipRepository: Repository<UserMembership>,
+    private readonly usersService: UsersService,
   ) {}
 
   async getAll(): Promise<MembershipDTO[]> {
@@ -33,5 +55,59 @@ export class MembershipsService {
     }
 
     return memberships.map((membership) => mapToMembershipDTO(membership));
+  }
+
+  async create(
+    userId: number,
+    membershipId: number,
+  ): Promise<UserMembershipDTO> {
+    this.logger.log('memberships: create');
+
+    return await this.userMemberShipRepository.manager.transaction(
+      async (trx) => {
+        const user = await this.usersService.findById(userId);
+        if (!user) {
+          throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+        }
+
+        const membershipType = await trx.findOne(Membership, {
+          where: { membership_id: membershipId },
+        });
+        if (membershipType == null) {
+          throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
+        }
+
+        const existingUserMembership = await trx.findOne(UserMembership, {
+          where: { user: { user_id: userId } },
+        });
+
+        if (existingUserMembership != null) {
+          await trx.delete(
+            UserMembership,
+            existingUserMembership.user_membership_id,
+          );
+        }
+
+        const newUserMembership = trx.create(UserMembership, {
+          start_date: new Date(),
+          end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+          user: { user_id: user.userId },
+          membership: { membership_id: membershipType.membership_id },
+        });
+
+        await trx.save(newUserMembership);
+
+        const savedUserMembership = await trx.findOne(UserMembership, {
+          where: { user_membership_id: newUserMembership.user_membership_id },
+          relations: ['membership', 'membership.washType'],
+        });
+
+        if (savedUserMembership == null) {
+          throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
+        }
+
+        return mapToUserMembershipDTO(savedUserMembership);
+      },
+    );
   }
 }

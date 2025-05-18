@@ -6,5 +6,6 @@ export enum ErrorMessages {
   UNKNOWN_REGISTER_ERROR = 'An error occurred during registration',
   LOCATIONS_NOT_FOUND = 'Locations not found',
   MEMBERSHIPS_NOT_FOUND = 'Memberships not found',
+  USER_MEMBERSHIP_NOT_FOUND = 'User membership not found',
   WASH_TYPES_NOT_FOUND = 'Wash types not found',
 }

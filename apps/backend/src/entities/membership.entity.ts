@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -27,7 +28,8 @@ export class Membership {
   @IsPositive()
   price: number;
 
-  @OneToOne(() => WashType)
+  //TODO: review relationship
+  @ManyToOne(() => WashType)
   @JoinColumn({ name: 'wash_type_id' })
   washType: WashType;
 }
