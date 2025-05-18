@@ -7,7 +7,11 @@ import { WashTypeDTO } from './dto/wash-type.dto';
 import { ErrorMessages } from 'src/utils/error-messages';
 import { CreateWashSessionDTO } from './dto/create-wash-session.dto';
 import { UsersService } from '../users/users.service';
-import { LocationsService } from '../locations/locations.service';
+import {
+  LocationsService,
+  mapToLocationDTO,
+} from '../locations/locations.service';
+import { UserWashDTO } from './dto/user-wash-dto';
 
 function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
   return {
@@ -16,6 +20,18 @@ function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
     price: washType.price,
     description: washType.description,
     isAutoWash: washType.is_auto_wash,
+  };
+}
+
+function mapToWashDTO(wash: Wash): UserWashDTO {
+  return {
+    washId: wash.wash_id,
+    type: wash.washType.type,
+    description: wash.washType.description,
+    price: wash.washType.price,
+    isAutoWash: wash.washType.is_auto_wash,
+    location: mapToLocationDTO(wash.location),
+    washType: mapToWashTypeDTO(wash.washType),
   };
 }
 
@@ -46,6 +62,7 @@ export class WashesService {
 
   async washTypeGetById(washTypeId: number): Promise<WashTypeDTO> {
     this.logger.log(`washTypes: getById`);
+
     const washType = await this.washTypeRepository.findOne({
       where: { wash_type_id: washTypeId },
     });
@@ -53,6 +70,21 @@ export class WashesService {
       throw new NotFoundException(ErrorMessages.WASH_TYPES_NOT_FOUND);
     }
     return mapToWashTypeDTO(washType);
+  }
+
+  async getUserWashes(userId: number): Promise<UserWashDTO[]> {
+    this.logger.log('washes: get user washes by userId');
+
+    const washes = await this.washRepository.find({
+      where: { user_id: userId },
+      relations: ['washType', 'location'],
+    });
+
+    if (washes == null || washes.length === 0) {
+      throw new NotFoundException(ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND);
+    }
+
+    return washes.map((wash) => mapToWashDTO(wash));
   }
 
   async createWashSession(

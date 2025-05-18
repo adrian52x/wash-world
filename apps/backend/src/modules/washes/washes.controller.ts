@@ -21,6 +21,21 @@ export class WashesController {
     return this.washesService.washTypesGetAll();
   }
 
+  @Get('user')
+  @ApiOperation({ summary: 'Get all user washes' })
+  @ApiResponse({
+    status: 200,
+    description: 'User washes retrieved successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND,
+  })
+  @UseGuards(JwtAuthGuard)
+  async getUserWashes(@Req() req) {
+    return this.washesService.getUserWashes(req.user.userId);
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create wash session' })
   @ApiResponse({

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LocationDTO } from './dto/location.dto';
 import { ErrorMessages } from 'src/utils/error-messages';
 
-function mapToLocationDTO(location: Location): LocationDTO {
+export function mapToLocationDTO(location: Location): LocationDTO {
   return {
     locationId: location.location_id,
     name: location.name,
