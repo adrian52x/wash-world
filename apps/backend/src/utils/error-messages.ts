@@ -8,4 +8,5 @@ export enum ErrorMessages {
   MEMBERSHIPS_NOT_FOUND = 'Memberships not found',
   USER_MEMBERSHIP_NOT_FOUND = 'User membership not found',
   WASH_TYPES_NOT_FOUND = 'Wash types not found',
+  WASH_SESSION_CREATE_FAILED = 'Failed to create wash session',
 }

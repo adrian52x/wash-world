@@ -5,6 +5,9 @@ import { Wash } from 'src/entities/wash.entity';
 import { Repository } from 'typeorm';
 import { WashTypeDTO } from './dto/wash-type.dto';
 import { ErrorMessages } from 'src/utils/error-messages';
+import { CreateWashSessionDTO } from './dto/create-wash-session.dto';
+import { UsersService } from '../users/users.service';
+import { LocationsService } from '../locations/locations.service';
 
 function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
   return {
@@ -25,6 +28,8 @@ export class WashesService {
     private readonly washTypeRepository: Repository<WashType>,
     @InjectRepository(Wash)
     private readonly washRepository: Repository<Wash>,
+    private readonly usersService: UsersService,
+    private readonly locationsService: LocationsService,
   ) {}
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
@@ -37,5 +42,55 @@ export class WashesService {
     }
 
     return washTypes.map((washType) => mapToWashTypeDTO(washType));
+  }
+
+  async washTypeGetById(washTypeId: number): Promise<WashTypeDTO> {
+    this.logger.log(`washTypes: getById`);
+    const washType = await this.washTypeRepository.findOne({
+      where: { wash_type_id: washTypeId },
+    });
+    if (washType == null) {
+      throw new NotFoundException(ErrorMessages.WASH_TYPES_NOT_FOUND);
+    }
+    return mapToWashTypeDTO(washType);
+  }
+
+  async createWashSession(
+    createWashSessionDto: CreateWashSessionDTO,
+  ): Promise<{ success: boolean }> {
+    this.logger.log('washes: createWashSession');
+
+    const { userId, washTypeId, locationId } = createWashSessionDto;
+
+    return await this.washRepository.manager.transaction(async (trx) => {
+      const user = await this.usersService.findById(userId);
+      if (user == null) {
+        throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+      }
+
+      const washType = await this.washTypeGetById(washTypeId);
+      if (washType == null) {
+        throw new NotFoundException(ErrorMessages.WASH_TYPES_NOT_FOUND);
+      }
+
+      const location = await this.locationsService.findById(locationId);
+      if (location == null) {
+        throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
+      }
+
+      const wash = this.washRepository.create({
+        user_id: user.userId,
+        washType: { wash_type_id: washType.washTypeId },
+        location: { location_id: location.locationId },
+        date_time: new Date(),
+      });
+
+      const savedWash = await trx.save(wash);
+      if (!savedWash) {
+        return { success: false };
+      }
+
+      return { success: true };
+    });
   }
 }

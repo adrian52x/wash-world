@@ -37,4 +37,17 @@ export class LocationsService {
 
     return locations.map((location) => mapToLocationDTO(location));
   }
+
+  async findById(locationId: number): Promise<LocationDTO> {
+    this.logger.log(`locations: findById`);
+
+    const location = await this.locationRepository.findOne({
+      where: { location_id: locationId },
+    });
+    if (location == null) {
+      throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
+    }
+
+    return mapToLocationDTO(location);
+  }
 }
