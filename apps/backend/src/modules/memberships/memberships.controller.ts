@@ -19,6 +19,7 @@ export class MembershipsController {
     status: 404,
     description: ErrorMessages.MEMBERSHIPS_NOT_FOUND,
   })
+  @UseGuards(JwtAuthGuard)
   getAll() {
     return this.membershipsService.getAll();
   }

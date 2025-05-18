@@ -81,6 +81,8 @@ export class AuthService {
         password: hashedPassword,
       });
 
+      console.log('newUser', newUser);
+
       if (!newUser) {
         throw new InternalServerErrorException(
           ErrorMessages.UNKNOWN_REGISTER_ERROR,

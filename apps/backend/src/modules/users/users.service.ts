@@ -98,6 +98,20 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
+  async validateUserEmail(email: string): Promise<{ isValid: boolean }> {
+    this.logger.log(`users: validateUserEmail`);
+
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (user) {
+      return { isValid: true };
+    }
+
+    return { isValid: false };
+  }
+
   async getCurrentSession(userId: number): Promise<UserSessionDTO> {
     this.logger.log(`users: getCurrentSession`);
 
