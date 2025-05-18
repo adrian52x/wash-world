@@ -8,6 +8,7 @@ import { UserDTO } from './dto/user.dto';
 import { User } from 'src/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { ErrorMessages } from 'src/utils/error-messages';
+import { UserSessionDTO } from './dto/user-session.dto';
 
 //TODO: We could have a better place for this function
 function mapToUserDTO(user: User): UserDTO {
@@ -18,6 +19,36 @@ function mapToUserDTO(user: User): UserDTO {
     phoneNumber: user.phone_number,
     licensePlate: user.license_plate,
     role: user.role,
+  };
+}
+
+function mapToUserSessionDTO(user: User): UserSessionDTO {
+  const userDTO: UserDTO = {
+    username: user.username,
+    email: user.email,
+    address: user.address,
+    phoneNumber: user.phone_number,
+    licensePlate: user.license_plate,
+    role: user.role,
+  };
+
+  const userMembershipDTO = user.userMembership
+    ? {
+        userMembershipId: user.userMembership.user_membership_id,
+        startDate: user.userMembership.start_date,
+        endDate: user.userMembership.end_date,
+        membership: {
+          membershipId: user.userMembership.membership.membership_id,
+          type: user.userMembership.membership.type,
+          price: Number(user.userMembership.membership.price),
+          washTypeId: user.userMembership.membership.washType.wash_type_id,
+        },
+      }
+    : null;
+
+  return {
+    user: userDTO,
+    userMembership: userMembershipDTO,
   };
 }
 
@@ -63,6 +94,27 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  async getCurrentSession(userId: number): Promise<UserSessionDTO> {
+    this.logger.log(`users: getCurrentSession`);
+
+    const user = await this.userRepository.findOne({
+      where: { user_id: userId },
+      relations: {
+        userMembership: {
+          membership: {
+            washType: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+    }
+
+    return mapToUserSessionDTO(user);
   }
 
   async updateUser(

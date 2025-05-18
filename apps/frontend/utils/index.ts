@@ -1,4 +1,4 @@
-import { MembershipTypeEnum, WashTypeEnum } from "@/types/types";
+import { MembershipTypeEnum, WashTypeEnum } from '@/types/types';
 
 const commonFeatures = [
   'Shampoo',
@@ -6,8 +6,8 @@ const commonFeatures = [
   'Brush washing',
   'High-pressure flushing',
   'Wheel wash',
-  'Rinsing wash'
-]
+  'Rinsing wash',
+];
 
 export const getWashFeatures = (type: WashTypeEnum | MembershipTypeEnum) => {
   switch (type) {
@@ -16,11 +16,7 @@ export const getWashFeatures = (type: WashTypeEnum | MembershipTypeEnum) => {
       return commonFeatures;
     case WashTypeEnum.Premium:
     case MembershipTypeEnum.Premium:
-      return [
-        ...commonFeatures,
-        'Undercarriage wash',
-        'Polishing',
-      ];
+      return [...commonFeatures, 'Undercarriage wash', 'Polishing'];
     case WashTypeEnum.Brilliant:
     case MembershipTypeEnum.Brilliant:
       return [
@@ -43,4 +39,4 @@ export const getWashFeatures = (type: WashTypeEnum | MembershipTypeEnum) => {
     default:
       return;
   }
-}
+};

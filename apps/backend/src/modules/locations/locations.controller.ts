@@ -5,7 +5,7 @@ import { ErrorMessages } from 'src/utils/error-messages';
 
 @Controller('locations')
 export class LocationsController {
-  constructor(private readonly locationsService: LocationsService) { }
+  constructor(private readonly locationsService: LocationsService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all locations' })

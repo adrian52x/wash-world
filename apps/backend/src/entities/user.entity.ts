@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { RoleEnum } from '../utils/enums';
 import {
   IsEmail,
@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { UserMembership } from './user-membership.entity';
 
 @Entity('users')
 export class User {
@@ -50,4 +51,7 @@ export class User {
   @IsNotEmpty()
   @IsEnum(RoleEnum)
   role: RoleEnum;
+
+  @OneToOne(() => UserMembership, (membership) => membership.user)
+  userMembership: UserMembership;
 }

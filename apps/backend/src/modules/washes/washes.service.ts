@@ -21,8 +21,9 @@ export class WashesService {
   private readonly logger = new Logger(WashesService.name);
 
   constructor(
-    @InjectRepository(WashesService)
+    @InjectRepository(WashType)
     private readonly washTypeRepository: Repository<WashType>,
+    @InjectRepository(Wash)
     private readonly washRepository: Repository<Wash>,
   ) {}
 

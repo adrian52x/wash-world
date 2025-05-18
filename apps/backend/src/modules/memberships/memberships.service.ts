@@ -19,7 +19,7 @@ export class MembershipsService {
   private readonly logger = new Logger(MembershipsService.name);
 
   constructor(
-    @InjectRepository(MembershipsService)
+    @InjectRepository(Membership)
     private readonly membershipRepository: Repository<Membership>,
   ) {}
 

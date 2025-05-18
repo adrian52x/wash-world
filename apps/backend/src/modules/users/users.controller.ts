@@ -25,13 +25,16 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Get user by ID' })
-  @ApiResponse({ status: 200, description: 'User retrieved successfully' })
+  @Get('current-session')
+  @ApiOperation({ summary: 'Get user current session with membership info' })
+  @ApiResponse({
+    status: 200,
+    description: 'User session retrieved successfully',
+  })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   @UseGuards(JwtAuthGuard)
   usersCurrentSession(@Req() req) {
-    return this.usersService.findById(req.user.userId);
+    return this.usersService.getCurrentSession(req.user.userId);
   }
 
   @Patch()
