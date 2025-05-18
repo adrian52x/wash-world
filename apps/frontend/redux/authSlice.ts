@@ -4,31 +4,12 @@ import { Role } from '@/types/enums';
 import { jwtDecode } from 'jwt-decode';
 import { Platform } from 'react-native';
 import { storage } from '@/utils/storage';
-
-// what we get from the decoded token
-interface decodedToken {
-  userId: number;
-  email: string;
-  role: Role;
-}
-interface SignupRequest {
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface AuthState {
-  user: decodedToken | null;
-  token: string | null;
-  loading: boolean;
-  errormessage: string | null;
-  isAuthenticated: boolean;
-}
+import {
+  AuthState,
+  DecodedToken,
+  LoginRequest,
+  SignupRequest,
+} from '@/types/auth.types';
 
 // initial state of auth
 const initialState: AuthState = {
@@ -37,11 +18,12 @@ const initialState: AuthState = {
   loading: false,
   errormessage: null,
   isAuthenticated: false,
+  userSession: null,
 };
 
 // handle token decoding
 const handleAuthSuccess = (token: string) => {
-  const decodedToken = jwtDecode<decodedToken>(token);
+  const decodedToken = jwtDecode<DecodedToken>(token);
   return {
     token,
     user: decodedToken,
@@ -60,9 +42,8 @@ export const initializeAuth = createAsyncThunk('auth/initialize', async () => {
 const API_URL =
   Platform.OS === 'ios'
     ? 'http://localhost:3000'
-    : process.env.EXPO_PUBLIC_API_URL; // ip from .env
+    : process.env.EXPO_PUBLIC_API_URL; // ip from .env, format: EXPO_PUBLIC_[NAME]=VALUE
 
-// make the api call here - a register thunk that gets the token
 export const signup = createAsyncThunk(
   'auth/signup',
   async (userData: SignupRequest) => {
@@ -102,6 +83,27 @@ export const login = createAsyncThunk(
   },
 );
 
+export const fetchUserSession = createAsyncThunk(
+  'auth/fetchUserSession',
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const token = state.auth.token;
+
+    const response = await fetch(`${API_URL}/users/current-session`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user session');
+    }
+
+    return await response.json();
+  },
+);
+
 // Creaating the slice:
 const authSlice = createSlice({
   name: 'auth',
@@ -113,6 +115,7 @@ const authSlice = createSlice({
       state.user = null;
       state.errormessage = null;
       state.isAuthenticated = false;
+      state.userSession = null;
     },
   },
   extraReducers: (builder) => {
@@ -130,6 +133,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.errormessage = action.error.message ?? 'Registration failed';
       })
+      //login
       .addCase(login.fulfilled, (state, action) => {
         const auth = handleAuthSuccess(action.payload);
         state.token = auth.token;
@@ -142,6 +146,7 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.errormessage = action.error.message ?? 'Registration failed';
       })
+      //initialiizeAuth
       .addCase(initializeAuth.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
@@ -151,14 +156,29 @@ const authSlice = createSlice({
         state.token = null;
         state.user = null;
         state.isAuthenticated = false;
+      })
+      //fetchUserSession
+      .addCase(fetchUserSession.fulfilled, (state, action) => {
+        state.userSession = action.payload;
+        state.loading = false;
+        state.errormessage = null;
+      })
+      .addCase(fetchUserSession.rejected, (state, action) => {
+        state.userSession = null;
+        state.loading = false;
+        state.errormessage =
+          action.error.message ?? 'Failed to fetch user data';
+      })
+      .addCase(fetchUserSession.pending, (state) => {
+        state.loading = true;
       });
   },
 });
 
-// Selector to access token anywhere in the app
-export const selectToken = (state: RootState) => state.auth.token;
+// Selector to access state anywhere in the app
 export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
+export const selectUserSession = (state: RootState) => state.auth.userSession;
 
-export default authSlice.reducer; // to add to the store
+export default authSlice.reducer;
 export const { logout } = authSlice.actions;

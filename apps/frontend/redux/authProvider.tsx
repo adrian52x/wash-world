@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { selectIsAuthenticated } from '@/redux/authSlice';
+import { fetchUserSession, selectIsAuthenticated } from '@/redux/authSlice';
 import { View } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
-import { useAppSelector } from './hooks';
+import { useAppSelector, useAppDispatch } from './hooks';
 
 export default function AuthProvider({
   children,
@@ -12,6 +12,7 @@ export default function AuthProvider({
   const router = useRouter();
   const segments = useSegments(); // the routes
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!segments) return; // wait for navigation to be ready
@@ -28,6 +29,8 @@ export default function AuthProvider({
         router.replace('/(auth)/login');
       } else if (isAuthenticated && inAuthGroup) {
         router.replace('/(tabs)');
+        // Fetch user session data when authenticated
+        dispatch(fetchUserSession());
       }
     }, 100);
 

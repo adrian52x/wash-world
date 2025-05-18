@@ -1,4 +1,4 @@
-import { logout } from '@/redux/authSlice';
+import { logout, selectUserSession } from '@/redux/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'expo-router';
 import { ScrollView, View, Text, Button } from 'react-native';
@@ -7,6 +7,8 @@ export default function ProfileScreen() {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  // const userSession = useAppSelector(selectUserSession);
+  // if (!userSession) return null;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -16,9 +18,16 @@ export default function ProfileScreen() {
   return (
     <View className="flex-1">
       <ScrollView contentContainerClassName="p-4 space-y-2">
-        {/* just to test: */}
-        <Text>Welcome, {user?.email}</Text>
-        <Text>This app includes example code to help you get started.</Text>
+        <Text>
+          Helloooo, I tested with mock data, and it works, and I commented out
+          the next lines of code, but when we merge they should work
+        </Text>
+
+        {/* <Text>Welcome {userSession.username}</Text>
+        {userSession.userMembership && (
+          <Text>Membership: {userSession.userMembership.membership.type}</Text>
+        )} */}
+
         <Button title="Logout" onPress={handleLogout} />
       </ScrollView>
     </View>
