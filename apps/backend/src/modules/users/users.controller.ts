@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
-import { ErrorMessages } from 'src/utils/error-messages';
+import { ErrorMessages } from '../../utils/error-messages';
 
 @Controller('users')
 export class UsersController {

@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Membership } from 'src/entities/membership.entity';
+import { Membership } from '../../entities/membership.entity';
 import {
   EntityManager,
   FindOneOptions,
@@ -8,9 +8,9 @@ import {
   Repository,
 } from 'typeorm';
 import { MembershipDTO } from './dto/membership.dto';
-import { ErrorMessages } from 'src/utils/error-messages';
+import { ErrorMessages } from '../../utils/error-messages';
 import { UsersService } from '../users/users.service';
-import { UserMembership } from 'src/entities/user-membership.entity';
+import { UserMembership } from '../../entities/user-membership.entity';
 import { UserMembershipDTO } from './dto/user-membership.dto';
 
 function mapToMembershipDTO(membership: Membership): MembershipDTO {
