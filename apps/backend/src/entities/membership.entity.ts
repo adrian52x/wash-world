@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { IsEnum, IsNotEmpty, IsPositive } from 'class-validator';
@@ -32,4 +33,7 @@ export class Membership {
   @ManyToOne(() => WashType)
   @JoinColumn({ name: 'wash_type_id' })
   washType: WashType;
+
+  // @RelationId((membership: Membership) => membership.washType)
+  // wash_type_id: number;
 }

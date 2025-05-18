@@ -25,6 +25,7 @@ function mapToUserDTO(user: User): UserDTO {
 
 function mapToUserSessionDTO(user: User): UserSessionDTO {
   const userDTO: UserDTO = {
+    userId: user.user_id,
     username: user.username,
     email: user.email,
     address: user.address,

@@ -1,7 +1,12 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Membership } from 'src/entities/membership.entity';
-import { Repository } from 'typeorm';
+import {
+  EntityManager,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { MembershipDTO } from './dto/membership.dto';
 import { ErrorMessages } from 'src/utils/error-messages';
 import { UsersService } from '../users/users.service';
@@ -45,10 +50,24 @@ export class MembershipsService {
     private readonly usersService: UsersService,
   ) {}
 
+  private async findUserMembership(
+    trx: EntityManager,
+    filter: FindOptionsWhere<UserMembership>,
+    includeRelations: boolean = false,
+  ): Promise<UserMembership | null> {
+    const options: FindOneOptions<UserMembership> = { where: filter };
+    if (includeRelations) {
+      options.relations = ['membership', 'membership.washType'];
+    }
+    return await trx.findOne(UserMembership, options);
+  }
+
   async getAll(): Promise<MembershipDTO[]> {
     this.logger.log('memberships: getAll');
 
-    const memberships = await this.membershipRepository.find();
+    const memberships = await this.membershipRepository.find({
+      relations: ['washType'],
+    });
 
     if (!memberships || memberships.length === 0) {
       throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
@@ -77,8 +96,8 @@ export class MembershipsService {
           throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
         }
 
-        const existingUserMembership = await trx.findOne(UserMembership, {
-          where: { user: { user_id: userId } },
+        const existingUserMembership = await this.findUserMembership(trx, {
+          user: { user_id: userId },
         });
 
         if (existingUserMembership != null) {
@@ -97,10 +116,11 @@ export class MembershipsService {
 
         await trx.save(newUserMembership);
 
-        const savedUserMembership = await trx.findOne(UserMembership, {
-          where: { user_membership_id: newUserMembership.user_membership_id },
-          relations: ['membership', 'membership.washType'],
-        });
+        const savedUserMembership = await this.findUserMembership(
+          trx,
+          { user_membership_id: newUserMembership.user_membership_id },
+          true,
+        );
 
         if (savedUserMembership == null) {
           throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
