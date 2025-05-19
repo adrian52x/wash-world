@@ -43,7 +43,7 @@ export class WashesService {
     private readonly washRepository: Repository<Wash>,
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
-  ) { }
+  ) {}
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
     this.logger.log('washTypes: getAll');
