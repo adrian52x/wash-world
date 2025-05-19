@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { MembershipsController } from './memberships.controller';
 import { MembershipsService } from './memberships.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Membership } from 'src/entities/membership.entity';
+import { Membership } from '../../entities/membership.entity';
 import { UsersModule } from '../users/users.module';
-import { UserMembership } from 'src/entities/user-membership.entity';
+import { UserMembership } from '../../entities/user-membership.entity';
 
 @Module({
   imports: [

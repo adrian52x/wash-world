@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { WashesService } from './washes.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ErrorMessages } from 'src/utils/error-messages';
+import { ErrorMessages } from '../../utils/error-messages';
 import { CreateWashSessionDTO } from './dto/create-wash-session.dto';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
