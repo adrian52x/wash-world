@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ErrorMessages } from '../../utils/error-messages';
+import { ErrorMessages } from 'src/utils/error-messages';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('locations')

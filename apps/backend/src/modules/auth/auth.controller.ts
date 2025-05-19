@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDTO } from './dto/signup.dto';
 import { LoginDTO } from './dto/login.dto';
@@ -15,14 +15,13 @@ export class AuthController {
 
   @Post('signup')
   @ApiOperation({ summary: 'User signup' })
-  @ApiResponse({ status: 201, description: 'Signup successful' })
+  @ApiResponse({ status: 200, description: 'Signup successful' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   async signup(@Body() signupDto: SignUpDTO): Promise<{ accessToken: string }> {
     return await this.authService.signup(signupDto);
   }
 
   @Post('login')
-  @HttpCode(200)
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 400, description: 'Bad request' })
@@ -31,7 +30,6 @@ export class AuthController {
   }
 
   @Post('validate-email')
-  @HttpCode(200)
   @ApiOperation({ summary: 'Validate user email' })
   @ApiResponse({ status: 200, description: 'Email validated successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })

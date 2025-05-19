@@ -1,9 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Location } from '../../entities/location.entity';
+import { Location } from 'src/entities/location.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LocationDTO } from './dto/location.dto';
-import { ErrorMessages } from '../../utils/error-messages';
+import { ErrorMessages } from 'src/utils/error-messages';
 
 export function mapToLocationDTO(location: Location): LocationDTO {
   return {

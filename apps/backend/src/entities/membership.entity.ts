@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { IsEnum, IsNotEmpty, IsPositive } from 'class-validator';
-import { MembershipTypeEnum } from '../utils/enums';
+import { MembershipTypeEnum } from 'src/utils/enums';
 
 @Entity('memberships')
 export class Membership {

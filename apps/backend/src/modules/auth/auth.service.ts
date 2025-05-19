@@ -4,14 +4,14 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { ErrorMessages } from '../../utils/error-messages';
-import { UsersService } from '../../modules/users/users.service';
+import { ErrorMessages } from 'src/utils/error-messages';
+import { UsersService } from 'src/modules/users/users.service';
 import { SignUpDTO } from './dto/signup.dto';
-import { User } from '../../entities/user.entity';
+import { User } from 'src/entities/user.entity';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { RoleEnum } from '../../utils/enums';
+import { RoleEnum } from 'src/utils/enums';
 
 @Injectable()
 export class AuthService {
@@ -80,6 +80,8 @@ export class AuthService {
         role: RoleEnum.RegularUser,
         password: hashedPassword,
       });
+
+      console.log('newUser', newUser);
 
       if (!newUser) {
         throw new InternalServerErrorException(

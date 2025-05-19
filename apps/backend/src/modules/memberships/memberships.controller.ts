@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MembershipsService } from './memberships.service';
-import { ErrorMessages } from '../../utils/error-messages';
+import { ErrorMessages } from 'src/utils/error-messages';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { CreateUserMembershipDTO } from './dto/create-user-membership.dto';
 

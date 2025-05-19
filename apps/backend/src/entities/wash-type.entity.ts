@@ -5,7 +5,7 @@ import {
   IsPositive,
   IsString,
 } from 'class-validator';
-import { WashTypeEnum } from '../utils/enums';
+import { WashTypeEnum } from 'src/utils/enums';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('wash_types')

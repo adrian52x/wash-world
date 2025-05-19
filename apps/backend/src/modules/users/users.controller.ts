@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
-import { ErrorMessages } from '../../utils/error-messages';
+import { ErrorMessages } from 'src/utils/error-messages';
 
 @Controller('users')
 export class UsersController {
@@ -50,7 +50,6 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
-  @UseGuards(JwtAuthGuard)
   remove(@Req() req) {
     return this.usersService.remove(req.user.userId);
   }
