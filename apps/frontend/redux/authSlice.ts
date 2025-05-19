@@ -35,10 +35,10 @@ export const initializeAuth = createAsyncThunk('auth/initialize', async () => {
   return { token };
 });
 
-const API_URL =
-  Platform.OS === 'ios'
-    ? 'http://localhost:3000'
-    : process.env.EXPO_PUBLIC_API_URL; // ip from .env, format: EXPO_PUBLIC_[NAME]=VALUE
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
+console.log('API_URL:', API_URL);
+
 
 export const signup = createAsyncThunk(
   'auth/signup',

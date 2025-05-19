@@ -1,9 +1,11 @@
-import { View } from 'react-native';
+import { Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/redux/hooks';
 import { login } from '@/redux/authSlice';
-import { TextInput, Button, Text } from 'react-native';
+import { TextInput, Button, Text, Image } from 'react-native';
+import washWorldLogo from '../../assets/images/WW-logo.png';
+import { Mail, Lock } from 'lucide-react-native';
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
@@ -15,36 +17,62 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       setError('');
-      const result = await dispatch(login({ email, password })).unwrap();
+      await dispatch(login({ email, password })).unwrap();
       // If login successful, AuthProvider will handle navigation
     } catch (error) {
-      console.error('Login failed:', error);
       setError('Login failed. Please check your credentials.');
     }
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>      
+    <View className="flex-1 items-center">
+
+      <Image source={washWorldLogo} resizeMode="contain" className="h-[200px] w-[200px]" />
+
+      <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
+        <Mail color="#797777" /> 
+        <TextInput
+          className="ml-2 w-full"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          placeholderTextColor="#9ca3af"
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
+      <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-6 w-full max-w-xs bg-white">
+        <Lock color="#797777" /> 
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          className="ml-2 w-full"
+          placeholderTextColor="#9ca3af"
+        />
+      </View>      
+
       {error ? (
-        <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text>
+        <Text className="text-red-500 mb-6">{error}</Text>
       ) : null}
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-      />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Register" onPress={() => router.push('/(auth)/signup')} />
+
+      <TouchableOpacity className='w-full mb-4 max-w-xs px-4 py-3 bg-green-light' onPress={handleLogin}>
+        <Text className='text-white font-semibold text-center'>
+          Login
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity className='w-full max-w-xs px-4 py-3 bg-white border border-green-light' 
+        onPress={() => router.push('/(auth)/signup')}
+      >
+        <Text className='text-green-light font-semibold text-center'>
+          Sign up
+        </Text>
+      </TouchableOpacity>            
+
     </View>
+    </TouchableWithoutFeedback>
   );
 }
