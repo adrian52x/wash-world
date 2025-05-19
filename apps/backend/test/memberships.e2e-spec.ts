@@ -1,11 +1,3 @@
-jest.mock('../src/logger/logger.middleware', () => ({
-  LoggerMiddleware: class {
-    use(req, res, next) {
-      next();
-    }
-  },
-}));
-
 import { INestApplication, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
