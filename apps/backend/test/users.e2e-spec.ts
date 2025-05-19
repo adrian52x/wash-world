@@ -8,7 +8,7 @@ import { ErrorMessages } from '../src/utils/error-messages';
 import { UserDTO } from '../src/modules/users/dto/user.dto';
 import { UpdateUserDto } from '../src/modules/users/dto/update-user.dto';
 import { RoleEnum } from '../src/utils/enums';
-import { TestAppModule } from './test-app.module';
+import { TestAppModule } from './config/test-app.module';
 
 const mockUser = {
   userId: 1,

@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 import { User } from '../src/entities/user.entity';
-import { TestAppModule } from './test-app.module';
+import { TestAppModule } from './config/test-app.module';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;

@@ -7,7 +7,7 @@ import { WashesService } from '../src/modules/washes/washes.service';
 import { ErrorMessages } from '../src/utils/error-messages';
 import { WashTypeEnum } from '../src/utils/enums';
 import { UserWashDTO } from 'src/modules/washes/dto/user-wash-dto';
-import { TestAppModule } from './test-app.module';
+import { TestAppModule } from './config/test-app.module';
 import { WashTypeDTO } from 'src/modules/washes/dto/wash-type.dto';
 
 const mockUser = {

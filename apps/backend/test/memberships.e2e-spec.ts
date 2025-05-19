@@ -1,13 +1,13 @@
 import { INestApplication, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { TestAppModule } from './test-app.module';
+import { TestAppModule } from './config/test-app.module';
 import { JwtAuthGuard } from '../src/modules/auth/guards/auth.guard';
 import { MembershipsService } from '../src/modules/memberships/memberships.service';
 import { ErrorMessages } from '../src/utils/error-messages';
 import { MembershipTypeEnum } from '../src/utils/enums';
-import { MembershipDTO } from 'src/modules/memberships/dto/membership.dto';
-import { UserMembershipDTO } from 'src/modules/memberships/dto/user-membership.dto';
+import { MembershipDTO } from '../src/modules/memberships/dto/membership.dto';
+import { UserMembershipDTO } from '../src/modules/memberships/dto/user-membership.dto';
 
 describe('MembershipsController (e2e)', () => {
   let app: INestApplication;

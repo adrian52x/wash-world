@@ -1,4 +1,4 @@
-jest.mock('../src/logger/logger.middleware', () => ({
+jest.mock('../../src/logger/logger.middleware', () => ({
   LoggerMiddleware: class {
     use(req, res, next) {
       next();

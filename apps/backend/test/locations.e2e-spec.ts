@@ -5,8 +5,8 @@ import * as request from 'supertest';
 import { JwtAuthGuard } from '../src/modules/auth/guards/auth.guard';
 import { LocationsService } from '../src/modules/locations/locations.service';
 import { ErrorMessages } from '../src/utils/error-messages';
-import { LocationDTO } from 'src/modules/locations/dto/location.dto';
-import { TestAppModule } from './test-app.module';
+import { LocationDTO } from '../src/modules/locations/dto/location.dto';
+import { TestAppModule } from './config/test-app.module';
 
 describe('LocationsController (e2e)', () => {
   let app: INestApplication;
