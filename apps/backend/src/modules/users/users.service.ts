@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDTO } from './dto/user.dto';
-import { User } from 'src/entities/user.entity';
+import { User } from '../../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { ErrorMessages } from 'src/utils/error-messages';
+import { ErrorMessages } from '../../utils/error-messages';
 import { UserSessionDTO } from './dto/user-session.dto';
 
 //TODO: We could have a better place for this function

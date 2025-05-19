@@ -9,8 +9,8 @@ import { WashesModule } from './modules/washes/washes.module';
 import { LocationsController } from './modules/locations/locations.controller';
 import { LocationsModule } from './modules/locations/locations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dbConfig } from 'data-source';
-import { LoggerMiddleware } from 'src/logger/logger.middleware';
+import { dbConfig } from '../data-source';
+import { LoggerMiddleware } from './logger/logger.middleware';
 
 @Module({
   imports: [
