@@ -18,12 +18,12 @@ export class UserMembership {
   @Column({ type: 'date' })
   @IsNotEmpty()
   @IsDateString()
-  start_date: string;
+  start_date: Date;
 
   @Column({ type: 'date', nullable: true })
   @IsNotEmpty()
   @IsDateString()
-  end_date: string;
+  end_date: Date;
 
   @OneToOne(() => User)
   @JoinColumn({ name: 'user_id' })

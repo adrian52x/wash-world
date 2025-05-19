@@ -3,10 +3,15 @@ import { AuthService } from './auth.service';
 import { SignUpDTO } from './dto/signup.dto';
 import { LoginDTO } from './dto/login.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ValidateEmailDTO } from './dto/validate-email.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('signup')
   @ApiOperation({ summary: 'User signup' })
@@ -22,5 +27,15 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Bad request' })
   async login(@Body() loginDto: LoginDTO): Promise<{ accessToken: string }> {
     return this.authService.login(loginDto);
+  }
+
+  @Post('validate-email')
+  @ApiOperation({ summary: 'Validate user email' })
+  @ApiResponse({ status: 200, description: 'Email validated successfully' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  async validateUserEmail(
+    @Body() validateEmailDto: ValidateEmailDTO,
+  ): Promise<{ isValid: boolean }> {
+    return await this.usersService.validateUserEmail(validateEmailDto.email);
   }
 }

@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   async signup(user: SignUpDTO): Promise<{ accessToken: string }> {
-    this.logger.log('Executing register functionality');
+    this.logger.log('auth: signup');
 
     try {
       const existingUser = await this.usersService.findByEmail(user.email);
@@ -81,6 +81,8 @@ export class AuthService {
         password: hashedPassword,
       });
 
+      console.log('newUser', newUser);
+
       if (!newUser) {
         throw new InternalServerErrorException(
           ErrorMessages.UNKNOWN_REGISTER_ERROR,
@@ -95,8 +97,6 @@ export class AuthService {
       if (error instanceof BadRequestException) {
         throw error;
       }
-
-      console.error('Registration error:', error);
 
       throw new InternalServerErrorException(
         ErrorMessages.UNKNOWN_REGISTER_ERROR,

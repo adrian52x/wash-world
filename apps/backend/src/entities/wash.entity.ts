@@ -14,6 +14,9 @@ export class Wash {
   @PrimaryGeneratedColumn()
   wash_id: number;
 
+  @Column({ type: 'int' })
+  user_id: number;
+
   @ManyToOne(() => WashType)
   @JoinColumn({ name: 'wash_type_id' })
   washType: WashType;
