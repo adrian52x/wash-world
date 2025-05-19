@@ -1,10 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WashType } from 'src/entities/wash-type.entity';
-import { Wash } from 'src/entities/wash.entity';
+import { WashType } from '../../entities/wash-type.entity';
+import { Wash } from '../../entities/wash.entity';
 import { Repository } from 'typeorm';
 import { WashTypeDTO } from './dto/wash-type.dto';
-import { ErrorMessages } from 'src/utils/error-messages';
+import { ErrorMessages } from '../../utils/error-messages';
 import { CreateWashSessionDTO } from './dto/create-wash-session.dto';
 import { UsersService } from '../users/users.service';
 import {
@@ -26,10 +26,7 @@ function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
 function mapToWashDTO(wash: Wash): UserWashDTO {
   return {
     washId: wash.wash_id,
-    type: wash.washType.type,
-    description: wash.washType.description,
-    price: wash.washType.price,
-    isAutoWash: wash.washType.is_auto_wash,
+    createdAt: wash.date_time,
     location: mapToLocationDTO(wash.location),
     washType: mapToWashTypeDTO(wash.washType),
   };
