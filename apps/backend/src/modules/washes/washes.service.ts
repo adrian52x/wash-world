@@ -26,10 +26,7 @@ function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
 function mapToWashDTO(wash: Wash): UserWashDTO {
   return {
     washId: wash.wash_id,
-    type: wash.washType.type,
-    description: wash.washType.description,
-    price: wash.washType.price,
-    isAutoWash: wash.washType.is_auto_wash,
+    createdAt: wash.date_time,
     location: mapToLocationDTO(wash.location),
     washType: mapToWashTypeDTO(wash.washType),
   };
@@ -46,7 +43,7 @@ export class WashesService {
     private readonly washRepository: Repository<Wash>,
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
-  ) {}
+  ) { }
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
     this.logger.log('washTypes: getAll');

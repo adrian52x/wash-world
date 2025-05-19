@@ -1,11 +1,12 @@
 import { INestApplication, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { TestAppModule } from './test-app.module';
+
 import { JwtAuthGuard } from '../src/modules/auth/guards/auth.guard';
 import { LocationsService } from '../src/modules/locations/locations.service';
 import { ErrorMessages } from '../src/utils/error-messages';
 import { LocationDTO } from 'src/modules/locations/dto/location.dto';
+import { TestAppModule } from './test-app.module';
 
 describe('LocationsController (e2e)', () => {
   let app: INestApplication;

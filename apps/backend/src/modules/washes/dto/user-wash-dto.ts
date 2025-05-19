@@ -4,10 +4,7 @@ import { WashTypeDTO } from './wash-type.dto';
 
 export class UserWashDTO {
   washId: number;
-  type: WashTypeEnum;
-  description: string;
-  price: number;
-  isAutoWash: boolean;
+  createdAt: Date;
   location: LocationDTO;
   washType: WashTypeDTO;
 }
