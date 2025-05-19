@@ -2,56 +2,44 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Role } from '@/types/enums';
 import { jwtDecode } from 'jwt-decode';
+import { Platform } from 'react-native';
+import { storage } from '@/utils/storage';
+import {
+  AuthState,
+  DecodedToken,
+  LoginRequest,
+  SignupRequest,
+} from '@/types/auth.types';
 
-// what we get from the decoded token
-interface User {
-  userId: number;
-  email: string;
-  role: Role;
-}
-interface SignupRequest {
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
-  errormessage: string | null;
-  isAuthenticated: boolean;
-}
-
-// initial state for the authentication
+// initial state of auth
 const initialState: AuthState = {
-  user: null,
   token: null,
   loading: false,
   errormessage: null,
   isAuthenticated: false,
+  userSession: null,
 };
 
-// Helper to handle token decoding
-const handleAuthSuccess = (token: string) => {
-  const decodedToken = jwtDecode<User>(token);
-  return {
-    token,
-    user: decodedToken,
-    isAuthenticated: true,
-  };
-};
+// const handleAuthSuccess = (token: string) => {
+//   return {
+//     token,
+//     isAuthenticated: true,
+//   };
+// };
 
-// add .env later
-// const API_URL = 'http://172.20.10.8:3000'; // when using physical device, get your ip from ipconfig
-const API_URL = 'http://localhost:3000';
+// to hydrate the user if there's data from the secure store
+export const initializeAuth = createAsyncThunk('auth/initialize', async () => {
+  const token = await storage.getToken();
+  if (!token) throw new Error('No token found');
 
-// make the api call here - a register thunk that gets the token
+  return { token };
+});
+
+const API_URL =
+  Platform.OS === 'ios'
+    ? 'http://localhost:3000'
+    : process.env.EXPO_PUBLIC_API_URL; // ip from .env, format: EXPO_PUBLIC_[NAME]=VALUE
+
 export const signup = createAsyncThunk(
   'auth/signup',
   async (userData: SignupRequest) => {
@@ -66,6 +54,7 @@ export const signup = createAsyncThunk(
     }
 
     const data = await response.json();
+    await storage.setToken(data.accessToken);
     return data.accessToken; // This includes the token now
   },
 );
@@ -84,7 +73,30 @@ export const login = createAsyncThunk(
     if (!response.ok) {
       throw new Error(data || 'Login failed');
     }
+
+    await storage.setToken(data.accessToken);
     return data.accessToken;
+  },
+);
+
+export const fetchUserSession = createAsyncThunk(
+  'auth/fetchUserSession',
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const token = state.auth.token;
+
+    const response = await fetch(`${API_URL}/users/current-session`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user session');
+    }
+
+    return await response.json();
   },
 );
 
@@ -94,19 +106,18 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      storage.removeToken();
       state.token = null;
-      state.user = null;
       state.errormessage = null;
       state.isAuthenticated = false;
+      state.userSession = null;
     },
   },
   extraReducers: (builder) => {
     builder
       //signup
       .addCase(signup.fulfilled, (state, action) => {
-        const auth = handleAuthSuccess(action.payload);
-        state.token = auth.token;
-        state.user = auth.user;
+        state.token = action.payload;
         state.isAuthenticated = true;
         state.errormessage = null;
       })
@@ -115,10 +126,9 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.errormessage = action.error.message ?? 'Registration failed';
       })
+      //login
       .addCase(login.fulfilled, (state, action) => {
-        const auth = handleAuthSuccess(action.payload);
-        state.token = auth.token;
-        state.user = auth.user;
+        state.token = action.payload;
         state.isAuthenticated = true;
         state.errormessage = null;
       })
@@ -126,16 +136,38 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.errormessage = action.error.message ?? 'Registration failed';
+      })
+      //initialiizeAuth
+      .addCase(initializeAuth.fulfilled, (state, action) => {
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+      })
+      .addCase(initializeAuth.rejected, (state) => {
+        state.token = null;
+        state.isAuthenticated = false;
+      })
+      //fetchUserSession
+      .addCase(fetchUserSession.fulfilled, (state, action) => {
+        state.userSession = action.payload;
+        state.loading = false;
+        state.errormessage = null;
+      })
+      .addCase(fetchUserSession.rejected, (state, action) => {
+        state.userSession = null;
+        state.loading = false;
+        state.errormessage =
+          action.error.message ?? 'Failed to fetch user data';
+      })
+      .addCase(fetchUserSession.pending, (state) => {
+        state.loading = true;
       });
   },
 });
 
-// Selector to access token anywhere in the app
-export const selectToken = (state: RootState) => state.auth.token;
-export const selectUser = (state: RootState) => state.auth.user;
+// Selector to access state anywhere in the app
 export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
+export const selectUserSession = (state: RootState) => state.auth.userSession;
 
-// exporting it cause we need it in the store
 export default authSlice.reducer;
 export const { logout } = authSlice.actions;
