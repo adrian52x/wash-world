@@ -50,6 +50,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
+  @UseGuards(JwtAuthGuard)
   remove(@Req() req) {
     return this.usersService.remove(req.user.userId);
   }
