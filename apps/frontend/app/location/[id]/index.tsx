@@ -5,13 +5,29 @@ import { ChevronRight, Clock, MapPin, Play } from 'lucide-react-native';
 import autowashHall from '@/assets/images/autowash-hall.png';
 import selfwashHall from '@/assets/images/selfwash-hall.png';
 import { InclinedButton } from '@/components/ui/InclinedButton';
+import { useLocationById } from '@/hooks/useLocations';
+import { useCreateWashSession } from '@/hooks/useWashSessions';
 
 export default function LocationDetails() {
   const { id } = useLocalSearchParams();
-  const location = fakeLocations.find((l) => l.id === Number(id));
   const router = useRouter();
+  
+  const idStr = Array.isArray(id) ? id[0] : id;
+  const { location } = useLocationById(idStr)
+
+  const { createWashSession } = useCreateWashSession();
 
   if (!location) return <Text>Location not found</Text>;
+
+
+  // Testing createWashSession, washTypeId is hardcoded to 1, but make sure database is seeded with this id
+  const handleStartWash = async () => {
+    await createWashSession.mutateAsync({
+      washTypeId: 1, 
+      locationId: location.locationId,
+    });
+    router.push(`/location/${location.locationId}/wash`);
+  };
 
   return (
     <View className="flex-1 p-6">
@@ -22,7 +38,7 @@ export default function LocationDetails() {
         }}
       />
       <Text className='font-subheader text-accent-gray-60'>Wash station</Text>
-      <Text className="font-header text-header font-bold mb-4">{location.title}</Text>
+      <Text className="font-header text-header font-bold mb-4">{location.name}</Text>
 
       <Text className='font-subheader text-subheader mb-6'>General</Text>
 
@@ -33,7 +49,7 @@ export default function LocationDetails() {
 
       <TouchableOpacity className='flex-row items-center justify-between border border-gray-300 px-2 py-3 mb-3 w-full bg-white'
         onPress={() => {
-          const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
+          const url = `https://www.google.com/maps/search/?api=1&query=${Number(location.coordinates.y)},${Number(location.coordinates.x)}`;
           Linking.openURL(url);
         }}      
       >
@@ -63,7 +79,7 @@ export default function LocationDetails() {
       </View>
 
       <TouchableOpacity className='w-[170px] absolute right-[-20px] bottom-24'
-        onPress={() => router.push(`/location/${location.id}/wash`)}
+        onPress={handleStartWash}
       >
         <InclinedButton className='flex-row gap-2' >
           <Play size={20} color="#ffffff" />

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ErrorMessages } from '../../utils/error-messages';
@@ -15,5 +15,13 @@ export class LocationsController {
   @UseGuards(JwtAuthGuard)
   getAll() {
     return this.locationsService.getAll();
+  }
+  // get by id
+  @Get('/:id')
+  @ApiOperation({ summary: 'Get location by id' })
+  @ApiResponse({ status: 200, description: 'Location retrieved successfully' })
+  @UseGuards(JwtAuthGuard)
+  getById(@Param('id') id: number) {
+    return this.locationsService.findById(id);
   }
 }

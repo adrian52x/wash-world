@@ -12,6 +12,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { store } from '@/redux/store';
 import { Provider } from 'react-redux';
 import AuthProvider from '@/redux/authProvider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -30,22 +33,24 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider store={store}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AuthProvider>
-          <Stack>
-            {/* order of the stack matters */}
-            <Stack.Screen
-              name="splash"
-              options={{ headerShown: false, animation: 'none' }}
-            />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </AuthProvider>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <AuthProvider>
+            <Stack>
+              {/* order of the stack matters */}
+              <Stack.Screen
+                name="splash"
+                options={{ headerShown: false, animation: 'none' }}
+              />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </AuthProvider>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </Provider>
+    </QueryClientProvider>
   );
 }

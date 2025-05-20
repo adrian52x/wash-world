@@ -17,6 +17,8 @@ import { fakeLocations } from '@/constants/fakeData';
 import MapSearch from '@/components/MapSearch';
 import { LocationDetailsBox } from '@/components/LocationDetailsBox';
 import { MapFilters } from '@/components/MapFilters';
+import { useLocations } from '@/hooks/useLocations';
+import { Location as LocationType } from '@/types/types';
 
 const cphCoordinates = {
   latitude: 55.6761,
@@ -37,6 +39,8 @@ export default function HomeScreen() {
   const [filter, setFilter] = useState<string>('auto'); // maybe use redux for this
 
   const router = useRouter();
+
+  const { locations } = useLocations()
 
   // Request location permission and get user location & animate map to user location
   useEffect(() => {
@@ -63,8 +67,10 @@ export default function HomeScreen() {
   }, []);
 
   // Filter locations based on the selected filter
-  const filteredLocations = fakeLocations.filter((loc) =>
-    filter === 'auto' ? loc.autoWashHalls > 0 : loc.selfWashHalls > 0,
+  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
+    filter === 'auto'
+      ? (loc.autoWashHalls ?? 0) > 0  // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
+      : (loc.selfWashHalls ?? 0) > 0,
   );
 
   // Focus on the marker when it is pressed
@@ -97,7 +103,7 @@ export default function HomeScreen() {
   };
 
   const focusedLocation = filteredLocations.find(
-    (loc) => loc.id === clickedLocationId,
+    (loc: LocationType) => loc.locationId === clickedLocationId,
   );
 
   return (
@@ -105,7 +111,7 @@ export default function HomeScreen() {
       <View>
         <MapSearch
           locations={filteredLocations}
-          onSelect={(loc) => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+          onSelect={(loc) => focusOnMarker(loc.locationId, Number(loc.coordinates.y), Number(loc.coordinates.x))}
         />
         {/* Filters below the search bar */}
         <MapFilters filter={filter} setFilter={setFilter} />
@@ -121,17 +127,17 @@ export default function HomeScreen() {
           showsUserLocation={true}
         >
           {/* Markers with locations */}
-          {filteredLocations.map((loc) => (
+          {filteredLocations.map((loc: LocationType) => (
             <Marker
-              key={loc.id}
-              coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
-              title={loc.title}
-              onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+              key={loc.locationId}
+              coordinate={{ latitude: Number(loc.coordinates.y), longitude: Number(loc.coordinates.x) }}
+              title={loc.name}
+              onPress={() => focusOnMarker(loc.locationId, Number(loc.coordinates.y), Number(loc.coordinates.x))}
             >
               <Image
                 source={washWorldMarker}
                 style={
-                  loc.id === clickedLocationId
+                  loc.locationId === clickedLocationId
                     ? { width: 60, height: 60 }
                     : { width: 40, height: 40 }
                 }
@@ -155,7 +161,7 @@ export default function HomeScreen() {
             location={focusedLocation}
             userLocation={userLocation ?? undefined}
             onClose={() => setClickedLocationId(null)}
-            onSeeMore={() => router.push(`/location/${focusedLocation.id}`)}
+            onSeeMore={() => router.push(`/location/${focusedLocation.locationId}`)}
           />
         )}
       </View>
