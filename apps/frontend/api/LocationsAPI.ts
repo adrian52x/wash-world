@@ -17,6 +17,7 @@ export class LocationsAPI {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        //await new Promise(resolve => setTimeout(resolve, 12000));
         return data;
     }
 

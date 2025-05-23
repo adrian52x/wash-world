@@ -8,6 +8,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import * as Location from 'expo-location';
 import washWorldMarker from '../../assets/icons/w-map-marker.png';
@@ -40,7 +41,7 @@ export default function HomeScreen() {
 
   const router = useRouter();
 
-  const { locations } = useLocations()
+  const { locations, loadingLocations } = useLocations()
 
   // Request location permission and get user location & animate map to user location
   useEffect(() => {
@@ -65,13 +66,6 @@ export default function HomeScreen() {
       );
     })();
   }, []);
-
-  // Filter locations based on the selected filter
-  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
-    filter === 'auto'
-      ? (loc.autoWashHalls ?? 0) > 0  // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
-      : (loc.selfWashHalls ?? 0) > 0,
-  );
 
   // Focus on the marker when it is pressed
   const focusOnMarker = (id: number, latitude: number, longitude: number) => {
@@ -101,6 +95,21 @@ export default function HomeScreen() {
       );
     }
   };
+
+  if (loadingLocations) {
+  return (
+      <View className='flex-1 justify-center items-center'>
+        <ActivityIndicator size="large" color="#22c55e" />
+      </View>
+    );
+  }
+
+  // Filter locations based on the selected filter
+  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
+    filter === 'auto'
+      ? (loc.autoWashHalls ?? 0) > 0  // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
+      : (loc.selfWashHalls ?? 0) > 0,
+  );
 
   const focusedLocation = filteredLocations.find(
     (loc: LocationType) => loc.locationId === clickedLocationId,
