@@ -1,3 +1,4 @@
+import { useWashSessions } from '@/hooks/useWashSessions';
 import { logout, selectUserSession } from '@/redux/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'expo-router';
@@ -8,6 +9,8 @@ export default function ProfileScreen() {
   const router = useRouter();
   // const userSession = useAppSelector(selectUserSession);
   // if (!userSession) return null;
+
+  const { washSessions } = useWashSessions();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -21,6 +24,28 @@ export default function ProfileScreen() {
           Helloooo, I tested with mock data, and it works, and I commented out
           the next lines of code, but when we merge they should work
         </Text>
+
+        {/* Testing */}
+        <Text className="text-lg font-bold mb-2">Your Wash Sessions</Text>
+        {washSessions && washSessions.length > 0 ? (
+          washSessions.map((wash: any) => (
+            <View
+              key={wash.washId}
+              className="mb-4 p-3 border border-gray-200 rounded-lg bg-white"
+            >
+              <Text className="font-semibold">{wash.location.name}</Text>
+              <Text>{wash.location.address}</Text>
+              <Text>
+                {wash.washType.type} - {wash.washType.price} DKK
+              </Text>
+              <Text className="text-xs text-gray-500">
+                {new Date(wash.createdAt).toLocaleString()}
+              </Text>
+            </View>
+          ))
+        ) : (
+          <Text>No wash sessions found.</Text>
+        )}
 
         {/* <Text>Welcome {userSession.username}</Text>
         {userSession.userMembership && (

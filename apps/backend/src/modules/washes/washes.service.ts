@@ -45,7 +45,7 @@ export class WashesService {
     private readonly locationsService: LocationsService,
   ) {}
 
-  async washTypesGetAll(): Promise<WashTypeDTO[]> {
+  async washTypesGetAll(): Promise<WashTypeDTO[]> { // To dicuss this later
     this.logger.log('washTypes: getAll');
 
     const washTypes = await this.washTypeRepository.find();

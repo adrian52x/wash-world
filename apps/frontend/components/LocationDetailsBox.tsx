@@ -8,14 +8,10 @@ import {
 } from 'react-native';
 import { CircleX, MapPinned } from 'lucide-react-native';
 import { InclinedButton } from './ui/InclinedButton';
+import { Location } from '@/types/types';
 
 interface LocationDetailsProps {
-  location: {
-    title: string;
-    openingHours: string;
-    latitude: number;
-    longitude: number;
-  };
+  location: Location;
   userLocation?: {
     latitude: number;
     longitude: number;
@@ -57,7 +53,7 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
       <TouchableOpacity className="absolute top-2 right-2" onPress={onClose}>
         <CircleX size={20} color="#888" />
       </TouchableOpacity>
-      <Text className="font-bold text-lg mb-1">{location.title}</Text>
+      <Text className="font-bold text-lg mb-1">{location.name}</Text>
       <Text className="text-[13px] mb-2 text-center">
         {location.openingHours}
       </Text>
@@ -67,8 +63,8 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
           {getDistanceFromLatLonInKm(
             userLocation.latitude,
             userLocation.longitude,
-            location.latitude,
-            location.longitude,
+            Number(location.coordinates.y),
+            Number(location.coordinates.x),
           ).toFixed(2)}{' '}
           km
         </Text>
@@ -81,7 +77,7 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
       <TouchableOpacity
         className="absolute right-[-22px] top-1/2 bg-white rounded-full p-2  "
         onPress={() => {
-          const url = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
+          const url = `https://www.google.com/maps/search/?api=1&query=${Number(location.coordinates.y)},${Number(location.coordinates.x)}`;
           Linking.openURL(url);
         }}
       >
