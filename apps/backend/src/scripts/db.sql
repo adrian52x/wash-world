@@ -7,4 +7,4 @@ INSERT INTO wash_types (type, description, price, is_auto_wash) VALUES
   INSERT INTO memberships (type, price, wash_type_id) VALUES 
   ('GOLD', 139, 1),
   ('PREMIUM', 169, 2),
-  ('BRILLIANT', 199, 3),
+  ('BRILLIANT', 199, 3)
