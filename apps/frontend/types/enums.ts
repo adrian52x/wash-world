@@ -1,6 +1,6 @@
 export enum RoleEnum {
-  Admin = 'ADMIN',
-  User = 'USER',
+  Admin = 'ADMIN', // does not exist in the backend yet
+  User = 'REGULAR_USER',
   PremiumUser = 'PREMIUM_USER',
 }
 

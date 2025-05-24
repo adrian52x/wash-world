@@ -7,6 +7,7 @@ import selfwashHall from '@/assets/images/selfwash-hall.png';
 import { InclinedButton } from '@/components/ui/InclinedButton';
 import { useLocationById } from '@/hooks/useLocations';
 import { useCreateWashSession } from '@/hooks/useWashSessions';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function LocationDetails() {
   const { id } = useLocalSearchParams();
@@ -19,8 +20,8 @@ export default function LocationDetails() {
 
   if (!location || errorLocation) {
     return (
-      <View className='flex-1 justify-center items-center'>
-        <Text className="text-lg text-gray-500">Location not found or an error occurred.</Text>
+      <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
+        <LoadingSpinner />
       </View>
     );
   }

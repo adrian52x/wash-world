@@ -38,7 +38,7 @@ export default function HomeScreen() {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [filter, setFilter] = useState<string>('auto'); // maybe use redux for this
+  const [filter, setFilter] = useState<string>('auto');
 
   const router = useRouter();
 

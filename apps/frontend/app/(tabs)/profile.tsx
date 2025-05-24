@@ -4,10 +4,11 @@ import { useUpdateUser } from '@/hooks/useUsers';
 import { useWashSessions } from '@/hooks/useWashSessions';
 import { fetchUserSession, logout, selectUserSession } from '@/redux/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { RoleEnum } from '@/types/enums';
 import { UpdateUser, WashSession } from '@/types/types';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, View, Text, Button } from 'react-native';
+import { ScrollView, View, Text, Button, Alert } from 'react-native';
 
 export default function ProfileScreen() {
   const dispatch = useAppDispatch();
@@ -49,6 +50,18 @@ export default function ProfileScreen() {
     );
   };
 
+  // Handle role upgrade
+  const handleUpgradeRole = async (role: RoleEnum) => {
+    await updateUser.mutateAsync(
+      { role },
+      {
+        onSuccess: () => {
+          dispatch(fetchUserSession());
+        },
+      }
+    );
+  };
+
   // For the first time, in ProfileScreen, user has to complete the onboarding form
   if (needsOnboarding) {
     return (
@@ -83,7 +96,13 @@ export default function ProfileScreen() {
 
   return (
     <View className="flex-1">
-      <ScrollView contentContainerClassName="p-4 space-y-2">
+      {updateUser.isPending && (
+        <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
+          <LoadingSpinner />
+        </View>
+      )}
+      
+      <ScrollView contentContainerClassName="p-4 space-y-2 pb-[100px]">
 
         {userSession ? (
           <>
@@ -93,6 +112,7 @@ export default function ProfileScreen() {
               <Text className="text-gray-500 mb-1">License Plate: {userSession.user.licensePlate}</Text>
               <Text className="text-gray-500 mb-1">Phone: {userSession.user.phoneNumber}</Text>
               <Text className="text-gray-500 mb-1">Address: {userSession.user.address}</Text>
+              <Text className="text-gray-500 mb-1">Role: {userSession.user.role}</Text>
               {userSession.userMembership && (
                 <Text className="text-green-600 font-semibold">
                   Membership: {userSession.userMembership.membership.type}
@@ -105,8 +125,57 @@ export default function ProfileScreen() {
           null
         )}
 
-        {/* Testing */}
-        <Text className="text-lg font-bold mb-2">Your Wash Sessions</Text>
+        {/* Upgrade button */}
+        {userSession?.user.role === RoleEnum.User && (
+          <>
+            <Text className="text-lg font-bold">Upgrade User</Text>
+            <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
+              <Button
+                title="Upgrade to Premium User"
+                onPress={() =>
+                  Alert.alert(
+                    "Confirm Upgrade",
+                    "Are you sure you want to upgrade to PREMIUM USER?",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      { text: "Upgrade", onPress: () => handleUpgradeRole(RoleEnum.PremiumUser) }
+                    ]
+                  )
+                }
+              />
+            </View>
+          </>
+        )}
+
+        {/* Extra features for Premium user*/}
+        {userSession?.user.role === RoleEnum.PremiumUser && (
+          <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
+            <Text className="text-lg font-bold mb-2">Premium Features</Text>
+            <Text className="text-gray-700 mb-2">
+              As a Premium User, you have access to exclusive features and benefits.
+            </Text>
+            <Button
+              title="Learn More"
+              onPress={() => Alert.alert("Premium Features", "Details about premium features...")}
+            />
+            <Button
+              title="Downgrade to Regular User"
+              onPress={() =>
+                Alert.alert(
+                  "Confirm Downgrade",
+                  "Are you sure you want to downgrade to Regular USER?",
+                  [
+                    { text: "Cancel", style: "cancel" },
+                    { text: "Yes", onPress: () => handleUpgradeRole(RoleEnum.User) }
+                  ]
+                )
+              }
+            />            
+          </View>
+        )}
+
+        {/* Testing wash sessions*/}
+        <Text className="text-lg font-bold">Your Wash Sessions</Text>
 
         {loadingWashSessions ? (
           <LoadingSpinner />
@@ -120,9 +189,9 @@ export default function ProfileScreen() {
             >
               <Text className="font-semibold">{wash.location.name}</Text>
               <Text>{wash.location.address}</Text>
-              <Text>
-                {wash.washType.type} - {wash.washType.price} DKK
-              </Text>
+              <Text>{wash.washType.type} Wash </Text>
+              <Text className="text-slate-600 mb-2">Paid: {wash.washType.price} DKK</Text>
+
               <Text className="text-xs text-gray-500">
                 {new Date(wash.createdAt).toLocaleString()}
               </Text>
@@ -130,8 +199,10 @@ export default function ProfileScreen() {
           ))
         )}
 
-
-        <Button title="Logout" onPress={handleLogout} />
+        <View >
+          <Button title="Logout" onPress={handleLogout} />
+        </View>
+        
       </ScrollView>
     </View>
   );
