@@ -32,4 +32,4 @@ pnpm add <package-name> --filter frontend
 
 
 Observations:
-1. updating a user email with an existing one / any => will not update but still gives 200 response
+1. add error handling (feedback on inputs) for login/register

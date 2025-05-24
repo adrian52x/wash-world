@@ -22,8 +22,7 @@ export default function ProfileScreen() {
     !userSession?.user.address ||
     !userSession?.user.licensePlate;
 
-  // track onboarding completion locally
-  const [onboardingDone, setOnboardingDone] = useState(false);
+  // State to control the visibility of the update form
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   
   const handleLogout = () => {
@@ -38,7 +37,7 @@ export default function ProfileScreen() {
         phoneNumber: values.phoneNumber,
         address: values.address,
         licensePlate: values.licensePlate,
-        email: values.email,
+        password: values.password,
         username: values.username,
       },
       {
@@ -51,7 +50,7 @@ export default function ProfileScreen() {
   };
 
   // For the first time, in ProfileScreen, user has to complete the onboarding form
-  if (needsOnboarding && !onboardingDone) {
+  if (needsOnboarding) {
     return (
       <UpdateUserForm
         initialValues={{
@@ -72,11 +71,12 @@ export default function ProfileScreen() {
           phoneNumber: userSession.user.phoneNumber ?? '',
           address: userSession.user.address ?? '',
           licensePlate: userSession.user.licensePlate ?? '',
-          email: userSession.user.email ?? '',
           username: userSession.user.username ?? '',
+          password: '',
         }}
         onSubmit={handleUpdateSubmit}
-        showEmailAndUsername
+        showUsername
+        onCancel={() => setShowUpdateForm(false)}
       />
     );
   }

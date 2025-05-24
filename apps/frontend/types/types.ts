@@ -1,8 +1,4 @@
-export enum MembershipTypeEnum {
-  Gold = 'GOLD',
-  Premium = 'PREMIUM',
-  Brilliant = 'BRILLIANT',
-}
+import { MembershipTypeEnum, RoleEnum, WashTypeEnum } from "./enums";
 
 export interface Membership {
   membershipId: number;
@@ -15,13 +11,6 @@ export interface UserMembership {
   startDate: string;
   endDate: string | null;
   membership: Membership;
-}
-
-export enum WashTypeEnum {
-  Gold = 'GOLD',
-  Premium = 'PREMIUM',
-  Brilliant = 'BRILLIANT',
-  SelfWash = 'SELF_WASH',
 }
 
 export interface WashType {
@@ -61,8 +50,9 @@ export interface Location {
 
 export interface UpdateUser {
   username?: string;
-  email?: string;
   address?: string;
   phoneNumber?: string;
   licensePlate?: string;
+  password?: string;
+  role?: RoleEnum;
 }

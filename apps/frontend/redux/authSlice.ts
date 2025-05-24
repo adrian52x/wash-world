@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from './store';
-import { Role } from '@/types/enums';
-import { jwtDecode } from 'jwt-decode';
-import { Platform } from 'react-native';
 import { storage } from '@/utils/storage';
 import {
   AuthState,
-  DecodedToken,
   LoginRequest,
   SignupRequest,
 } from '@/types/auth.types';

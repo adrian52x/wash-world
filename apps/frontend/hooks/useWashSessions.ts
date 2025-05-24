@@ -21,6 +21,7 @@ export const useWashSessions = () => {
     const { data: washSessions, isLoading: loadingWashSessions, isError: errorWashSessions } = useQuery({
         queryKey: ['userWashSessions'],
         queryFn: () => WashesAPI.getUserWashSessions(),
+        retry: 1, // Retry once on failure
     });
 
     return { washSessions, loadingWashSessions, errorWashSessions };
