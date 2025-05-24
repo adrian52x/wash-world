@@ -11,6 +11,12 @@ export interface Membership {
   washTypeId: number;
 }
 
+export interface UserMembership {
+  startDate: string;
+  endDate: string | null;
+  membership: Membership;
+}
+
 export enum WashTypeEnum {
   Gold = 'GOLD',
   Premium = 'PREMIUM',
@@ -51,4 +57,12 @@ export interface Location {
   autoWashHalls: number;
   selfWashHalls: number;
   coordinates: Coordinates;
+}
+
+export interface UpdateUser {
+  username?: string;
+  email?: string;
+  address?: string;
+  phoneNumber?: string;
+  licensePlate?: string;
 }

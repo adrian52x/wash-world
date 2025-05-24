@@ -18,12 +18,12 @@ export const useWashTypes = () => {
 
 // Fetch user wash sessions
 export const useWashSessions = () => {
-    const { data: washSessions } = useQuery({
+    const { data: washSessions, isLoading: loadingWashSessions, isError: errorWashSessions } = useQuery({
         queryKey: ['userWashSessions'],
         queryFn: () => WashesAPI.getUserWashSessions(),
     });
 
-    return { washSessions };
+    return { washSessions, loadingWashSessions, errorWashSessions };
 };
 
 // Create wash session

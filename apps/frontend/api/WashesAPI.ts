@@ -32,6 +32,8 @@ export class WashesAPI {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        //throw new Error('test error');
         return data;
     }
 

@@ -20,6 +20,7 @@ import { LocationDetailsBox } from '@/components/LocationDetailsBox';
 import { MapFilters } from '@/components/MapFilters';
 import { useLocations } from '@/hooks/useLocations';
 import { Location as LocationType } from '@/types/types';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const cphCoordinates = {
   latitude: 55.6761,
@@ -98,9 +99,7 @@ export default function HomeScreen() {
 
   if (loadingLocations) {
   return (
-      <View className='flex-1 justify-center items-center'>
-        <ActivityIndicator size="large" color="#22c55e" />
-      </View>
+      <LoadingSpinner />
     );
   }
 

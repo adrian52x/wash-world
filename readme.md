@@ -28,3 +28,8 @@ pnpm install
 Add stuff
 pnpm add <package-name> --filter backend
 pnpm add <package-name> --filter frontend
+
+
+
+Observations:
+1. updating a user email with an existing one / any => will not update but still gives 200 response
