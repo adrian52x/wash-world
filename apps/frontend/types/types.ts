@@ -30,3 +30,10 @@ export interface Location {
   selfWashHalls: number;
   coordinates: Coordinates;
 }
+
+export interface Membership {
+  membershipId: number;
+  type: MembershipTypeEnum;
+  price: number;
+  washTypeId: number;
+}

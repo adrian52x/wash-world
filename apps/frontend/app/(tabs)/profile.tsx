@@ -7,8 +7,11 @@ import { ScrollView, View, Text, Button } from 'react-native';
 export default function ProfileScreen() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  // const userSession = useAppSelector(selectUserSession);
-  // if (!userSession) return null;
+  //------------------------------------
+  //to check this...
+  const userSession = useAppSelector(selectUserSession);
+  if (!userSession) return null;
+  //------------------------------------
 
   const { washSessions } = useWashSessions();
 
@@ -47,10 +50,7 @@ export default function ProfileScreen() {
           <Text>No wash sessions found.</Text>
         )}
 
-        {/* <Text>Welcome {userSession.username}</Text>
-        {userSession.userMembership && (
-          <Text>Membership: {userSession.userMembership.membership.type}</Text>
-        )} */}
+        <Text>Welcomeee {userSession.username}</Text>
 
         <Button title="Logout" onPress={handleLogout} />
       </ScrollView>
