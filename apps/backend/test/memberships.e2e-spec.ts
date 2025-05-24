@@ -16,15 +16,21 @@ describe('MembershipsController (e2e)', () => {
   const mockMemberships: MembershipDTO[] = [
     {
       membershipId: 1,
-      type: MembershipTypeEnum.Premium,
-      price: 100,
+      type: MembershipTypeEnum.Gold,
+      price: 139,
       washTypeId: 1,
     },
     {
       membershipId: 2,
-      type: MembershipTypeEnum.Gold,
-      price: 50,
+      type: MembershipTypeEnum.Premium,
+      price: 169,
       washTypeId: 2,
+    },
+    {
+      membershipId: 3,
+      type: MembershipTypeEnum.Brilliant,
+      price: 199,
+      washTypeId: 3,
     },
   ];
 
@@ -34,10 +40,16 @@ describe('MembershipsController (e2e)', () => {
     endDate: new Date('2025-02-01T00:00:00Z'),
     membership: {
       membershipId: 1,
-      type: MembershipTypeEnum.Premium,
-      price: 100,
+      type: MembershipTypeEnum.Gold,
+      price: 139,
       washTypeId: 1,
     },
+  };
+
+  const mockUpdatedUser = {
+    userId: 1,
+    email: 'test@example.com',
+    role: 'PREMIUM_USER',
   };
 
   beforeAll(async () => {
@@ -48,7 +60,11 @@ describe('MembershipsController (e2e)', () => {
       .useValue({
         canActivate: (context) => {
           const request = context.switchToHttp().getRequest();
-          request.user = { email: 'test@example.com', password: 'password' };
+          request.user = {
+            userId: 1,
+            email: 'test@example.com',
+            password: 'password',
+          };
           return true;
         },
       })
@@ -86,21 +102,29 @@ describe('MembershipsController (e2e)', () => {
   });
 
   describe('POST /memberships', () => {
-    it('should create a new membership for a user', async () => {
+    it('should create a new membership for a user and update their role', async () => {
+      // arrange
+      const membershipId = 1;
+      const expectedMembership = mockUserMembership;
       jest
         .spyOn(membershipsService, 'create')
-        .mockResolvedValueOnce(mockUserMembership);
+        .mockResolvedValueOnce(expectedMembership);
+
+      // act
       const response = await request(app.getHttpServer())
         .post('/memberships')
-        .send({ membershipId: 1 })
+        .send({ membershipId })
         .expect(201);
 
+      // assert
       expect(response.body).toMatchObject({
         userMembershipId: mockUserMembership.userMembershipId,
         startDate: mockUserMembership.startDate.toISOString(),
         endDate: mockUserMembership.endDate.toISOString(),
         membership: mockUserMembership.membership,
       });
+      expect(response.body.membership.type).toBe(MembershipTypeEnum.Gold);
+      expect(mockUserMembership.membership.type).toBe(MembershipTypeEnum.Gold);
     });
 
     it('should return 404 when creating a membership fails', async () => {

@@ -12,6 +12,7 @@ import { ErrorMessages } from '../../utils/error-messages';
 import { UsersService } from '../users/users.service';
 import { UserMembership } from '../../entities/user-membership.entity';
 import { UserMembershipDTO } from './dto/user-membership.dto';
+import { RoleEnum } from 'src/utils/enums';
 
 function mapToMembershipDTO(membership: Membership): MembershipDTO {
   return {
@@ -95,6 +96,11 @@ export class MembershipsService {
         if (membershipType == null) {
           throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
         }
+
+        // update the role
+        await this.usersService.updateUser(userId, {
+          role: `${membershipType.type}_USER` as RoleEnum,
+        });
 
         const existingUserMembership = await this.findUserMembership(trx, {
           user: { user_id: userId },
