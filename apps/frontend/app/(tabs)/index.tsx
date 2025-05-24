@@ -146,7 +146,7 @@ export default function HomeScreen() {
                 source={washWorldMarker}
                 style={
                   loc.locationId === clickedLocationId
-                    ? { width: 60, height: 60 }
+                    ? { width: 50, height: 50 }
                     : { width: 40, height: 40 }
                 }
                 resizeMode="contain"

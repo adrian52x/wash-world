@@ -96,6 +96,7 @@ export default function ProfileScreen() {
 
   return (
     <View className="flex-1">
+      {/* Loading state on update user */}
       {updateUser.isPending && (
         <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
           <LoadingSpinner />
@@ -175,7 +176,7 @@ export default function ProfileScreen() {
         )}
 
         {/* Testing wash sessions*/}
-        <Text className="text-lg font-bold">Your Wash Sessions</Text>
+        <Text className="text-lg font-bold">Wash Sessions History</Text>
 
         {loadingWashSessions ? (
           <LoadingSpinner />

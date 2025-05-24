@@ -1,6 +1,5 @@
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { View, Text, TouchableOpacity, Linking, Image, ActivityIndicator } from 'react-native';
-import { fakeLocations } from '@/constants/fakeData';
 import { ChevronRight, Clock, MapPin, Play } from 'lucide-react-native';
 import autowashHall from '@/assets/images/autowash-hall.png';
 import selfwashHall from '@/assets/images/selfwash-hall.png';
@@ -16,8 +15,6 @@ export default function LocationDetails() {
   const idStr = Array.isArray(id) ? id[0] : id;
   const { location, loadingLocation, errorLocation } = useLocationById(idStr)
 
-  const { createWashSession } = useCreateWashSession();
-
   if (!location || errorLocation) {
     return (
       <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
@@ -28,18 +25,12 @@ export default function LocationDetails() {
 
   // Testing createWashSession, washTypeId is hardcoded to 1, but make sure database is seeded with this id
   const handleStartWash = async () => {
-    await createWashSession.mutateAsync({
-      washTypeId: 1, 
-      locationId: location.locationId,
-    });
     router.push(`/location/${location.locationId}/wash`);
   };
 
   if (loadingLocation) {
   return (
-      <View className='flex-1 justify-center items-center'>
-        <ActivityIndicator size="large" color="#22c55e" />
-      </View>
+      <LoadingSpinner/>
     );
   }
 
