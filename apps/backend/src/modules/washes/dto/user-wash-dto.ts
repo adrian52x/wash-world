@@ -7,4 +7,5 @@ export class UserWashDTO {
   createdAt: Date;
   location: LocationDTO;
   washType: WashTypeDTO;
+  amountPaid: number;
 }

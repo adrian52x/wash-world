@@ -12,6 +12,8 @@ import {
   mapToLocationDTO,
 } from '../locations/locations.service';
 import { UserWashDTO } from './dto/user-wash-dto';
+import { UserMembership } from 'src/entities/user-membership.entity';
+import { MembershipsService } from '../memberships/memberships.service';
 
 function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
   return {
@@ -29,6 +31,7 @@ function mapToWashDTO(wash: Wash): UserWashDTO {
     createdAt: wash.date_time,
     location: mapToLocationDTO(wash.location),
     washType: mapToWashTypeDTO(wash.washType),
+    amountPaid: wash.amountPaid ?? 0,
   };
 }
 
@@ -43,9 +46,11 @@ export class WashesService {
     private readonly washRepository: Repository<Wash>,
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
+    private readonly membershipsService: MembershipsService,
   ) {}
 
-  async washTypesGetAll(): Promise<WashTypeDTO[]> { // To dicuss this later
+  async washTypesGetAll(): Promise<WashTypeDTO[]> {
+    // To dicuss this later
     this.logger.log('washTypes: getAll');
 
     const washTypes = await this.washTypeRepository.find();
@@ -97,6 +102,12 @@ export class WashesService {
         throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
       }
 
+      const userMembership = await this.membershipsService.findUserMembership(
+        trx,
+        { user: { user_id: userId } },
+        true,
+      );
+
       const washType = await this.washTypeGetById(washTypeId);
       if (washType == null) {
         throw new NotFoundException(ErrorMessages.WASH_TYPES_NOT_FOUND);
@@ -107,11 +118,30 @@ export class WashesService {
         throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
       }
 
+      let amountPaid = washType.price;
+
+      if (userMembership?.membership?.washType) {
+        const membershipWashType = userMembership.membership.washType;
+
+        if (membershipWashType.wash_type_id === washType.washTypeId) {
+          // same wash type as membership - free
+          amountPaid = 0;
+        } else if (membershipWashType.price < washType.price) {
+          // higher tier wash - pay the difference
+          amountPaid = washType.price - membershipWashType.price;
+        }
+        // lower tier wash - free
+        else {
+          amountPaid = 0;
+        }
+      }
+
       const wash = this.washRepository.create({
         user_id: user.userId,
         washType: { wash_type_id: washType.washTypeId },
         location: { location_id: location.locationId },
         date_time: new Date(),
+        amountPaid,
       });
 
       const savedWash = await trx.save(wash);
