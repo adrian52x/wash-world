@@ -1,14 +1,31 @@
-export enum MembershipTypeEnum {
-  Gold = 'GOLD',
-  Premium = 'PREMIUM',
-  Brilliant = 'BRILLIANT',
+import { MembershipTypeEnum, RoleEnum, WashTypeEnum } from "./enums";
+
+export interface Membership {
+  membershipId: number;
+  type: MembershipTypeEnum;
+  price: string;
+  washTypeId: number;
 }
 
-export enum WashTypeEnum {
-  Gold = 'GOLD',
-  Premium = 'PREMIUM',
-  Brilliant = 'BRILLIANT',
-  SelfWash = 'SELF_WASH',
+export interface UserMembership {
+  startDate: string;
+  endDate: string | null;
+  membership: Membership;
+}
+
+export interface WashType {
+  washTypeId: number;
+  type: WashTypeEnum;
+  price: string;
+  description: string;
+  isAutoWash: boolean;
+}
+
+export interface WashSession {
+  washId: number;
+  createdAt: string; // ISO date string
+  location: Location;
+  washType: WashType;
 }
 
 export interface InsertWash {
@@ -31,9 +48,11 @@ export interface Location {
   coordinates: Coordinates;
 }
 
-export interface Membership {
-  membershipId: number;
-  type: MembershipTypeEnum;
-  price: number;
-  washTypeId: number;
+export interface UpdateUser {
+  username?: string;
+  address?: string;
+  phoneNumber?: string;
+  licensePlate?: string;
+  password?: string;
+  role?: RoleEnum;
 }

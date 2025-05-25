@@ -1,4 +1,5 @@
-import { MembershipTypeEnum, WashTypeEnum } from '@/types/types';
+import { MembershipTypeEnum, WashTypeEnum } from "@/types/enums";
+
 
 const commonFeatures = [
   'Shampoo',

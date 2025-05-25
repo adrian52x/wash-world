@@ -1,33 +1,37 @@
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { View, Text, TouchableOpacity, Linking, Image } from 'react-native';
-import { fakeLocations } from '@/constants/fakeData';
 import { ChevronRight, Clock, MapPin, Play } from 'lucide-react-native';
 import autowashHall from '@/assets/images/autowash-hall.png';
 import selfwashHall from '@/assets/images/selfwash-hall.png';
 import { InclinedButton } from '@/components/ui/InclinedButton';
 import { useLocationById } from '@/hooks/useLocations';
-import { useCreateWashSession } from '@/hooks/useWashSessions';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function LocationDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   
   const idStr = Array.isArray(id) ? id[0] : id;
-  const { location } = useLocationById(idStr)
+  const { location, loadingLocation, errorLocation } = useLocationById(idStr)
 
-  const { createWashSession } = useCreateWashSession();
-
-  if (!location) return <Text>Location not found</Text>;
-
+  if (!location || errorLocation) {
+    return (
+      <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
+        <LoadingSpinner />
+      </View>
+    );
+  }
 
   // Testing createWashSession, washTypeId is hardcoded to 1, but make sure database is seeded with this id
   const handleStartWash = async () => {
-    await createWashSession.mutateAsync({
-      washTypeId: 1, 
-      locationId: location.locationId,
-    });
     router.push(`/location/${location.locationId}/wash`);
   };
+
+  if (loadingLocation) {
+  return (
+      <LoadingSpinner/>
+    );
+  }
 
   return (
     <View className="flex-1 p-6">

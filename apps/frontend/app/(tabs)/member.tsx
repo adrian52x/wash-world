@@ -1,9 +1,10 @@
 import { SelectionList } from '@/components/SelectionList';
 import { useCreateMembership, useMemberships } from '@/hooks/useMemberships';
-import { Membership, MembershipTypeEnum } from '@/types/types';
+import { MembershipTypeEnum } from '@/types/enums';
+import { Membership } from '@/types/types';
 import { getWashFeatures } from '@/utils';
 import { useState } from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 export default function MemberScreen() {
   const { memberships } = useMemberships();

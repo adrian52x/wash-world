@@ -5,7 +5,6 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Text,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -13,12 +12,12 @@ import * as Location from 'expo-location';
 import washWorldMarker from '../../assets/icons/w-map-marker.png';
 import { Navigation as MyLocationIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { fakeLocations } from '@/constants/fakeData';
 import MapSearch from '@/components/MapSearch';
 import { LocationDetailsBox } from '@/components/LocationDetailsBox';
 import { MapFilters } from '@/components/MapFilters';
 import { useLocations } from '@/hooks/useLocations';
 import { Location as LocationType } from '@/types/types';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const cphCoordinates = {
   latitude: 55.6761,
@@ -36,11 +35,11 @@ export default function HomeScreen() {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [filter, setFilter] = useState<string>('auto'); // maybe use redux for this
+  const [filter, setFilter] = useState<string>('auto');
 
   const router = useRouter();
 
-  const { locations } = useLocations()
+  const { locations, loadingLocations } = useLocations()
 
   // Request location permission and get user location & animate map to user location
   useEffect(() => {
@@ -65,13 +64,6 @@ export default function HomeScreen() {
       );
     })();
   }, []);
-
-  // Filter locations based on the selected filter
-  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
-    filter === 'auto'
-      ? (loc.autoWashHalls ?? 0) > 0  // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
-      : (loc.selfWashHalls ?? 0) > 0,
-  );
 
   // Focus on the marker when it is pressed
   const focusOnMarker = (id: number, latitude: number, longitude: number) => {
@@ -101,6 +93,19 @@ export default function HomeScreen() {
       );
     }
   };
+
+  if (loadingLocations) {
+  return (
+      <LoadingSpinner />
+    );
+  }
+
+  // Filter locations based on the selected filter
+  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
+    filter === 'auto'
+      ? (loc.autoWashHalls ?? 0) > 0  // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
+      : (loc.selfWashHalls ?? 0) > 0,
+  );
 
   const focusedLocation = filteredLocations.find(
     (loc: LocationType) => loc.locationId === clickedLocationId,
@@ -138,7 +143,7 @@ export default function HomeScreen() {
                 source={washWorldMarker}
                 style={
                   loc.locationId === clickedLocationId
-                    ? { width: 60, height: 60 }
+                    ? { width: 50, height: 50 }
                     : { width: 40, height: 40 }
                 }
                 resizeMode="contain"
