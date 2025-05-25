@@ -5,7 +5,12 @@ import step1 from '@/assets/images/wash-step1.png';
 import step2 from '@/assets/images/wash-step2.png';
 import step3 from '@/assets/images/wash-step3.png';
 import CarImage from '@/assets/images/washed-car.png';
-import { ChevronDown, ChevronUp, Circle, CircleCheck } from 'lucide-react-native';
+import {
+  ChevronDown,
+  ChevronUp,
+  Circle,
+  CircleCheck,
+} from 'lucide-react-native';
 import { useCreateWashSession, useWashTypes } from '@/hooks/useWashSessions';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getWashFeatures } from '@/utils';
@@ -33,23 +38,27 @@ export default function WashProcessScreen() {
   }, []);
 
   // Inlcude only auto wash types
-  const onlyAutoWashTypes = (washTypes ?? []).filter(washType => washType.isAutoWash);
+  const onlyAutoWashTypes = (washTypes ?? []).filter(
+    (washType) => washType.isAutoWash,
+  );
 
-  const [selectedWash, setSelectedWash] = useState(onlyAutoWashTypes[1] || null);
+  const [selectedWash, setSelectedWash] = useState(
+    onlyAutoWashTypes[1] || null,
+  );
 
   // ensures selectedWash is set once the data is available.
   useEffect(() => {
-  if (onlyAutoWashTypes.length > 0 && !selectedWash) {
-    setSelectedWash(onlyAutoWashTypes[1]); 
-  }
+    if (onlyAutoWashTypes.length > 0 && !selectedWash) {
+      setSelectedWash(onlyAutoWashTypes[1]);
+    }
   }, [onlyAutoWashTypes]);
 
   const handleCreateWashSession = async () => {
     await createWashSession.mutateAsync({
-      washTypeId: selectedWash.washTypeId, 
+      washTypeId: selectedWash.washTypeId,
       locationId: Number(id),
     });
-    setStep(1) // move to next step after selecting wash type and creating session
+    setStep(1); // move to next step after selecting wash type and creating session
   };
 
   // Step 0: Select wash type
@@ -63,7 +72,6 @@ export default function WashProcessScreen() {
           }}
         />
         <View className="flex-1 p-6">
-
           {/* Loading state on create Session */}
           {createWashSession.isPending && (
             <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
@@ -71,9 +79,13 @@ export default function WashProcessScreen() {
             </View>
           )}
 
-          <Text className="font-header text-header font-bold mb-4">Choose a wash</Text>
-          <Text className='font-subheader text-accent-gray-60 mb-4'>Your license plate was scanned at Hall 2, please choose a wash program you'd like to proceed with:</Text>
-
+          <Text className="font-header text-header font-bold mb-4">
+            Choose a wash
+          </Text>
+          <Text className="font-subheader text-accent-gray-60 mb-4">
+            Your license plate was scanned at Hall 2, please choose a wash
+            program you'd like to proceed with:
+          </Text>
 
           <View className="flex-col flex-1">
             {onlyAutoWashTypes.map((wash) => {
@@ -83,24 +95,29 @@ export default function WashProcessScreen() {
               return (
                 <TouchableOpacity
                   key={wash.type}
-                  className={`flex-col px-4 px-2 py-3 border border-gray-300 ${
+                  className={`flex-col px-2 py-3 border border-gray-300 ${
                     isSelected ? 'bg-green-light' : 'bg-white'
                   }`}
                   onPress={() => setSelectedWash(wash)}
                 >
                   <View className="flex-row items-center justify-between">
-                  <View className="flex-row items-center gap-2">
-                    <CheckIcon size={20} />
-                    <Text className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}>
-                      {wash.type} - {wash.price} DKK
-                    </Text>
-                  </View>
-                  <Chevron size={20} />
+                    <View className="flex-row items-center gap-2">
+                      <CheckIcon size={20} />
+                      <Text
+                        className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                      >
+                        {wash.type} - {wash.price} DKK
+                      </Text>
+                    </View>
+                    <Chevron size={20} />
                   </View>
                   {isSelected && (
                     <View className="mt-2">
-                        {getWashFeatures(wash.type)?.map((item, idx) => (
-                        <Text key={idx} className="font-bodyText text-bodyText text-white">
+                      {getWashFeatures(wash.type)?.map((item, idx) => (
+                        <Text
+                          key={idx}
+                          className="font-bodyText text-bodyText text-white"
+                        >
                           • {item}
                         </Text>
                       ))}

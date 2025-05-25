@@ -6,12 +6,14 @@ import { Wash } from '../../entities/wash.entity';
 import { WashesService } from './washes.service';
 import { UsersModule } from '../users/users.module';
 import { LocationsModule } from '../locations/locations.module';
+import { MembershipsModule } from '../memberships/memberships.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([WashType, Wash]),
     UsersModule,
     LocationsModule,
+    MembershipsModule,
   ],
   controllers: [WashesController],
   providers: [WashesService],

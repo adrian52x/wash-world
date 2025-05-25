@@ -46,12 +46,6 @@ describe('MembershipsController (e2e)', () => {
     },
   };
 
-  const mockUpdatedUser = {
-    userId: 1,
-    email: 'test@example.com',
-    role: 'PREMIUM_USER',
-  };
-
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [TestAppModule],
@@ -102,7 +96,7 @@ describe('MembershipsController (e2e)', () => {
   });
 
   describe('POST /memberships', () => {
-    it('should create a new membership for a user and update their role', async () => {
+    it('should create a new membership for a user', async () => {
       // arrange
       const membershipId = 1;
       const expectedMembership = mockUserMembership;
@@ -123,8 +117,6 @@ describe('MembershipsController (e2e)', () => {
         endDate: mockUserMembership.endDate.toISOString(),
         membership: mockUserMembership.membership,
       });
-      expect(response.body.membership.type).toBe(MembershipTypeEnum.Gold);
-      expect(mockUserMembership.membership.type).toBe(MembershipTypeEnum.Gold);
     });
 
     it('should return 404 when creating a membership fails', async () => {
