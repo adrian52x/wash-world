@@ -28,3 +28,9 @@ pnpm install
 Add stuff
 pnpm add <package-name> --filter backend
 pnpm add <package-name> --filter frontend
+
+
+
+Observations:
+1. add error handling (feedback on inputs) for login/register
+2. order or wash sessions is weird (needs sort)

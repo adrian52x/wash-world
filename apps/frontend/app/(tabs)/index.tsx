@@ -5,7 +5,6 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Text,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -13,10 +12,12 @@ import * as Location from 'expo-location';
 import washWorldMarker from '../../assets/icons/w-map-marker.png';
 import { Navigation as MyLocationIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { fakeLocations } from '@/constants/fakeData';
 import MapSearch from '@/components/MapSearch';
 import { LocationDetailsBox } from '@/components/LocationDetailsBox';
 import { MapFilters } from '@/components/MapFilters';
+import { useLocations } from '@/hooks/useLocations';
+import { Location as LocationType } from '@/types/types';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const cphCoordinates = {
   latitude: 55.6761,
@@ -34,9 +35,11 @@ export default function HomeScreen() {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [filter, setFilter] = useState<string>('auto'); // maybe use redux for this
+  const [filter, setFilter] = useState<string>('auto');
 
   const router = useRouter();
+
+  const { locations, loadingLocations } = useLocations()
 
   // Request location permission and get user location & animate map to user location
   useEffect(() => {
@@ -61,11 +64,6 @@ export default function HomeScreen() {
       );
     })();
   }, []);
-
-  // Filter locations based on the selected filter
-  const filteredLocations = fakeLocations.filter((loc) =>
-    filter === 'auto' ? loc.autoWashHalls > 0 : loc.selfWashHalls > 0,
-  );
 
   // Focus on the marker when it is pressed
   const focusOnMarker = (id: number, latitude: number, longitude: number) => {
@@ -96,8 +94,21 @@ export default function HomeScreen() {
     }
   };
 
+  if (loadingLocations) {
+  return (
+      <LoadingSpinner />
+    );
+  }
+
+  // Filter locations based on the selected filter
+  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
+    filter === 'auto'
+      ? (loc.autoWashHalls ?? 0) > 0  // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
+      : (loc.selfWashHalls ?? 0) > 0,
+  );
+
   const focusedLocation = filteredLocations.find(
-    (loc) => loc.id === clickedLocationId,
+    (loc: LocationType) => loc.locationId === clickedLocationId,
   );
 
   return (
@@ -105,7 +116,7 @@ export default function HomeScreen() {
       <View>
         <MapSearch
           locations={filteredLocations}
-          onSelect={(loc) => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+          onSelect={(loc) => focusOnMarker(loc.locationId, Number(loc.coordinates.y), Number(loc.coordinates.x))}
         />
         {/* Filters below the search bar */}
         <MapFilters filter={filter} setFilter={setFilter} />
@@ -121,18 +132,18 @@ export default function HomeScreen() {
           showsUserLocation={true}
         >
           {/* Markers with locations */}
-          {filteredLocations.map((loc) => (
+          {filteredLocations.map((loc: LocationType) => (
             <Marker
-              key={loc.id}
-              coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
-              title={loc.title}
-              onPress={() => focusOnMarker(loc.id, loc.latitude, loc.longitude)}
+              key={loc.locationId}
+              coordinate={{ latitude: Number(loc.coordinates.y), longitude: Number(loc.coordinates.x) }}
+              title={loc.name}
+              onPress={() => focusOnMarker(loc.locationId, Number(loc.coordinates.y), Number(loc.coordinates.x))}
             >
               <Image
                 source={washWorldMarker}
                 style={
-                  loc.id === clickedLocationId
-                    ? { width: 60, height: 60 }
+                  loc.locationId === clickedLocationId
+                    ? { width: 50, height: 50 }
                     : { width: 40, height: 40 }
                 }
                 resizeMode="contain"
@@ -155,7 +166,7 @@ export default function HomeScreen() {
             location={focusedLocation}
             userLocation={userLocation ?? undefined}
             onClose={() => setClickedLocationId(null)}
-            onSeeMore={() => router.push(`/location/${focusedLocation.id}`)}
+            onSeeMore={() => router.push(`/location/${focusedLocation.locationId}`)}
           />
         )}
       </View>

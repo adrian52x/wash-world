@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Post,
@@ -48,5 +49,20 @@ export class MembershipsController {
       req.user.userId,
       createUserMembershipDto.membershipId,
     );
+  }
+
+  @Delete()
+  @ApiOperation({ summary: 'Cancel user membership' })
+  @ApiResponse({
+    status: 200,
+    description: 'Membership cancelled successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: ErrorMessages.USER_MEMBERSHIP_NOT_FOUND,
+  })
+  @UseGuards(JwtAuthGuard)
+  cancel(@Req() req) {
+    return this.membershipsService.cancel(req.user.userId);
   }
 }

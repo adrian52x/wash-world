@@ -12,6 +12,8 @@ import { ErrorMessages } from '../../utils/error-messages';
 import { UsersService } from '../users/users.service';
 import { UserMembership } from '../../entities/user-membership.entity';
 import { UserMembershipDTO } from './dto/user-membership.dto';
+import { RoleEnum } from 'src/utils/enums';
+import { UserDTO } from '../users/dto/user.dto';
 
 function mapToMembershipDTO(membership: Membership): MembershipDTO {
   return {
@@ -96,6 +98,11 @@ export class MembershipsService {
           throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
         }
 
+        // update the role
+        await this.usersService.updateUser(userId, {
+          role: `${membershipType.type}_USER` as RoleEnum,
+        });
+
         const existingUserMembership = await this.findUserMembership(trx, {
           user: { user_id: userId },
         });
@@ -127,6 +134,35 @@ export class MembershipsService {
         }
 
         return mapToUserMembershipDTO(savedUserMembership);
+      },
+    );
+  }
+
+  async cancel(userId: number): Promise<UserDTO> {
+    this.logger.log(`Cancelling membership for user ${userId}`);
+    return await this.userMemberShipRepository.manager.transaction(
+      async (trx) => {
+        const existingUserMembership = await this.findUserMembership(trx, {
+          user: { user_id: userId },
+        });
+        this.logger.log(
+          `Found membership: ${JSON.stringify(existingUserMembership)}`,
+        );
+
+        if (!existingUserMembership) {
+          throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
+        }
+
+        await trx.delete(
+          UserMembership,
+          existingUserMembership.user_membership_id,
+        );
+
+        const updatedUser = await this.usersService.updateUser(userId, {
+          role: RoleEnum.RegularUser,
+        });
+
+        return updatedUser;
       },
     );
   }

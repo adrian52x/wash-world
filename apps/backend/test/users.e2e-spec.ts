@@ -121,10 +121,11 @@ describe('UsersController (e2e)', () => {
     it('should update user successfully', async () => {
       const updatedUser: UserDTO = {
         ...mockUser,
-        username: updateUserDto.username,
-        address: updateUserDto.address,
-        phoneNumber: updateUserDto.phoneNumber,
-        licensePlate: updateUserDto.licensePlate,
+        username: updateUserDto.username ?? mockUser.username,
+        address: updateUserDto.address ?? mockUser.address,
+        phoneNumber: updateUserDto.phoneNumber ?? mockUser.phoneNumber,
+        licensePlate: updateUserDto.licensePlate ?? mockUser.licensePlate,
+        role: updateUserDto.role ?? mockUser.role,
       };
 
       jest.spyOn(usersService, 'updateUser').mockResolvedValueOnce(updatedUser);

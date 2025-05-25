@@ -1,3 +1,4 @@
+import { Location } from '@/types/types';
 import React, { useState } from 'react';
 import {
   View,
@@ -7,7 +8,6 @@ import {
   Text,
   Keyboard,
 } from 'react-native';
-import { Location } from '@/types';
 
 type Props = {
   locations: Location[];
@@ -43,7 +43,7 @@ export default function MapSearch({ locations, onSelect }: Props) {
         <FlatList
           className="bg-white rounded-b-xl mt-2 max-h-40"
           data={results}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.locationId.toString()}
           keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -55,7 +55,7 @@ export default function MapSearch({ locations, onSelect }: Props) {
               }}
             >
               <View className="px-4 py-3 border-b border-gray-200">
-                <Text className="font-bold text-base">{item.title}</Text>
+                <Text className="font-bold text-base">{item.name}</Text>
                 <Text className="text-xs text-gray-500">{item.address}</Text>
               </View>
             </TouchableOpacity>
