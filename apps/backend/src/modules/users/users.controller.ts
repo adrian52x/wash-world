@@ -12,10 +12,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { ErrorMessages } from '../../utils/error-messages';
+import { StatisticsService } from '../statistics/statistics.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private readonly statisticsService: StatisticsService
+  ) { }
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
@@ -35,6 +37,18 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   usersCurrentSession(@Req() req) {
     return this.usersService.getCurrentSession(req.user.userId);
+  }
+
+  @Get('statistics')
+  @ApiOperation({ summary: 'Get wash statistics for the current user' })
+  @ApiResponse({
+    status: 200,
+    description: 'User statistics retrieved successfully',
+  })
+  @ApiResponse({ status: 404, description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND })
+  @UseGuards(JwtAuthGuard)
+  async getUserStatistics(@Req() req) {
+    return this.statisticsService.getUserWashStats(req.user.userId);
   }
 
   @Patch()
