@@ -1,4 +1,5 @@
 import { Role } from './enums';
+import { UserMembership } from './types';
 
 export interface DecodedToken {
   userId: number;
@@ -25,33 +26,17 @@ export interface AuthState {
   userSession: UserSessionData | null;
 }
 
-// user types
-
-export interface WashType {
-  id: number;
-  name: string;
-  description: string;
-}
-
-export interface Membership {
-  id: number;
-  type: string;
-  price: number;
-  washType: WashType;
-}
-
-export interface UserMembership {
-  startDate: string;
-  endDate: string | null;
-  membership: Membership;
-}
-
-export interface UserSessionData {
+export interface User {
+  userId: number;
   username: string;
   email: string;
   address: string | null;
   phoneNumber: string | null;
   licensePlate: string | null;
   role: Role;
+}
+
+export interface UserSessionData {
+  user: User;
   userMembership: UserMembership | null;
 }

@@ -23,7 +23,8 @@
     "migration:show": "npm run typeorm -- migration:show",
     "migration:run-latest": "npm run typeorm -- migration:run -- -n latest",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "migration:drop": "npm run typeorm -- migration:drop"
+    "migration:drop": "npm run typeorm -- migration:drop",
+    "seed": "ts-node src/scripts/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
