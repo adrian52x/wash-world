@@ -80,6 +80,7 @@ export class WashesService {
     const washes = await this.washRepository.find({
       where: { user_id: userId },
       relations: ['washType', 'location'],
+      order: { date_time: 'DESC' },
     });
 
     if (washes == null || washes.length === 0) {
@@ -118,17 +119,19 @@ export class WashesService {
         throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
       }
 
-      let amountPaid = washType.price;
+      let amountPaid = Number(washType.price);
 
       if (userMembership?.membership?.washType) {
         const membershipWashType = userMembership.membership.washType;
+        const membershipWashPrice = Number(membershipWashType.price);
+        const washPrice = Number(washType.price); 
 
-        if (membershipWashType.wash_type_id === washType.washTypeId) {
+        if (membershipWashType.type === washType.type) {
           // same wash type as membership - free
           amountPaid = 0;
-        } else if (membershipWashType.price < washType.price) {
+        } else if (membershipWashPrice < washPrice) {
           // higher tier wash - pay the difference
-          amountPaid = washType.price - membershipWashType.price;
+          amountPaid = washPrice - membershipWashPrice;
         }
         // lower tier wash - free
         else {

@@ -32,7 +32,7 @@ export class WashesAPI {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        await new Promise(resolve => setTimeout(resolve, 3000)); // simulate network delay -- to see loading state in UI
+        //await new Promise(resolve => setTimeout(resolve, 3000)); // simulate network delay -- to see loading state in UI
         //throw new Error('test error');
         return data;
     }
