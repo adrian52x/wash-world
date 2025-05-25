@@ -149,13 +149,17 @@ export class UsersService {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
 
-      const updatedUser = {
-        username: updateUserDto.username,
-        address: updateUserDto.address,
-        phone_number: updateUserDto.phoneNumber,
-        license_plate: updateUserDto.licensePlate,
-        role: updateUserDto.role,
-      };
+      const updatedUser = {};
+      if (updateUserDto.username !== undefined)
+        updatedUser['username'] = updateUserDto.username;
+      if (updateUserDto.address !== undefined)
+        updatedUser['address'] = updateUserDto.address;
+      if (updateUserDto.phoneNumber !== undefined)
+        updatedUser['phone_number'] = updateUserDto.phoneNumber;
+      if (updateUserDto.licensePlate !== undefined)
+        updatedUser['license_plate'] = updateUserDto.licensePlate;
+      if (updateUserDto.role !== undefined)
+        updatedUser['role'] = updateUserDto.role;
 
       await trx.update(User, userId, updatedUser);
 

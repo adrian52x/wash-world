@@ -27,7 +27,7 @@ export default function WashProcessScreen() {
 
   useEffect(() => {
     // Preload all step images on mount
-    [step1, step2, step3].forEach(img => {
+    [step1, step2, step3].forEach((img) => {
       Image.prefetch(Image.resolveAssetSource(img).uri);
     });
   }, []);
@@ -103,7 +103,7 @@ export default function WashProcessScreen() {
                         <Text key={idx} className="font-bodyText text-bodyText text-white">
                           • {item}
                         </Text>
-                        ))}
+                      ))}
                     </View>
                   )}
                 </TouchableOpacity>
@@ -122,21 +122,29 @@ export default function WashProcessScreen() {
     );
   }
 
-  // Steps 1+: Process steps 
+  // Steps 1+: Process steps
   const processIndex = step - 1;
   if (processIndex < processSteps.length) {
     const current = processSteps[processIndex];
     return (
       <View className="flex-1 pt-[100px] items-center bg-white">
-        <Text className="font-button text-bodyText text-green-light">Step {step}</Text>
-        <Text className="mb-4 font-subheader text-subheader">{current.label}</Text>
+        <Text className="font-button text-bodyText text-green-light">
+          Step {step}
+        </Text>
+        <Text className="mb-4 font-subheader text-subheader">
+          {current.label}
+        </Text>
         {step === 1 && (
           <Text className="font-bodyText text-bodyText text-center max-w-xs">
             The washing will begin once you're inside the hall
           </Text>
         )}
         {current.image && (
-          <Image source={current.image} className="w-48 h-48 mb-6" resizeMode="contain" />
+          <Image
+            source={current.image}
+            className="w-48 h-48 mb-6"
+            resizeMode="contain"
+          />
         )}
         <TouchableOpacity
           className="bg-green-light px-8 py-3 mt-10"
@@ -153,16 +161,22 @@ export default function WashProcessScreen() {
   // All done
   return (
     <View className="flex-1 pt-[200px] items-center bg-green-light">
-      <Text className="text-header font-header text-white mb-4">You are good to go!</Text>
-      <Text className="text-bodyText font-subheader text-white">+10 WashPoints added</Text>
-      <Image source={CarImage} className="w-48 h-48 mb-2" resizeMode="contain" />
+      <Text className="text-header font-header text-white mb-4">
+        You are good to go!
+      </Text>
+      <Text className="text-bodyText font-subheader text-white">
+        +10 WashPoints added
+      </Text>
+      <Image
+        source={CarImage}
+        className="w-48 h-48 mb-2"
+        resizeMode="contain"
+      />
       <TouchableOpacity
-          className="bg-accent-gray-80 px-8 py-3"
-          onPress={() => router.push(`/(tabs)`)}
+        className="bg-accent-gray-80 px-8 py-3"
+        onPress={() => router.push(`/(tabs)`)}
       >
-        <Text className="text-white font-button text-button">
-          Home page
-        </Text>
+        <Text className="text-white font-button text-button">Home page</Text>
       </TouchableOpacity>
     </View>
   );

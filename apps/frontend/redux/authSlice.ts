@@ -16,25 +16,49 @@ const initialState: AuthState = {
   userSession: null,
 };
 
-// const handleAuthSuccess = (token: string) => {
-//   return {
-//     token,
-//     isAuthenticated: true,
-//   };
-// };
+export const fetchUserSession = createAsyncThunk(
+  'auth/fetchUserSession',
+  async ({ token }: { token?: string } = {}, { getState }) => {
+    const state = getState() as RootState;
+    const authToken = token || state.auth.token;
+
+    const response = await fetch(`${API_URL}/users/current-session`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user session');
+    }
+
+    return await response.json();
+  },
+);
 
 // to hydrate the user if there's data from the secure store
-export const initializeAuth = createAsyncThunk('auth/initialize', async () => {
-  const token = await storage.getToken();
-  if (!token) throw new Error('No token found');
+export const initializeAuth = createAsyncThunk(
+  'auth/initialize',
+  async (_, { dispatch }) => {
+    const token = await storage.getToken();
+    if (!token) throw new Error('No token found');
 
-  return { token };
-});
+    try {
+      // Try to fetch user session to validate token
+      await dispatch(fetchUserSession({ token })).unwrap();
+      return { token };
+    } catch (error) {
+      // If session fetch fails, token is invalid
+      await storage.removeToken();
+      throw new Error('Invalid token');
+    }
+  },
+);
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 console.log('API_URL:', API_URL);
-
 
 export const signup = createAsyncThunk(
   'auth/signup',
@@ -72,27 +96,6 @@ export const login = createAsyncThunk(
 
     await storage.setToken(data.accessToken);
     return data.accessToken;
-  },
-);
-
-export const fetchUserSession = createAsyncThunk(
-  'auth/fetchUserSession',
-  async (_, { getState }) => {
-    const state = getState() as RootState;
-    const token = state.auth.token;
-
-    const response = await fetch(`${API_URL}/users/current-session`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch user session');
-    }
-
-    return await response.json();
   },
 );
 

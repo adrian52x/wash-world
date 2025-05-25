@@ -5,16 +5,13 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Text,
   TouchableWithoutFeedback,
   Keyboard,
-  ActivityIndicator,
 } from 'react-native';
 import * as Location from 'expo-location';
 import washWorldMarker from '../../assets/icons/w-map-marker.png';
 import { Navigation as MyLocationIcon } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { fakeLocations } from '@/constants/fakeData';
 import MapSearch from '@/components/MapSearch';
 import { LocationDetailsBox } from '@/components/LocationDetailsBox';
 import { MapFilters } from '@/components/MapFilters';

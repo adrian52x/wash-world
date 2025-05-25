@@ -43,7 +43,7 @@ export default function ProfileScreen() {
       },
       {
         onSuccess: () => {
-          dispatch(fetchUserSession());
+          dispatch(fetchUserSession({}));
           setShowUpdateForm(false);
         },
       }
@@ -56,7 +56,7 @@ export default function ProfileScreen() {
       { role },
       {
         onSuccess: () => {
-          dispatch(fetchUserSession());
+          dispatch(fetchUserSession({}));
         },
       }
     );

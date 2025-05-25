@@ -1,11 +1,10 @@
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
-import { View, Text, TouchableOpacity, Linking, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Linking, Image } from 'react-native';
 import { ChevronRight, Clock, MapPin, Play } from 'lucide-react-native';
 import autowashHall from '@/assets/images/autowash-hall.png';
 import selfwashHall from '@/assets/images/selfwash-hall.png';
 import { InclinedButton } from '@/components/ui/InclinedButton';
 import { useLocationById } from '@/hooks/useLocations';
-import { useCreateWashSession } from '@/hooks/useWashSessions';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function LocationDetails() {

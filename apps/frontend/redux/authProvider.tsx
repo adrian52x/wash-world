@@ -30,7 +30,7 @@ export default function AuthProvider({
       } else if (isAuthenticated && inAuthGroup) {
         router.replace('/(tabs)');
         // Fetch user session data when authenticated
-        dispatch(fetchUserSession());
+        dispatch(fetchUserSession({}));
       }
     }, 100);
 
