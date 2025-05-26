@@ -52,7 +52,7 @@ export class MembershipsService {
     private readonly usersService: UsersService,
   ) {}
 
-  private async findUserMembership(
+  async findUserMembership(
     trx: EntityManager,
     filter: FindOptionsWhere<UserMembership>,
     includeRelations: boolean = false,
@@ -97,11 +97,6 @@ export class MembershipsService {
         if (membershipType == null) {
           throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
         }
-
-        // update the role
-        await this.usersService.updateUser(userId, {
-          role: `${membershipType.type}_USER` as RoleEnum,
-        });
 
         const existingUserMembership = await this.findUserMembership(trx, {
           user: { user_id: userId },

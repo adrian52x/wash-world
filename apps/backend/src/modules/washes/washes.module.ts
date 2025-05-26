@@ -7,13 +7,15 @@ import { WashesService } from './washes.service';
 import { UsersModule } from '../users/users.module';
 import { LocationsModule } from '../locations/locations.module';
 import { StatisticsModule } from '../statistics/statistics.module';
+import { MembershipsModule } from '../memberships/memberships.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([WashType, Wash]),
     forwardRef(() => UsersModule),
     LocationsModule,
-    forwardRef(() => StatisticsModule)
+    forwardRef(() => StatisticsModule),
+    MembershipsModule,
   ],
   controllers: [WashesController],
   providers: [WashesService],

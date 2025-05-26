@@ -1,4 +1,4 @@
-import { MembershipTypeEnum, RoleEnum, WashTypeEnum } from "./enums";
+import { MembershipTypeEnum, RoleEnum, WashTypeEnum } from './enums';
 
 export interface Membership {
   membershipId: number;
@@ -26,6 +26,7 @@ export interface WashSession {
   createdAt: string; // ISO date string
   location: Location;
   washType: WashType;
+  amountPaid: number;
 }
 
 export interface InsertWash {

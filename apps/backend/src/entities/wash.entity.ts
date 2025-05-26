@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { Location } from './location.entity';
-import { IsDateString, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsOptional } from 'class-validator';
 
 @Entity('washes')
 export class Wash {
@@ -29,4 +29,9 @@ export class Wash {
   @IsNotEmpty()
   @IsDateString()
   date_time: Date;
+
+  @Column({ type: 'int', nullable: true }) // put it like this, so i can test
+  // @IsNotEmpty()
+  @IsOptional()
+  amountPaid: number;
 }
