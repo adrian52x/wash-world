@@ -51,10 +51,7 @@ export class LocationsService {
     return mapToLocationDTO(location);
   }
 
-  async update(
-    locationId: number,
-    updateLocationDto: Partial<LocationDTO>,
-  ): Promise<{ success: boolean }> {
+  async update(locationId: number, updateLocationDto: Partial<LocationDTO>): Promise<{ success: boolean }> {
     this.logger.log(`locations: update`);
 
     const location = await this.locationRepository.findOne({
@@ -65,7 +62,11 @@ export class LocationsService {
       throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
     }
 
-    Object.assign(location, updateLocationDto);
+    location.name = updateLocationDto.name ?? location.name;
+    location.address = updateLocationDto.address ?? location.address;
+    location.opening_hours = updateLocationDto.openingHours ?? location.opening_hours;
+    location.auto_wash_halls = updateLocationDto.autoWashHalls ?? location.auto_wash_halls;
+    location.self_wash_halls = updateLocationDto.selfWashHalls ?? location.self_wash_halls;
 
     const updatedLocation = await this.locationRepository.save(location);
 
