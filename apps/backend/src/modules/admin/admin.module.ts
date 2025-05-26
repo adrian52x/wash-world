@@ -4,8 +4,6 @@ import { LocationsModule } from '../locations/locations.module';
 
 @Module({
   controllers: [AdminController],
-  imports: [
-    LocationsModule
-  ],
+  imports: [LocationsModule],
 })
-export class AdminModule { }
+export class AdminModule {}

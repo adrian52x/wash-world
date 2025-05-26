@@ -24,7 +24,7 @@ export class LocationsService {
   constructor(
     @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>,
-  ) { }
+  ) {}
 
   async getAll(): Promise<LocationDTO[]> {
     this.logger.log('locations: getAll');
@@ -54,7 +54,7 @@ export class LocationsService {
   async update(
     locationId: number,
     updateLocationDto: Partial<LocationDTO>,
-  ): Promise<{ success: boolean; }> {
+  ): Promise<{ success: boolean }> {
     this.logger.log(`locations: update`);
 
     const location = await this.locationRepository.findOne({
