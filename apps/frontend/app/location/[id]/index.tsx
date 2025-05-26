@@ -6,10 +6,14 @@ import selfwashHall from '@/assets/images/selfwash-hall.png';
 import { InclinedButton } from '@/components/ui/InclinedButton';
 import { useLocationById } from '@/hooks/useLocations';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useAppSelector } from '@/redux/hooks';
+import { selectUserSession } from '@/redux/authSlice';
 
 export default function LocationDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const userSession = useAppSelector(selectUserSession);
+  
 
   const idStr = Array.isArray(id) ? id[0] : id;
   const { location, loadingLocation, errorLocation } = useLocationById(idStr);
@@ -24,6 +28,7 @@ export default function LocationDetails() {
 
   // Testing createWashSession, washTypeId is hardcoded to 1, but make sure database is seeded with this id
   const handleStartWash = async () => {
+    //if (!userSession?.user.licensePlate) return;
     router.push(`/location/${location.locationId}/wash`);
   };
 
@@ -100,10 +105,12 @@ export default function LocationDetails() {
       </View>
 
       {location.autoWashHalls > 0 && (
-        <TouchableOpacity className='w-[170px] absolute right-[-20px] bottom-24'
+        <TouchableOpacity
+          className='w-[170px] absolute right-[-20px] bottom-24'
           onPress={handleStartWash}
+          disabled={!userSession?.user.licensePlate}
         >
-          <InclinedButton className='flex-row gap-2' >
+          <InclinedButton className='flex-row gap-2' disabled={!userSession?.user.licensePlate}>
             <Play size={20} color="#ffffff" />
             <Text className='text-white font-subheader text-button'>Start wash</Text>
           </InclinedButton>

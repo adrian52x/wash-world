@@ -145,11 +145,11 @@ export default function ProfileScreen() {
             <Text className="text-lg font-bold">Upgrade User</Text>
             <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
               <Button
-                title="Upgrade to Premium User"
+                title="Upgrade to Paid User"
                 onPress={() =>
                   Alert.alert(
                     'Confirm Upgrade',
-                    'Are you sure you want to upgrade to PREMIUM USER?',
+                    'Are you sure you want to upgrade to Paid USER?',
                     [
                       { text: 'Cancel', style: 'cancel' },
                       {
