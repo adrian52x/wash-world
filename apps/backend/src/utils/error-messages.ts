@@ -10,4 +10,5 @@ export enum ErrorMessages {
   WASH_TYPES_NOT_FOUND = 'Wash types not found',
   WASH_SESSION_CREATE_FAILED = 'Failed to create wash session',
   USER_WASH_SESSIONS_NOT_FOUND = 'User wash sessions not found',
+  UNAUTHORIZED = 'Unauthorized',
 }

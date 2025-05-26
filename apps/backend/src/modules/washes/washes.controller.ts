@@ -7,7 +7,7 @@ import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('washes')
 export class WashesController {
-  constructor(private readonly washesService: WashesService) {}
+  constructor(private readonly washesService: WashesService) { }
 
   @Get()
   @ApiOperation({ summary: 'Get all wash types' })
@@ -15,6 +15,7 @@ export class WashesController {
     status: 200,
     description: 'Wash types retrieved successfully',
   })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @ApiResponse({ status: 404, description: ErrorMessages.WASH_TYPES_NOT_FOUND })
   @UseGuards(JwtAuthGuard)
   washTypesGetAll() {
@@ -27,6 +28,7 @@ export class WashesController {
     status: 200,
     description: 'User washes retrieved successfully',
   })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @ApiResponse({
     status: 404,
     description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND,
@@ -42,6 +44,7 @@ export class WashesController {
     status: 201,
     description: 'Wash session created successfully',
   })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @ApiResponse({
     status: 400,
     description: ErrorMessages.WASH_SESSION_CREATE_FAILED,

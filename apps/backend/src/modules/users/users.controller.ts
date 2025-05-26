@@ -23,6 +23,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   findAll() {
     return this.usersService.findAll();
   }
@@ -34,6 +35,7 @@ export class UsersController {
     description: 'User session retrieved successfully',
   })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @UseGuards(JwtAuthGuard)
   usersCurrentSession(@Req() req) {
     return this.usersService.getCurrentSession(req.user.userId);
@@ -46,6 +48,7 @@ export class UsersController {
     description: 'User statistics retrieved successfully',
   })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @UseGuards(JwtAuthGuard)
   async getUserStatistics(@Req() req) {
     return this.statisticsService.getUserWashStats(req.user.userId);
@@ -54,6 +57,8 @@ export class UsersController {
   @Patch()
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 400, description: 'Bad request when updating a user' })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   @UseGuards(JwtAuthGuard)
   async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
@@ -62,7 +67,8 @@ export class UsersController {
 
   @Delete()
   @ApiOperation({ summary: 'Delete user by ID' })
-  @ApiResponse({ status: 200, description: 'User deleted successfully' })
+  @ApiResponse({ status: 204, description: 'User deleted successfully' })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_NOT_FOUND })
   @UseGuards(JwtAuthGuard)
   remove(@Req() req) {

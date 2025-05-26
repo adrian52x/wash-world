@@ -16,7 +16,7 @@ import { CreateUserMembershipDTO } from './dto/create-user-membership.dto';
 
 @Controller('memberships')
 export class MembershipsController {
-  constructor(private readonly membershipsService: MembershipsService) {}
+  constructor(private readonly membershipsService: MembershipsService) { }
 
   @Get()
   @ApiOperation({ summary: 'Get all membership' })
@@ -28,6 +28,7 @@ export class MembershipsController {
     status: 404,
     description: ErrorMessages.MEMBERSHIPS_NOT_FOUND,
   })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @UseGuards(JwtAuthGuard)
   getAll() {
     return this.membershipsService.getAll();
@@ -44,6 +45,7 @@ export class MembershipsController {
     description: ErrorMessages.USER_MEMBERSHIP_NOT_FOUND,
   })
   @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   create(@Req() req, @Body() createUserMembershipDto: CreateUserMembershipDTO) {
     return this.membershipsService.create(
       req.user.userId,
@@ -61,6 +63,7 @@ export class MembershipsController {
     status: 404,
     description: ErrorMessages.USER_MEMBERSHIP_NOT_FOUND,
   })
+  @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @UseGuards(JwtAuthGuard)
   cancel(@Req() req) {
     return this.membershipsService.cancel(req.user.userId);

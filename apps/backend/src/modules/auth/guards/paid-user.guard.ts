@@ -7,7 +7,7 @@ import {
 import { RoleEnum } from '../../../utils/enums';
 
 @Injectable()
-export class GoldUserGuard implements CanActivate {
+export class PaidUserGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
@@ -16,8 +16,8 @@ export class GoldUserGuard implements CanActivate {
       throw new ForbiddenException('User not authenticated');
     }
 
-    if (user.role !== RoleEnum.GoldUser) {
-      throw new ForbiddenException('Admin access required');
+    if (user.role !== RoleEnum.PaidUser) {
+      throw new ForbiddenException('Paid user access required');
     }
 
     return true;

@@ -15,7 +15,7 @@ import { MembershipsModule } from '../memberships/memberships.module';
     forwardRef(() => UsersModule),
     LocationsModule,
     forwardRef(() => StatisticsModule),
-    MembershipsModule,
+    forwardRef(() => MembershipsModule),
   ],
   controllers: [WashesController],
   providers: [WashesService],
