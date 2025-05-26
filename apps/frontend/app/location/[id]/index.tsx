@@ -65,7 +65,10 @@ export default function LocationDetails() {
       >
         <View className="flex-row items-center gap-2">
           <MapPin size={16} />
-          <Text className="font-button text-green-600">{location.address}</Text>
+          <Text className="font-button text-green-600"
+            numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: 290 }}>
+              {location.address}
+          </Text>
         </View>
         <ChevronRight size={20} color="#28a626" />
       </TouchableOpacity>

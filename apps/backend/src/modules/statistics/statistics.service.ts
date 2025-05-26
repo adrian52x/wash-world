@@ -25,7 +25,7 @@ export class StatisticsService {
 
   private calculateTotalSpent(userWashes: UserWashDTO[]): number {
     return userWashes.reduce(
-      (sum, wash) => sum + Number(wash.washType.price),
+      (sum, wash) => sum + Number(wash.amountPaid),
       0,
     );
   }

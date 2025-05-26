@@ -232,7 +232,7 @@ export default function WashProcessScreen() {
         You are good to go!
       </Text>
       <Text className="text-bodyText font-subheader text-white">
-        +10 WashPoints added
+        You can now exit the hall.
       </Text>
       <Image
         source={CarImage}

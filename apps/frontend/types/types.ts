@@ -29,6 +29,19 @@ export interface WashSession {
   amountPaid: number;
 }
 
+export interface WashStats {
+  totalSpent: number;
+  mostUsedLocation: {
+    name: string;
+    visitCount: number;
+  };
+  favoriteWashType: {
+    type: string;
+    useCount: number;
+  };
+  lastMonthWashes: number;
+}
+
 export interface InsertWash {
   washTypeId: number;
   locationId: number;

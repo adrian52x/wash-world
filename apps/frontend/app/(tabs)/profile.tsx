@@ -1,22 +1,40 @@
+import { ExtraFeaturesCard } from '@/components/ExtraFeaturesCard';
 import { UpdateUserForm } from '@/components/UpdateUserForm';
+import { UserDetailsCard } from '@/components/UserDetailsCard';
+import { WashSessionsCard } from '@/components/WashSessionsCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { useUpdateUser } from '@/hooks/useUsers';
+import { useUpdateUser, useUserWashStats } from '@/hooks/useUsers';
 import { useWashSessions } from '@/hooks/useWashSessions';
 import { fetchUserSession, logout, selectUserSession } from '@/redux/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { RoleEnum } from '@/types/enums';
 import { UpdateUser, WashSession } from '@/types/types';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { ScrollView, View, Text, Button, Alert } from 'react-native';
+import { use, useState } from 'react';
+import { ScrollView, View, Text, Button, Alert, RefreshControl } from 'react-native';
 
 export default function ProfileScreen() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const userSession = useAppSelector(selectUserSession);
-  const { washSessions, loadingWashSessions, errorWashSessions } =
-    useWashSessions();
+  const { washSessions, loadingWashSessions, errorWashSessions, refetchWashSessions } = useWashSessions();
   const { updateUser } = useUpdateUser();
+
+  const { washStats, loadingWashStats, errorWashStats, refetchWashStats } = useUserWashStats();
+  const paidUserOnly = userSession?.user.role === RoleEnum.PaidUser;
+  const normalUserOnly = userSession?.user.role === RoleEnum.User;
+
+  const [refreshing, setRefreshing] = useState(false);
+  // Drag-page to refresh functionality
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([
+      dispatch(fetchUserSession({})),
+      refetchWashStats(),
+      refetchWashSessions(),
+    ]);
+    setRefreshing(false);
+  };
 
   // Check if onboarding is needed
   const needsOnboarding =
@@ -73,6 +91,7 @@ export default function ProfileScreen() {
           licensePlate: userSession?.user.licensePlate ?? '',
         }}
         onSubmit={handleUpdateSubmit}
+        isPending={updateUser.isPending}
       />
     );
   }
@@ -86,11 +105,11 @@ export default function ProfileScreen() {
           address: userSession.user.address ?? '',
           licensePlate: userSession.user.licensePlate ?? '',
           username: userSession.user.username ?? '',
-          password: '',
         }}
         onSubmit={handleUpdateSubmit}
         showUsername
         onCancel={() => setShowUpdateForm(false)}
+        isPending={updateUser.isPending}
       />
     );
   }
@@ -104,48 +123,28 @@ export default function ProfileScreen() {
         </View>
       )}
 
-      <ScrollView contentContainerClassName="p-4 space-y-2 pb-[100px]">
-        {userSession ? (
-          <>
-            <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
-              <Text className="text-xl font-bold mb-1">
-                {userSession.user.username}
-              </Text>
-              <Text className="text-gray-700 mb-1">
-                {userSession.user.email}
-              </Text>
-              <Text className="text-gray-500 mb-1">
-                License Plate: {userSession.user.licensePlate}
-              </Text>
-              <Text className="text-gray-500 mb-1">
-                Phone: {userSession.user.phoneNumber}
-              </Text>
-              <Text className="text-gray-500 mb-1">
-                Address: {userSession.user.address}
-              </Text>
-              <Text className="text-gray-500 mb-1">
-                Role: {userSession.user.role}
-              </Text>
-              {userSession.userMembership && (
-                <Text className="text-green-600 font-semibold">
-                  Membership: {userSession.userMembership.membership.type}
-                </Text>
-              )}
-              <Button
-                title="Update Profile"
-                onPress={() => setShowUpdateForm(true)}
-              />
-            </View>
-          </>
-        ) : null}
+      <ScrollView contentContainerClassName="p-4 space-y-2 pb-[100px]"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
+        
+        {/* User details */}
+        {userSession && (
+          <UserDetailsCard
+            userSession={userSession}
+            onUpdateProfile={() => setShowUpdateForm(true)}
+            onLogout={handleLogout}
+          />
+        )}
 
         {/* Upgrade button */}
-        {userSession?.user.role === RoleEnum.User && (
+        {normalUserOnly && (
           <>
-            <Text className="text-lg font-bold">Upgrade User</Text>
             <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
               <Button
                 title="Upgrade to Paid User"
+                color="#10b981"
                 onPress={() =>
                   Alert.alert(
                     'Confirm Upgrade',
@@ -164,72 +163,36 @@ export default function ProfileScreen() {
           </>
         )}
 
-        {/* Extra features for Premium user*/}
-        {userSession?.user.role === RoleEnum.PaidUser && (
-          <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
-            <Text className="text-lg font-bold mb-2">Premium Features</Text>
-            <Text className="text-gray-700 mb-2">
-              As a Premium User, you have access to exclusive features and
-              benefits.
-            </Text>
-            <Button
-              title="Learn More"
-              onPress={() =>
-                Alert.alert(
-                  'Premium Features',
-                  'Details about premium features...',
-                )
-              }
-            />
-            <Button
-              title="Downgrade to Regular User"
-              onPress={() =>
-                Alert.alert(
-                  'Confirm Downgrade',
-                  'Are you sure you want to downgrade to Regular USER?',
-                  [
-                    { text: 'Cancel', style: 'cancel' },
-                    {
-                      text: 'Yes',
-                      onPress: () => handleUpgradeRole(RoleEnum.User),
-                    },
-                  ],
-                )
-              }
-            />
-          </View>
+        {/* Extra features for Paid user*/}
+        {paidUserOnly && (
+          <ExtraFeaturesCard
+            loading={loadingWashStats}
+            error={errorWashStats}
+            stats={washStats}
+            onDowngrade={() =>
+              Alert.alert(
+                'Confirm Downgrade',
+                'Are you sure you want to downgrade to Regular USER?',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  {
+                    text: 'Yes',
+                    onPress: () => handleUpgradeRole(RoleEnum.User),
+                  },
+                ],
+              )
+            }
+          />
         )}
 
-        {/* Testing wash sessions*/}
-        <Text className="text-lg font-bold">Wash Sessions History</Text>
+        {/* Wash sessions*/}
+        <WashSessionsCard
+          sessions={washSessions ?? []}
+          loading={loadingWashSessions}
+          error={errorWashSessions}
+          onSeeAll={() => router.push('/history/wash')}
+        />
 
-        {loadingWashSessions ? (
-          <LoadingSpinner />
-        ) : errorWashSessions ? (
-          <Text className="text-red-500 mb-2">{errorWashSessions}</Text>
-        ) : (
-          (washSessions ?? []).map((wash: WashSession) => (
-            <View
-              key={wash.washId}
-              className="mb-4 p-3 border border-gray-200 rounded-lg bg-white"
-            >
-              <Text className="font-semibold">{wash.location.name}</Text>
-              <Text>{wash.location.address}</Text>
-              <Text>{wash.washType.type} Wash </Text>
-              <Text className="text-slate-600 mb-2">
-                Paid: {wash.amountPaid} DKK
-              </Text>
-
-              <Text className="text-xs text-gray-500">
-                {new Date(wash.createdAt).toLocaleString()}
-              </Text>
-            </View>
-          ))
-        )}
-
-        <View>
-          <Button title="Logout" onPress={handleLogout} />
-        </View>
       </ScrollView>
     </View>
   );
