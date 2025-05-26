@@ -3,9 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
-  RelationId,
 } from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { IsEnum, IsNotEmpty, IsPositive } from 'class-validator';

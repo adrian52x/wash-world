@@ -12,7 +12,6 @@ import {
   mapToLocationDTO,
 } from '../locations/locations.service';
 import { UserWashDTO } from './dto/user-wash-dto';
-import { UserMembership } from 'src/entities/user-membership.entity';
 import { MembershipsService } from '../memberships/memberships.service';
 
 function mapToWashTypeDTO(washType: WashType): WashTypeDTO {
@@ -47,10 +46,9 @@ export class WashesService {
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
     private readonly membershipsService: MembershipsService,
-  ) {}
+  ) { }
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
-    // To dicuss this later
     this.logger.log('washTypes: getAll');
 
     const washTypes = await this.washTypeRepository.find();
