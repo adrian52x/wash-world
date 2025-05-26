@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Post,
   Req,
   UseGuards,
@@ -16,7 +15,7 @@ import { CreateUserMembershipDTO } from './dto/create-user-membership.dto';
 
 @Controller('memberships')
 export class MembershipsController {
-  constructor(private readonly membershipsService: MembershipsService) {}
+  constructor(private readonly membershipsService: MembershipsService) { }
 
   @Get()
   @ApiOperation({ summary: 'Get all membership' })

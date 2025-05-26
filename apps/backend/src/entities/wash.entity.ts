@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { Location } from './location.entity';
-import { IsDateString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsDateString, IsNotEmpty } from 'class-validator';
 
 @Entity('washes')
 export class Wash {
