@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from '../data-source';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { StatisticsModule } from './modules/statistics/statistics.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     MembershipsModule,
     WashesModule,
     LocationsModule,
+    AdminModule,
     StatisticsModule,
   ],
   controllers: [AppController, LocationsController],
