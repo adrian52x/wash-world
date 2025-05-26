@@ -7,7 +7,7 @@ import { JwtAuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('washes')
 export class WashesController {
-  constructor(private readonly washesService: WashesService) { }
+  constructor(private readonly washesService: WashesService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all wash types' })

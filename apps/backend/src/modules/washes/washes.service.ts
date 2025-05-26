@@ -47,7 +47,7 @@ export class WashesService {
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
     private readonly membershipsService: MembershipsService,
-  ) { }
+  ) {}
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
     // To dicuss this later

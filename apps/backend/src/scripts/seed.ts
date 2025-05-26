@@ -1,10 +1,10 @@
-import datasource from "../../data-source";
+import datasource from '../../data-source';
 
 async function seed() {
-    await datasource.initialize();
+  await datasource.initialize();
 
-    // Seed locations
-    await datasource.query(`
+  // Seed locations
+  await datasource.query(`
         INSERT INTO locations (name, address, opening_hours, auto_wash_halls, self_wash_halls, coordinates)
         VALUES 
         ('Nørrebro Wash Center', 'Nørrebrogade 50, 2200 København N', '6-22', 0, 4, '{"y":"55.6998","x":"12.5528"}'),
@@ -22,34 +22,32 @@ async function seed() {
         ('Esbjerg - Sædding Ringvej', 'Sædding Ringvej 6, 6710 Esbjerg', '7-22', 2, null, '{"y":"55.5037278","x":"8.40741920000005"}'),
         ('Farum - Gammelgårdsvej', 'Gammelgårdsvej 84, 3520 Farum', '7-22', 1, 3, '{"y":55.816943,"x":12.37035}');
     `);
-    console.log('Locations seeded!');
+  console.log('Locations seeded!');
 
-    // Seed wash types
-    await datasource.query(`
+  // Seed wash types
+  await datasource.query(`
         INSERT INTO wash_types (type, description, price, is_auto_wash) VALUES 
         ('GOLD', 'A simple basic wash.', 59, true),
         ('PREMIUM', 'Includes extra detailing and waxing.', 89, true),
         ('BRILLIANT', 'Fully automated wash process.', 119, true),
         ('SELF_WASH', 'Comprehensive cleaning with premium products.', 6, false);
     `);
-    console.log('Wash types seeded!');
+  console.log('Wash types seeded!');
 
-    // Seed memberships
-    await datasource.query(`
+  // Seed memberships
+  await datasource.query(`
         INSERT INTO memberships (type, price, wash_type_id) VALUES 
         ('GOLD', 139, 1),
         ('PREMIUM', 169, 2),
         ('BRILLIANT', 199, 3);
 
     `);
-    console.log('Memberships seeded!');
+  console.log('Memberships seeded!');
 
-
-
-    await datasource.destroy();
+  await datasource.destroy();
 }
 
 seed().catch((e) => {
-    console.error(e);
-    process.exit(1);
-});    
+  console.error(e);
+  process.exit(1);
+});

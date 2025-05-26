@@ -22,7 +22,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     MembershipsModule,
     WashesModule,
     LocationsModule,
-    StatisticsModule
+    StatisticsModule,
   ],
   controllers: [AppController, LocationsController],
   providers: [AppService],

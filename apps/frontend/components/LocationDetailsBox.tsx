@@ -70,7 +70,9 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
         </Text>
       )}
       <TouchableOpacity onPress={onSeeMore} className="flex-row items-center">
-        <InclinedButton><Text className='text-white'>See more</Text></InclinedButton>
+        <InclinedButton>
+          <Text className="text-white">See more</Text>
+        </InclinedButton>
       </TouchableOpacity>
 
       {/* Google Maps Button */}

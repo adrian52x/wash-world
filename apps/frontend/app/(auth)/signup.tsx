@@ -1,4 +1,9 @@
-import { Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/redux/hooks';
@@ -20,60 +25,59 @@ export default function SignupScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>      
-    <View className="flex-1 items-center">
-
-      <Image source={washWorldLogo} resizeMode="contain" className="h-[200px] w-[200px]" />
-
-      <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
-        <Mail color="#797777" /> 
-        <TextInput
-          className="ml-2 w-full"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          placeholderTextColor="#9ca3af"
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View className="flex-1 items-center">
+        <Image
+          source={washWorldLogo}
+          resizeMode="contain"
+          className="h-[200px] w-[200px]"
         />
+
+        <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
+          <Mail color="#797777" />
+          <TextInput
+            className="ml-2 w-full"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            placeholderTextColor="#9ca3af"
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+        <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
+          <User color="#797777" />
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            className="ml-2 w-full"
+            placeholderTextColor="#9ca3af"
+          />
+        </View>
+        <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-6 w-full max-w-xs bg-white">
+          <Lock color="#797777" />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            className="ml-2 w-full"
+            placeholderTextColor="#9ca3af"
+          />
+        </View>
+
+        {error ? <Text className="text-red-500 mb-6">{error}</Text> : null}
+
+        <TouchableOpacity
+          className="w-full mb-4 max-w-xs px-4 py-3 bg-green-light"
+          onPress={handleSignup}
+        >
+          <Text className="text-white font-semibold text-center">Sign Up</Text>
+        </TouchableOpacity>
+
+        <Button title="Back to Login" onPress={() => router.push('/login')} />
       </View>
-      <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
-        <User color="#797777" /> 
-        <TextInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          className="ml-2 w-full"
-          placeholderTextColor="#9ca3af"
-        />
-      </View>      
-      <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-6 w-full max-w-xs bg-white">
-        <Lock color="#797777" /> 
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          className="ml-2 w-full"
-          placeholderTextColor="#9ca3af"
-        />
-      </View>      
-
-      {error ? (
-        <Text className="text-red-500 mb-6">{error}</Text>
-      ) : null}
-
-      <TouchableOpacity className='w-full mb-4 max-w-xs px-4 py-3 bg-green-light' onPress={handleSignup}>
-        <Text className='text-white font-semibold text-center'>
-          Sign Up
-        </Text>
-      </TouchableOpacity>
-
-      <Button title="Back to Login" onPress={() => router.push('/login')} />            
-
-    </View>
     </TouchableWithoutFeedback>
   );
 }
-
-

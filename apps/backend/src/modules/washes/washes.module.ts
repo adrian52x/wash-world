@@ -21,4 +21,4 @@ import { MembershipsModule } from '../memberships/memberships.module';
   providers: [WashesService],
   exports: [WashesService],
 })
-export class WashesModule { }
+export class WashesModule {}

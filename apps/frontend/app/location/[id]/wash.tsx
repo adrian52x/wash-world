@@ -46,8 +46,11 @@ export default function WashProcessScreen() {
   );
 
   // Find the wash type associated with the user's membership
-  const membershipWashTypeId = userSession?.userMembership?.membership?.washTypeId;
-  const membershipWash = onlyAutoWashTypes.find(wash => wash.washTypeId === membershipWashTypeId);
+  const membershipWashTypeId =
+    userSession?.userMembership?.membership?.washTypeId;
+  const membershipWash = onlyAutoWashTypes.find(
+    (wash) => wash.washTypeId === membershipWashTypeId,
+  );
 
   // Set initial selected wash = membership wash or the second auto wash type by default if no membership
   const [selectedWash, setSelectedWash] = useState(
@@ -90,8 +93,8 @@ export default function WashProcessScreen() {
           <Text className="font-header text-header font-bold mb-4">
             Choose a wash
           </Text>
-          { userSession?.userMembership?.membership && (
-            <View className='flex-row items-center gap-2 mb-4 '>
+          {userSession?.userMembership?.membership && (
+            <View className="flex-row items-center gap-2 mb-4 ">
               <Text className="font-subheader text-bodyText text-body">
                 Membership:
               </Text>
@@ -100,7 +103,7 @@ export default function WashProcessScreen() {
               </Text>
             </View>
           )}
-          <View className='flex-row items-center gap-2 mb-4 '>
+          <View className="flex-row items-center gap-2 mb-4 ">
             <Text className="font-subheader text-bodyText text-body">
               License plate scanned:
             </Text>
@@ -108,7 +111,6 @@ export default function WashProcessScreen() {
               {userSession?.user.licensePlate}
             </Text>
           </View>
-
 
           <View className="flex-col flex-1">
             {onlyAutoWashTypes.map((wash) => {
@@ -118,7 +120,7 @@ export default function WashProcessScreen() {
 
               const membershipWashPrice = Number(membershipWash?.price);
               const washPrice = Number(wash.price);
-              
+
               // Calculate displayed price
               let displayedPrice = washPrice;
               if (!isNaN(membershipWashPrice)) {
@@ -145,12 +147,16 @@ export default function WashProcessScreen() {
                       <Text
                         className={`pr-2 text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
                       >
-                        {wash.type} - {displayedPrice === 0 ? 'Included' : `${displayedPrice} DKK`}
+                        {wash.type} -{' '}
+                        {displayedPrice === 0
+                          ? 'Included'
+                          : `${displayedPrice} DKK`}
                       </Text>
 
                       {/* Old price with line-through*/}
-                      <Text className='line-through text-lg text-gray-500'>
-                        {displayedPrice !== Number(wash.price) && `${wash.price} DKK`}
+                      <Text className="line-through text-lg text-gray-500">
+                        {displayedPrice !== Number(wash.price) &&
+                          `${wash.price} DKK`}
                       </Text>
                     </View>
                     <Chevron size={20} />

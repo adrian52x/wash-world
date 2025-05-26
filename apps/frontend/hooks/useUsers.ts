@@ -1,6 +1,6 @@
-import { UsersAPI } from "@/api/UsersAPI";
-import { UpdateUser } from "@/types/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { UsersAPI } from '@/api/UsersAPI';
+import { UpdateUser } from '@/types/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
@@ -15,4 +15,4 @@ export const useUpdateUser = () => {
   return {
     updateUser,
   };
-}
+};

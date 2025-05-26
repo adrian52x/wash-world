@@ -17,8 +17,10 @@ import { PaidUser } from '../auth/decorators/paid-user.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService, private readonly statisticsService: StatisticsService
-  ) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly statisticsService: StatisticsService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
@@ -48,7 +50,10 @@ export class UsersController {
     status: 200,
     description: 'User statistics retrieved successfully',
   })
-  @ApiResponse({ status: 404, description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND })
+  @ApiResponse({
+    status: 404,
+    description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND,
+  })
   @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @PaidUser()
   async getUserStatistics(@Req() req) {

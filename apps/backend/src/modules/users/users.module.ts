@@ -11,4 +11,4 @@ import { StatisticsModule } from '../statistics/statistics.module';
   providers: [UsersService],
   exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}
