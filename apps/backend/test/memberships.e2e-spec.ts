@@ -97,20 +97,17 @@ describe('MembershipsController (e2e)', () => {
 
   describe('POST /memberships', () => {
     it('should create a new membership for a user', async () => {
-      // arrange
       const membershipId = 1;
       const expectedMembership = mockUserMembership;
       jest
         .spyOn(membershipsService, 'create')
         .mockResolvedValueOnce(expectedMembership);
 
-      // act
       const response = await request(app.getHttpServer())
         .post('/memberships')
         .send({ membershipId })
         .expect(201);
 
-      // assert
       expect(response.body).toMatchObject({
         userMembershipId: mockUserMembership.userMembershipId,
         startDate: mockUserMembership.startDate.toISOString(),
