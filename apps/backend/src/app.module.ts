@@ -11,6 +11,7 @@ import { LocationsModule } from './modules/locations/locations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from '../data-source';
 import { LoggerMiddleware } from './logger/logger.middleware';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { LoggerMiddleware } from './logger/logger.middleware';
     MembershipsModule,
     WashesModule,
     LocationsModule,
+    StatisticsModule
   ],
   controllers: [AppController, LocationsController],
   providers: [AppService],

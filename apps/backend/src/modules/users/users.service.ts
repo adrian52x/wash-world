@@ -10,7 +10,6 @@ import * as bcrypt from 'bcryptjs';
 import { ErrorMessages } from '../../utils/error-messages';
 import { UserSessionDTO } from './dto/user-session.dto';
 
-//TODO: We could have a better place for this function
 function mapToUserDTO(user: User): UserDTO {
   return {
     userId: user.user_id,
@@ -36,16 +35,16 @@ function mapToUserSessionDTO(user: User): UserSessionDTO {
 
   const userMembershipDTO = user.userMembership
     ? {
-        userMembershipId: user.userMembership.user_membership_id,
-        startDate: user.userMembership.start_date,
-        endDate: user.userMembership.end_date,
-        membership: {
-          membershipId: user.userMembership.membership.membership_id,
-          type: user.userMembership.membership.type,
-          price: Number(user.userMembership.membership.price),
-          washTypeId: user.userMembership.membership.washType.wash_type_id,
-        },
-      }
+      userMembershipId: user.userMembership.user_membership_id,
+      startDate: user.userMembership.start_date,
+      endDate: user.userMembership.end_date,
+      membership: {
+        membershipId: user.userMembership.membership.membership_id,
+        type: user.userMembership.membership.type,
+        price: Number(user.userMembership.membership.price),
+        washTypeId: user.userMembership.membership.washType.wash_type_id,
+      },
+    }
     : null;
 
   return {
@@ -61,7 +60,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   create(createUserDto: CreateUserDto) {
     this.logger.log('users: create');

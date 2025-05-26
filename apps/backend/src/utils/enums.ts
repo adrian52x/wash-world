@@ -1,8 +1,7 @@
 export enum RoleEnum {
   RegularUser = 'REGULAR_USER',
-  GoldUser = 'GOLD_USER',
-  PremiumUser = 'PREMIUM_USER',
-  BrilliantUser = 'BRILLIANT_USER',
+  PaidUser = 'PAID_USER',
+  Admin = 'ADMIN',
 }
 
 export enum MembershipTypeEnum {

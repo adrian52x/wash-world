@@ -1,6 +1,5 @@
 import { MembershipTypeEnum, WashTypeEnum } from "@/types/enums";
 
-
 const commonFeatures = [
   'Shampoo',
   'Drying',

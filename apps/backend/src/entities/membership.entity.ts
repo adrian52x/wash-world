@@ -29,11 +29,7 @@ export class Membership {
   @IsPositive()
   price: number;
 
-  //TODO: review relationship
   @ManyToOne(() => WashType)
   @JoinColumn({ name: 'wash_type_id' })
   washType: WashType;
-
-  // @RelationId((membership: Membership) => membership.washType)
-  // wash_type_id: number;
 }
