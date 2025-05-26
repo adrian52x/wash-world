@@ -50,4 +50,29 @@ export class LocationsService {
 
     return mapToLocationDTO(location);
   }
+
+  async update(
+    locationId: number,
+    updateLocationDto: Partial<LocationDTO>,
+  ): Promise<{ success: boolean }> {
+    this.logger.log(`locations: update`);
+
+    const location = await this.locationRepository.findOne({
+      where: { location_id: locationId },
+    });
+
+    if (!location) {
+      throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);
+    }
+
+    Object.assign(location, updateLocationDto);
+
+    const updatedLocation = await this.locationRepository.save(location);
+
+    if (!updatedLocation) {
+      return { success: false };
+    }
+
+    return { success: true };
+  }
 }
