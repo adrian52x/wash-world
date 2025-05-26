@@ -14,6 +14,8 @@ import {
 import { useCreateWashSession, useWashTypes } from '@/hooks/useWashSessions';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { getWashFeatures } from '@/utils';
+import { useAppSelector } from '@/redux/hooks';
+import { selectUserSession } from '@/redux/authSlice';
 
 const processSteps = [
   { label: 'Enter the hall', image: null },
@@ -26,6 +28,7 @@ export default function WashProcessScreen() {
   const { id } = useLocalSearchParams();
   const [step, setStep] = useState(0);
   const router = useRouter();
+  const userSession = useAppSelector(selectUserSession);
 
   const { washTypes } = useWashTypes();
   const { createWashSession } = useCreateWashSession();
@@ -42,16 +45,21 @@ export default function WashProcessScreen() {
     (washType) => washType.isAutoWash,
   );
 
+  // Find the wash type associated with the user's membership
+  const membershipWashTypeId = userSession?.userMembership?.membership?.washTypeId;
+  const membershipWash = onlyAutoWashTypes.find(wash => wash.washTypeId === membershipWashTypeId);
+
+  // Set initial selected wash = membership wash or the second auto wash type by default if no membership
   const [selectedWash, setSelectedWash] = useState(
-    onlyAutoWashTypes[1] || null,
+    membershipWash || onlyAutoWashTypes[1] || null,
   );
 
   // ensures selectedWash is set once the data is available.
   useEffect(() => {
     if (onlyAutoWashTypes.length > 0 && !selectedWash) {
-      setSelectedWash(onlyAutoWashTypes[1]);
+      setSelectedWash(membershipWash || onlyAutoWashTypes[1]);
     }
-  }, [onlyAutoWashTypes]);
+  }, [onlyAutoWashTypes, membershipWash]);
 
   const handleCreateWashSession = async () => {
     await createWashSession.mutateAsync({
@@ -82,16 +90,47 @@ export default function WashProcessScreen() {
           <Text className="font-header text-header font-bold mb-4">
             Choose a wash
           </Text>
-          <Text className="font-subheader text-accent-gray-60 mb-4">
-            Your license plate was scanned at Hall 2, please choose a wash
-            program you'd like to proceed with:
-          </Text>
+          { userSession?.userMembership?.membership && (
+            <View className='flex-row items-center gap-2 mb-4 '>
+              <Text className="font-subheader text-bodyText text-body">
+                Membership:
+              </Text>
+              <Text className="font-subheader text-bodyText underline text-green-light">
+                {userSession.userMembership.membership.type}
+              </Text>
+            </View>
+          )}
+          <View className='flex-row items-center gap-2 mb-4 '>
+            <Text className="font-subheader text-bodyText text-body">
+              License plate scanned:
+            </Text>
+            <Text className="font-subheader text-bodyText underline text-green-light">
+              {userSession?.user.licensePlate}
+            </Text>
+          </View>
+
 
           <View className="flex-col flex-1">
             {onlyAutoWashTypes.map((wash) => {
               const isSelected = selectedWash?.type === wash.type;
               const CheckIcon = isSelected ? CircleCheck : Circle;
               const Chevron = isSelected ? ChevronUp : ChevronDown;
+
+              const membershipWashPrice = Number(membershipWash?.price);
+              const washPrice = Number(wash.price);
+              
+              // Calculate displayed price
+              let displayedPrice = washPrice;
+              if (!isNaN(membershipWashPrice)) {
+                if (washPrice === membershipWashPrice) {
+                  displayedPrice = 0;
+                } else if (washPrice > membershipWashPrice) {
+                  displayedPrice = washPrice - membershipWashPrice;
+                } else {
+                  displayedPrice = 0;
+                }
+              }
+
               return (
                 <TouchableOpacity
                   key={wash.type}
@@ -104,9 +143,14 @@ export default function WashProcessScreen() {
                     <View className="flex-row items-center gap-2">
                       <CheckIcon size={20} />
                       <Text
-                        className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                        className={`pr-2 text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
                       >
-                        {wash.type} - {wash.price} DKK
+                        {wash.type} - {displayedPrice === 0 ? 'Included' : `${displayedPrice} DKK`}
+                      </Text>
+
+                      {/* Old price with line-through*/}
+                      <Text className='line-through text-lg text-gray-500'>
+                        {displayedPrice !== Number(wash.price) && `${wash.price} DKK`}
                       </Text>
                     </View>
                     <Chevron size={20} />
