@@ -31,7 +31,7 @@ function mapToWashDTO(wash: Wash): UserWashDTO {
     createdAt: wash.date_time,
     location: mapToLocationDTO(wash.location),
     washType: mapToWashTypeDTO(wash.washType),
-    amountPaid: wash.amountPaid ?? 0,
+    amountPaid: wash.amount_paid ?? 0,
   };
 }
 
@@ -47,7 +47,7 @@ export class WashesService {
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
     private readonly membershipsService: MembershipsService,
-  ) {}
+  ) { }
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
     // To dicuss this later
@@ -124,7 +124,7 @@ export class WashesService {
       if (userMembership?.membership?.washType) {
         const membershipWashType = userMembership.membership.washType;
         const membershipWashPrice = Number(membershipWashType.price);
-        const washPrice = Number(washType.price); 
+        const washPrice = Number(washType.price);
 
         if (membershipWashType.type === washType.type) {
           // same wash type as membership - free
@@ -144,7 +144,7 @@ export class WashesService {
         washType: { wash_type_id: washType.washTypeId },
         location: { location_id: location.locationId },
         date_time: new Date(),
-        amountPaid,
+        amount_paid: amountPaid,
       });
 
       const savedWash = await trx.save(wash);

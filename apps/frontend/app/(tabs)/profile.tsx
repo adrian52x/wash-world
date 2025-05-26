@@ -154,7 +154,7 @@ export default function ProfileScreen() {
                       { text: 'Cancel', style: 'cancel' },
                       {
                         text: 'Upgrade',
-                        onPress: () => handleUpgradeRole(RoleEnum.PremiumUser),
+                        onPress: () => handleUpgradeRole(RoleEnum.PaidUser),
                       },
                     ],
                   )
@@ -165,7 +165,7 @@ export default function ProfileScreen() {
         )}
 
         {/* Extra features for Premium user*/}
-        {userSession?.user.role === RoleEnum.PremiumUser && (
+        {userSession?.user.role === RoleEnum.PaidUser && (
           <View className="mb-6 p-4 border border-gray-200 rounded-lg bg-white">
             <Text className="text-lg font-bold mb-2">Premium Features</Text>
             <Text className="text-gray-700 mb-2">

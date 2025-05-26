@@ -1,7 +1,7 @@
 export enum RoleEnum {
   Admin = 'ADMIN', // does not exist in the backend yet
   User = 'REGULAR_USER',
-  PremiumUser = 'PREMIUM_USER',
+  PaidUser = 'PAID_USER',
 }
 
 export enum MembershipTypeEnum {

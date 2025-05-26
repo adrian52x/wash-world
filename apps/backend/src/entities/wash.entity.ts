@@ -30,8 +30,7 @@ export class Wash {
   @IsDateString()
   date_time: Date;
 
-  @Column({ type: 'int', nullable: true }) // put it like this, so i can test
-  // @IsNotEmpty()
-  @IsOptional()
-  amountPaid: number;
+  @Column({ type: 'int' })
+  @IsNotEmpty()
+  amount_paid: number;
 }

@@ -23,16 +23,6 @@ async function seed() {
         ('Farum - Gammelgårdsvej', 'Gammelgårdsvej 84, 3520 Farum', '7-22', 1, 3, '{"y":55.816943,"x":12.37035}');
     `);
     console.log('Locations seeded!');
-    
-    // Seed memberships
-    await datasource.query(`
-        INSERT INTO memberships (type, price, wash_type_id) VALUES 
-        ('GOLD', 139, 1),
-        ('PREMIUM', 169, 2),
-        ('BRILLIANT', 199, 3);
-
-    `);
-    console.log('Memberships seeded!');
 
     // Seed wash types
     await datasource.query(`
@@ -44,10 +34,22 @@ async function seed() {
     `);
     console.log('Wash types seeded!');
 
+    // Seed memberships
+    await datasource.query(`
+        INSERT INTO memberships (type, price, wash_type_id) VALUES 
+        ('GOLD', 139, 1),
+        ('PREMIUM', 169, 2),
+        ('BRILLIANT', 199, 3);
+
+    `);
+    console.log('Memberships seeded!');
+
+
+
     await datasource.destroy();
 }
 
 seed().catch((e) => {
-  console.error(e);
-  process.exit(1);
+    console.error(e);
+    process.exit(1);
 });    

@@ -13,7 +13,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/auth.guard';
 import { ErrorMessages } from '../../utils/error-messages';
 import { StatisticsService } from '../statistics/statistics.service';
-import { PaidUserGuard } from '../auth/guards/paid-user.guard';
+import { PaidUser } from '../auth/decorators/paid-user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -50,7 +50,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 404, description: ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND })
   @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
-  @UseGuards(PaidUserGuard)
+  @PaidUser()
   async getUserStatistics(@Req() req) {
     return this.statisticsService.getUserWashStats(req.user.userId);
   }
