@@ -145,7 +145,7 @@ export default function WashProcessScreen() {
                     <View className="flex-row items-center gap-2">
                       <CheckIcon size={20} />
                       <Text
-                        className={`pr-2 text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                        className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
                       >
                         {wash.type} -{' '}
                         {displayedPrice === 0

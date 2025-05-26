@@ -99,17 +99,17 @@ export default function LocationDetails() {
         </View>
       </View>
 
-      <TouchableOpacity
-        className="w-[170px] absolute right-[-20px] bottom-24"
-        onPress={handleStartWash}
-      >
-        <InclinedButton className="flex-row gap-2">
-          <Play size={20} color="#ffffff" />
-          <Text className="text-white font-subheader text-button">
-            Start wash
-          </Text>
-        </InclinedButton>
-      </TouchableOpacity>
+      {location.autoWashHalls > 0 && (
+        <TouchableOpacity className='w-[170px] absolute right-[-20px] bottom-24'
+          onPress={handleStartWash}
+        >
+          <InclinedButton className='flex-row gap-2' >
+            <Play size={20} color="#ffffff" />
+            <Text className='text-white font-subheader text-button'>Start wash</Text>
+          </InclinedButton>
+        </TouchableOpacity>
+      )}
+
     </View>
   );
 }
