@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { fetchUserSession, selectIsAuthenticated } from '@/redux/authSlice';
+import { fetchUserSession, initializeAuth, selectIsAuthenticated } from '@/redux/authSlice';
 import { View } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 import { useAppSelector, useAppDispatch } from './hooks';
@@ -13,6 +13,10 @@ export default function AuthProvider({
   const segments = useSegments(); // the routes
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initializeAuth());
+  }, []);
 
   useEffect(() => {
     if (!segments) return; // wait for navigation to be ready

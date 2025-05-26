@@ -1,5 +1,5 @@
 import { User } from '@/types/auth.types';
-import { UpdateUser } from '@/types/types';
+import { UpdateUser, WashStats } from '@/types/types';
 import { storage } from '@/utils/storage';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -35,5 +35,22 @@ export class UsersAPI {
       throw new Error('Network response was not ok');
     }
     return null; // No content to return on delete
+  }
+
+  static async getUserStatistics(): Promise<WashStats> {
+    const token = await storage.getToken();
+    const response = await fetch(`${API_URL}/users/statistics`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    //throw new Error('Intentionally throwing an error');
+    return data;
   }
 }

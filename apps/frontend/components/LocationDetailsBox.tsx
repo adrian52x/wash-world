@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Linking,
 } from 'react-native';
-import { CircleX, MapPinned } from 'lucide-react-native';
+import { CircleX, MapPin, MapPinned, Ruler, Clock } from 'lucide-react-native';
 import { InclinedButton } from './ui/InclinedButton';
 import { Location } from '@/types/types';
 
@@ -48,44 +48,78 @@ export const LocationDetailsBox: React.FC<LocationDetailsProps> = ({
     return d;
   }
 
-  return (
-    <View style={styles.detailsBox}>
-      <TouchableOpacity className="absolute top-2 right-2" onPress={onClose}>
-        <CircleX size={20} color="#888" />
-      </TouchableOpacity>
-      <Text className="font-bold text-lg mb-1">{location.name}</Text>
-      <Text className="text-[13px] mb-2 text-center">
-        {location.openingHours}
-      </Text>
-      {userLocation && (
-        <Text className="text-[13px] mb-2 text-center">
-          Distance:{' '}
-          {getDistanceFromLatLonInKm(
-            userLocation.latitude,
-            userLocation.longitude,
-            Number(location.coordinates.y),
-            Number(location.coordinates.x),
-          ).toFixed(2)}{' '}
-          km
-        </Text>
-      )}
-      <TouchableOpacity onPress={onSeeMore} className="flex-row items-center">
-        <InclinedButton>
-          <Text className="text-white">See more</Text>
-        </InclinedButton>
-      </TouchableOpacity>
+  const distance =
+    userLocation &&
+    getDistanceFromLatLonInKm(
+      userLocation.latitude,
+      userLocation.longitude,
+      Number(location.coordinates.y),
+      Number(location.coordinates.x),
+    ).toFixed(2);
 
-      {/* Google Maps Button */}
-      <TouchableOpacity
-        className="absolute right-[-22px] top-1/2 bg-white rounded-full p-2  "
-        onPress={() => {
-          const url = `https://www.google.com/maps/search/?api=1&query=${Number(location.coordinates.y)},${Number(location.coordinates.x)}`;
-          Linking.openURL(url);
-        }}
-      >
-        <MapPinned size={28} color="green" />
-      </TouchableOpacity>
+  return (
+  <View style={styles.detailsBox}>
+    {/* Close Button */}
+    <TouchableOpacity className="absolute top-2 right-2 z-10" onPress={onClose}>
+      <CircleX size={22} color="#888" />
+    </TouchableOpacity>
+
+    {/* Name */}
+    <Text className="font-bold text-lg mb-0.5 text-green-700 text-center" 
+      numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: 180 }}>
+        {location.name}
+    </Text>
+
+    {/* Address */}
+    <View className="flex-row items-center mb-0.5 justify-center gap-1">
+      <MapPin size={15} color="#16a34a" />
+      <Text className="text-xs text-gray-700" 
+        selectable numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: 200 }}>
+        {location.address}
+      </Text>
     </View>
+
+    {/* Divider */}
+    <View className="w-full h-[0.5px] bg-gray-200 my-1" />
+
+    {/* Opening Hours */}
+    <View className="flex-row items-center justify-center mb-1 gap-1">
+      <Clock size={14} color="#16a34a"/>
+      <Text className="text-xs text-center text-gray-500">
+      {location.openingHours}
+      </Text>
+    </View>
+
+    {/* Distance */}
+    {userLocation && (
+      <View className="flex-row items-center mb-1 justify-center gap-1">
+        <Ruler size={14} color="#16a34a" />
+        <Text className="text-xs text-gray-600">
+          Distance: <Text className="font-semibold">{distance} km</Text>
+        </Text>
+      </View>
+    )}
+
+    {/* See More Button */}
+    <TouchableOpacity onPress={onSeeMore} className="mt-1">
+      <InclinedButton>
+        <Text className="text-white text-sm font-semibold">See more</Text>
+      </InclinedButton>
+    </TouchableOpacity>
+
+    {/* Google Maps Button */}
+    <TouchableOpacity
+      className="absolute right-[-18px] top-1/2 bg-white rounded-full p-1 shadow"
+      onPress={() => {
+        const url = `https://www.google.com/maps/search/?api=1&query=${Number(
+          location.coordinates.y,
+        )},${Number(location.coordinates.x)}`;
+        Linking.openURL(url);
+      }}
+    >
+      <MapPinned size={22} color="green" />
+    </TouchableOpacity>
+  </View>
   );
 };
 
@@ -95,18 +129,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 100,
     left: '50%',
-    marginLeft: -125,
-    width: 275,
-    minHeight: 120,
+    marginLeft: -120,
+    width: 240,
+    minHeight: 90,
     backgroundColor: 'white',
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: 12,
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 6,
     shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     borderWidth: 1,
     borderColor: '#eee',

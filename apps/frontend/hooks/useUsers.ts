@@ -1,6 +1,6 @@
 import { UsersAPI } from '@/api/UsersAPI';
 import { UpdateUser } from '@/types/types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
@@ -16,3 +16,15 @@ export const useUpdateUser = () => {
     updateUser,
   };
 };
+
+export const useUserWashStats = () => {
+  const { data: washStats, isLoading: loadingWashStats, error: errorWashStats, refetch: refetchWashStats } = useQuery({
+    queryKey: ['userStatistics'],
+    queryFn: () => UsersAPI.getUserStatistics(),
+    retry: 2,
+  });
+
+  return {
+    washStats, loadingWashStats, errorWashStats, refetchWashStats
+  }
+}
