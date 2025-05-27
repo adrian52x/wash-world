@@ -1,5 +1,6 @@
 import { LocationsAPI } from '@/api/LocationsAPI';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Location as WashLocation } from '@/types/types';
 
 export const useLocations = () => {
   // Fetch locations
@@ -37,5 +38,21 @@ export const useLocationById = (id: string) => {
     location,
     loadingLocation,
     errorLocation,
+  };
+};
+
+export const useUpdateLocation = () => {
+  const queryClient = useQueryClient();
+  const updateLocation = useMutation({
+    mutationFn: ({ locationId, ...data }: { locationId: number } & Partial<WashLocation>) =>
+      LocationsAPI.updateLocation(locationId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['locations'] });
+      queryClient.invalidateQueries({ queryKey: ['location'] });
+    },
+  });
+
+  return {
+    updateLocation,
   };
 };

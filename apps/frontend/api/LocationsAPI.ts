@@ -34,4 +34,23 @@ export class LocationsAPI {
     const data = await response.json();
     return data;
   }
+
+  static async updateLocation(locationId: number, data: Partial<Location>): Promise<Location> {
+    const token = await storage.getToken();
+    const response = await fetch(`${API_URL}/admin/locations/${locationId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update location');
+    }
+
+    const updatedLocation = await response.json();
+    return updatedLocation;
+  }
 }
