@@ -19,6 +19,17 @@ jest.mock('@/assets/images/autowash-hall.png', () => '');
 jest.mock('@/assets/images/selfwash-hall.png', () => '');
 jest.mock('@/hooks/useLocations');
 
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useSelector: jest.fn((selector) => ({
+    user: {
+      licensePlate: 'AB12345',
+    },
+    token: 'mock-token'
+  })),
+  Provider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 describe('LocationDetails', () => {
   const mockRouter = { push: jest.fn() };
   const mockLocation = {
@@ -29,6 +40,10 @@ describe('LocationDetails', () => {
     coordinates: { x: '10.123', y: '56.789' },
     autoWashHalls: 2,
     selfWashHalls: 3,
+  };
+
+  const renderWithRedux = (component: React.ReactElement) => {
+    return render(component);
   };
 
   beforeEach(() => {
@@ -44,7 +59,7 @@ describe('LocationDetails', () => {
       errorLocation: false,
     });
 
-    const { getByText } = render(<LocationDetails />);
+    const { getByText } = renderWithRedux(<LocationDetails />);
     expect(getByText('Test Location')).toBeTruthy();
   });
 
@@ -55,7 +70,7 @@ describe('LocationDetails', () => {
       errorLocation: false,
     });
 
-    const { getByText } = render(<LocationDetails />);
+    const { getByText } = renderWithRedux(<LocationDetails />);
     
     const startWashButton = getByText('Start wash');
     fireEvent.press(startWashButton);
@@ -70,7 +85,7 @@ describe('LocationDetails', () => {
       errorLocation: false,
     });
 
-    const { getByText } = render(<LocationDetails />);
+    const { getByText } = renderWithRedux(<LocationDetails />);
     
     const addressButton = getByText('123 Test St');
     fireEvent.press(addressButton);
@@ -78,5 +93,19 @@ describe('LocationDetails', () => {
     expect(Linking.openURL).toHaveBeenCalledWith(
       'https://www.google.com/maps/search/?api=1&query=56.789,10.123'
     );
+  });
+
+  it('displays vehicle dimension information', () => {
+    jest.spyOn(useLocationsHook, 'useLocationById').mockReturnValue({
+      location: mockLocation,
+      loadingLocation: false,
+      errorLocation: false,
+    });
+
+    const { getByText } = renderWithRedux(<LocationDetails />);
+    
+    expect(getByText('Height: 2.6m')).toBeTruthy();
+    expect(getByText('Side mirror to side mirror: 2.55m')).toBeTruthy();
+    expect(getByText('Max. wheel width: 2.15m')).toBeTruthy();
   });
 });
