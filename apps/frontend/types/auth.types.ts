@@ -1,10 +1,10 @@
-import { Role } from './enums';
+import { RoleEnum } from './enums';
 import { UserMembership } from './types';
 
 export interface DecodedToken {
   userId: number;
   email: string;
-  role: Role;
+  role: RoleEnum;
 }
 
 export interface SignupRequest {
@@ -33,7 +33,7 @@ export interface User {
   address: string | null;
   phoneNumber: string | null;
   licensePlate: string | null;
-  role: Role;
+  role: RoleEnum;
 }
 
 export interface UserSessionData {
