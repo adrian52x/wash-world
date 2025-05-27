@@ -40,3 +40,16 @@ export const getWashFeatures = (type: WashTypeEnum | MembershipTypeEnum) => {
       return;
   }
 };
+
+export const displayRoleUI = (role: string) => {
+  switch (role) {
+    case 'REGULAR_USER':
+      return 'Regular User';
+    case 'PAID_USER':
+      return 'Paid User';
+    case 'ADMIN':
+      return 'Administrator';
+    default:
+      return role;
+  }
+}

@@ -145,7 +145,7 @@ export default function WashProcessScreen() {
                     <View className="flex-row items-center gap-2">
                       <CheckIcon size={20} />
                       <Text
-                        className={`pr-2 text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                        className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}
                       >
                         {wash.type} -{' '}
                         {displayedPrice === 0
@@ -232,7 +232,7 @@ export default function WashProcessScreen() {
         You are good to go!
       </Text>
       <Text className="text-bodyText font-subheader text-white">
-        +10 WashPoints added
+        You can now exit the hall.
       </Text>
       <Image
         source={CarImage}

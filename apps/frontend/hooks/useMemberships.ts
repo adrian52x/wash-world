@@ -12,6 +12,7 @@ export const useMemberships = () => {
   } = useQuery({
     queryKey: ['memberships'],
     queryFn: () => MembershipsAPI.getMemberships(),
+    retry: 2,
   });
 
   return {

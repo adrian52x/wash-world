@@ -11,6 +11,7 @@ export const useWashTypes = () => {
   } = useQuery({
     queryKey: ['washTypes'],
     queryFn: () => WashesAPI.getWashTypes(),
+    retry: 2,
   });
 
   return {
@@ -25,14 +26,15 @@ export const useWashSessions = () => {
   const {
     data: washSessions,
     isLoading: loadingWashSessions,
-    isError: errorWashSessions,
+    error: errorWashSessions,
+    refetch: refetchWashSessions,
   } = useQuery({
     queryKey: ['userWashSessions'],
     queryFn: () => WashesAPI.getUserWashSessions(),
-    retry: 1, // Retry once on failure
+    retry: 2, 
   });
 
-  return { washSessions, loadingWashSessions, errorWashSessions };
+  return { washSessions, loadingWashSessions, errorWashSessions, refetchWashSessions };
 };
 
 // Create wash session

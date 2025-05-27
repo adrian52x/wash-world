@@ -11,6 +11,7 @@ export const useLocations = () => {
   } = useQuery({
     queryKey: ['locations'],
     queryFn: () => LocationsAPI.getLocations(),
+    retry: 2, 
   });
 
   return {
@@ -30,6 +31,7 @@ export const useLocationById = (id: string) => {
     queryKey: ['location', id],
     queryFn: () => LocationsAPI.getLocationById(id),
     enabled: !!id, // Only run the query if id is defined
+    retry: 2,
   });
 
   return {

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Phone, Home, Car, User, Lock } from 'lucide-react-native';
 import { UpdateUser } from '@/types/types';
+import LoadingSpinner from './ui/LoadingSpinner';
 
 interface UpdateUserFormProps {
   initialValues: UpdateUser;
@@ -16,6 +17,7 @@ interface UpdateUserFormProps {
   onCancel?: () => void;
 
   showUsername?: boolean;
+  isPending: boolean
 }
 
 export function UpdateUserForm({
@@ -23,6 +25,7 @@ export function UpdateUserForm({
   onSubmit,
   onCancel,
   showUsername = false,
+  isPending = false,
 }: UpdateUserFormProps) {
   const [phoneNumber, setPhoneNumber] = useState(initialValues.phoneNumber);
   const [address, setAddress] = useState(initialValues.address);
@@ -36,8 +39,15 @@ export function UpdateUserForm({
     (!showUsername || username === initialValues.username);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>   
       <View className="flex-1 pt-[100px] items-center p-6 bg-white">
+        {/* Loading state  */}
+        {isPending && (
+          <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
+            <LoadingSpinner />
+          </View>
+        )}
+                
         {showUsername ? (
           <Text className="text-xl font-bold mb-4">Update Your Profile</Text>
         ) : (

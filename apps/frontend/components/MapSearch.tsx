@@ -34,7 +34,7 @@ export default function MapSearch({ locations, onSelect }: Props) {
   return (
     <View className="absolute top-[60px] left-[20px] right-[20px] z-10">
       <TextInput
-        className="bg-white px-4 py-2 text-xl shadow"
+        className="bg-white px-4 py-3 text-xl shadow"
         placeholder="Search location..."
         value={search}
         onChangeText={handleSearch}
