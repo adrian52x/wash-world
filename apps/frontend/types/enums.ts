@@ -1,5 +1,5 @@
 export enum RoleEnum {
-  Admin = 'ADMIN', // does not exist in the backend yet
+  Admin = 'ADMIN',
   User = 'REGULAR_USER',
   PaidUser = 'PAID_USER',
 }

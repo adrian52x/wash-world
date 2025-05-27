@@ -53,6 +53,16 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="admin"
+        options={{
+          title: 'Admin',
+          headerTitle: 'Admin page',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="gear.circle.fill" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

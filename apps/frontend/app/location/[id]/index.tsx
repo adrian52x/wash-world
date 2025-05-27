@@ -45,9 +45,7 @@ export default function LocationDetails() {
         }}
       />
       <Text className="font-subheader text-accent-gray-60">Wash station</Text>
-      <Text className="font-header text-header font-bold mb-4">
-        {location.name}
-      </Text>
+      <Text className="font-header text-header font-bold mb-4">{location.name}</Text>
 
       <Text className="font-subheader text-subheader mb-6">General</Text>
 
@@ -76,34 +74,18 @@ export default function LocationDetails() {
       <Text className="font-subheader text-subheader my-6">About</Text>
 
       <Text className="font-bodyText text-bodyText">Height: 2.6m</Text>
-      <Text className="font-bodyText text-bodyText">
-        Side mirror to side mirror: 2.55m
-      </Text>
-      <Text className="font-bodyText text-bodyText">
-        Max. wheel width: 2.15m
-      </Text>
+      <Text className="font-bodyText text-bodyText">Side mirror to side mirror: 2.55m</Text>
+      <Text className="font-bodyText text-bodyText">Max. wheel width: 2.15m</Text>
 
       <View className="flex-row items-center justify-center gap-16 border border-gray-300 px-2 py-3 my-4 w-full bg-white">
         <View className="items-center">
-          <Image
-            source={autowashHall}
-            resizeMode="contain"
-            className="h-[100px] w-[100px]"
-          />
-          <Text className="font-subheader text-bodyText">
-            {location.autoWashHalls} Auto Wash
-          </Text>
+          <Image source={autowashHall} resizeMode="contain" className="h-[100px] w-[100px]" />
+          <Text className="font-subheader text-bodyText">{location.autoWashHalls} Auto Wash</Text>
         </View>
 
         <View className="items-center">
-          <Image
-            source={selfwashHall}
-            resizeMode="contain"
-            className="h-[100px] w-[100px]"
-          />
-          <Text className="font-subheader text-bodyText">
-            {location.selfWashHalls} Self Wash
-          </Text>
+          <Image source={selfwashHall} resizeMode="contain" className="h-[100px] w-[100px]" />
+          <Text className="font-subheader text-bodyText">{location.selfWashHalls} Self Wash</Text>
         </View>
       </View>
 
@@ -119,7 +101,6 @@ export default function LocationDetails() {
           </InclinedButton>
         </TouchableOpacity>
       )}
-
     </View>
   );
 }
