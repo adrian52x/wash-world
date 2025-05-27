@@ -1,41 +1,23 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import {
-  Circle,
-  CircleCheck,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react-native';
+import { Circle, CircleCheck, ChevronDown, ChevronUp } from 'lucide-react-native';
 
 type SelectionItem = {
   label: string;
   extra: string[];
+  isCurrent?: boolean;
 };
 
 type SelectionListProps = {
   items: SelectionItem[];
   selectedItem: string | null;
   onSelect: (label: string) => void;
-  onContinue: () => void;
-  title: string;
   subtitle?: string;
 };
 
-export function SelectionList({
-  items,
-  selectedItem,
-  onSelect,
-  onContinue,
-  title,
-  subtitle,
-}: SelectionListProps) {
+export function MembershipSelect({ items, selectedItem, onSelect, subtitle }: SelectionListProps) {
   return (
-    <View className="flex-1 p-2">
-      <Text className="font-header text-header font-bold mb-4">{title}</Text>
-      {subtitle && (
-        <Text className="font-subheader text-accent-gray-60 mb-4">
-          {subtitle}
-        </Text>
-      )}
+    <View className="flex-1">
+      {subtitle && <Text className="font-subheader text-accent-gray-60 mb-4">{subtitle}</Text>}
 
       <View className="flex-col flex-1">
         {items.map((item) => {
@@ -46,9 +28,7 @@ export function SelectionList({
           return (
             <TouchableOpacity
               key={item.label}
-              className={`flex-col px-4 py-3 border border-gray-300 ${
-                isSelected ? 'bg-green-light' : 'bg-white'
-              }`}
+              className={`flex-col px-4 py-3 border border-gray-300 ${isSelected ? 'bg-green-light' : 'bg-white'}`}
               onPress={() => onSelect(item.label)}
             >
               <View className="flex-row items-center justify-between">
@@ -56,7 +36,7 @@ export function SelectionList({
                   <CheckIcon size={20} />
                   <Text
                     className={`text-lg font-semibold ${
-                      isSelected ? 'text-white' : 'text-gray-700'
+                      isSelected ? 'text-white' : item.isCurrent ? 'text-green-light' : 'text-gray-700'
                     }`}
                   >
                     {item.label}
@@ -67,10 +47,7 @@ export function SelectionList({
               {isSelected && (
                 <View className="mt-2">
                   {item.extra.map((extraItem, idx) => (
-                    <Text
-                      key={idx}
-                      className="font-bodyText text-bodyText text-white"
-                    >
+                    <Text key={idx} className="font-bodyText text-bodyText text-white">
                       • {extraItem}
                     </Text>
                   ))}
@@ -80,13 +57,6 @@ export function SelectionList({
           );
         })}
       </View>
-
-      <TouchableOpacity
-        className="bg-green-light px-8 py-3 rounded-lg mb-10 items-center"
-        onPress={onContinue}
-      >
-        <Text className="text-white text-lg font-button">Continue</Text>
-      </TouchableOpacity>
     </View>
   );
 }

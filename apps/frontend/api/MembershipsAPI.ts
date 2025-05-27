@@ -47,4 +47,26 @@ export class MembershipsAPI {
 
     return response.json();
   }
+
+  static async cancelMembership() {
+    const token = store.getState().auth.token;
+
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+
+    const response = await fetch(`${API_URL}/memberships`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to cancel memberships');
+    }
+
+    return response.json();
+  }
 }
