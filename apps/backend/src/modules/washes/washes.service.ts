@@ -7,10 +7,7 @@ import { WashTypeDTO } from './dto/wash-type.dto';
 import { ErrorMessages } from '../../utils/error-messages';
 import { CreateWashSessionDTO } from './dto/create-wash-session.dto';
 import { UsersService } from '../users/users.service';
-import {
-  LocationsService,
-  mapToLocationDTO,
-} from '../locations/locations.service';
+import { LocationsService, mapToLocationDTO } from '../locations/locations.service';
 import { UserWashDTO } from './dto/user-wash-dto';
 import { MembershipsService } from '../memberships/memberships.service';
 
@@ -46,7 +43,7 @@ export class WashesService {
     private readonly usersService: UsersService,
     private readonly locationsService: LocationsService,
     private readonly membershipsService: MembershipsService,
-  ) { }
+  ) {}
 
   async washTypesGetAll(): Promise<WashTypeDTO[]> {
     this.logger.log('washTypes: getAll');
@@ -88,9 +85,7 @@ export class WashesService {
     return washes.map((wash) => mapToWashDTO(wash));
   }
 
-  async createWashSession(
-    createWashSessionDto: CreateWashSessionDTO,
-  ): Promise<{ success: boolean }> {
+  async createWashSession(createWashSessionDto: CreateWashSessionDTO): Promise<{ success: boolean }> {
     this.logger.log('washes: createWashSession');
 
     const { userId, washTypeId, locationId } = createWashSessionDto;
@@ -101,11 +96,7 @@ export class WashesService {
         throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
       }
 
-      const userMembership = await this.membershipsService.findUserMembership(
-        trx,
-        { user: { user_id: userId } },
-        true,
-      );
+      const userMembership = await this.membershipsService.findUserMembership(trx, { user: { user_id: userId } }, true);
 
       const washType = await this.washTypeGetById(washTypeId);
       if (washType == null) {

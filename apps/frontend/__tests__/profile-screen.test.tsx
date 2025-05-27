@@ -14,47 +14,47 @@ import { User } from '@/types/auth.types';
 
 jest.mock('@/redux/hooks', () => ({
   useAppDispatch: jest.fn(),
-  useAppSelector: jest.fn()
+  useAppSelector: jest.fn(),
 }));
 
 jest.mock('@/hooks/useUsers', () => ({
   useUpdateUser: jest.fn(),
-  useUserWashStats: jest.fn()
+  useUserWashStats: jest.fn(),
 }));
 
 jest.mock('@/hooks/useWashSessions', () => ({
-  useWashSessions: jest.fn()
+  useWashSessions: jest.fn(),
 }));
 
 jest.mock('@/redux/authSlice', () => ({
   fetchUserSession: jest.fn(),
   logout: jest.fn(),
-  selectUserSession: jest.fn()
+  selectUserSession: jest.fn(),
 }));
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({
     replace: jest.fn(),
-    push: jest.fn()
-  })
+    push: jest.fn(),
+  }),
 }));
 
 jest.mock('@/components/ui/LoadingSpinner', () => 'LoadingSpinner');
 
 jest.mock('@/components/UpdateUserForm', () => ({
-  UpdateUserForm: jest.fn().mockImplementation(() => null)
+  UpdateUserForm: jest.fn().mockImplementation(() => null),
 }));
 
 jest.mock('@/components/UserDetailsCard', () => ({
-  UserDetailsCard: jest.fn().mockImplementation(() => null)
+  UserDetailsCard: jest.fn().mockImplementation(() => null),
 }));
 
 jest.mock('@/components/WashSessionsCard', () => ({
-  WashSessionsCard: jest.fn().mockImplementation(() => null)
+  WashSessionsCard: jest.fn().mockImplementation(() => null),
 }));
 
 jest.mock('@/components/ExtraFeaturesCard', () => ({
-  ExtraFeaturesCard: jest.fn().mockImplementation(() => null)
+  ExtraFeaturesCard: jest.fn().mockImplementation(() => null),
 }));
 
 jest.spyOn(Alert, 'alert');
@@ -68,37 +68,31 @@ describe('ProfileScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (UpdateUserForm as jest.Mock).mockImplementation(() => (
-      <View testID="update-user-form">UpdateUserForm</View>
-    ));
-    
-    (UserDetailsCard as jest.Mock).mockImplementation(() => (
-      <View testID="user-details-card">UserDetailsCard</View>
-    ));
-    
-    (WashSessionsCard as jest.Mock).mockImplementation(() => (
-      <View testID="wash-sessions-card">WashSessionsCard</View>
-    ));
-    
+    (UpdateUserForm as jest.Mock).mockImplementation(() => <View testID="update-user-form">UpdateUserForm</View>);
+
+    (UserDetailsCard as jest.Mock).mockImplementation(() => <View testID="user-details-card">UserDetailsCard</View>);
+
+    (WashSessionsCard as jest.Mock).mockImplementation(() => <View testID="wash-sessions-card">WashSessionsCard</View>);
+
     (ExtraFeaturesCard as jest.Mock).mockImplementation(() => (
       <View testID="extra-features-card">ExtraFeaturesCard</View>
     ));
 
     (useAppDispatch as jest.Mock).mockReturnValue(dispatchMock);
     (useUpdateUser as jest.Mock).mockReturnValue({
-      updateUser: { mutateAsync: mutateMock, isPending: false }
+      updateUser: { mutateAsync: mutateMock, isPending: false },
     });
     (useUserWashStats as jest.Mock).mockReturnValue({
       washStats: { totalWashes: 5, favoriteProgram: 'Basic' },
       loadingWashStats: false,
       errorWashStats: null,
-      refetchWashStats: refetchStatsMock
+      refetchWashStats: refetchStatsMock,
     });
     (useWashSessions as jest.Mock).mockReturnValue({
       washSessions: [{ id: 1, date: '2023-01-01' }],
       loadingWashSessions: false,
       errorWashSessions: null,
-      refetchWashSessions: refetchSessionsMock
+      refetchWashSessions: refetchSessionsMock,
     });
   });
 
@@ -142,15 +136,15 @@ describe('ProfileScreen', () => {
       'Are you sure you want to upgrade to Paid USER?',
       expect.arrayContaining([
         expect.objectContaining({ text: 'Cancel' }),
-        expect.objectContaining({ text: 'Upgrade' })
-      ])
+        expect.objectContaining({ text: 'Upgrade' }),
+      ]),
     );
 
     const onPress = (Alert.alert as jest.Mock).mock.calls[0][2][1].onPress;
     onPress();
     expect(mutateMock).toHaveBeenCalledWith(
       { role: RoleEnum.PaidUser },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
+      expect.objectContaining({ onSuccess: expect.any(Function) }),
     );
   });
 });

@@ -18,13 +18,21 @@ export const useUpdateUser = () => {
 };
 
 export const useUserWashStats = () => {
-  const { data: washStats, isLoading: loadingWashStats, error: errorWashStats, refetch: refetchWashStats } = useQuery({
+  const {
+    data: washStats,
+    isLoading: loadingWashStats,
+    error: errorWashStats,
+    refetch: refetchWashStats,
+  } = useQuery({
     queryKey: ['userStatistics'],
     queryFn: () => UsersAPI.getUserStatistics(),
     retry: 2,
   });
 
   return {
-    washStats, loadingWashStats, errorWashStats, refetchWashStats
-  }
-}
+    washStats,
+    loadingWashStats,
+    errorWashStats,
+    refetchWashStats,
+  };
+};

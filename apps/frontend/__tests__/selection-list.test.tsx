@@ -13,12 +13,12 @@ describe('SelectionList', () => {
   const mockItems = [
     {
       label: 'Option 1',
-      extra: ['Detail 1', 'Detail 2']
+      extra: ['Detail 1', 'Detail 2'],
     },
     {
       label: 'Option 2',
-      extra: ['Detail 3', 'Detail 4']
-    }
+      extra: ['Detail 3', 'Detail 4'],
+    },
   ];
   const mockOnSelect = jest.fn();
   const mockOnContinue = jest.fn();
@@ -35,7 +35,7 @@ describe('SelectionList', () => {
         onSelect={mockOnSelect}
         onContinue={mockOnContinue}
         title="Test Title"
-      />
+      />,
     );
 
     expect(getByText('Test Title')).toBeTruthy();
@@ -54,7 +54,7 @@ describe('SelectionList', () => {
         onContinue={mockOnContinue}
         title="Test Title"
         subtitle="Test Subtitle"
-      />
+      />,
     );
 
     expect(getByText('Test Title')).toBeTruthy();
@@ -69,12 +69,12 @@ describe('SelectionList', () => {
         onSelect={mockOnSelect}
         onContinue={mockOnContinue}
         title="Test Title"
-      />
+      />,
     );
 
     const option = getAllByText('Option 1')[0];
     fireEvent.press(option);
-    
+
     expect(mockOnSelect).toHaveBeenCalledWith('Option 1');
   });
 
@@ -86,7 +86,7 @@ describe('SelectionList', () => {
         onSelect={mockOnSelect}
         onContinue={mockOnContinue}
         title="Test Title"
-      />
+      />,
     );
 
     expect(getByText('• Detail 1')).toBeTruthy();
@@ -101,12 +101,12 @@ describe('SelectionList', () => {
         onSelect={mockOnSelect}
         onContinue={mockOnContinue}
         title="Test Title"
-      />
+      />,
     );
 
     const continueButton = getByText('Continue');
     fireEvent.press(continueButton);
-    
+
     expect(mockOnContinue).toHaveBeenCalled();
   });
 
@@ -118,11 +118,11 @@ describe('SelectionList', () => {
         onSelect={mockOnSelect}
         onContinue={mockOnContinue}
         title="Test Title"
-      />
+      />,
     );
-    
+
     const selectedText = getAllByText('Option 1')[0];
-    
+
     expect(selectedText.props.className).toContain('text-white');
   });
 
@@ -134,11 +134,11 @@ describe('SelectionList', () => {
         onSelect={mockOnSelect}
         onContinue={mockOnContinue}
         title="Test Title"
-      />
+      />,
     );
-    
+
     const unselectedText = getAllByText('Option 2')[0];
-    
+
     expect(unselectedText.props.className).toContain('text-gray-700');
   });
 });

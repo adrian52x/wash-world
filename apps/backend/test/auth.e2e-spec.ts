@@ -28,18 +28,12 @@ describe('AuthController (e2e)', () => {
   });
 
   it('should sign up a new user', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(testUser)
-      .expect(201);
+    const response = await request(app.getHttpServer()).post('/auth/signup').send(testUser).expect(201);
     expect(response.body).toHaveProperty('accessToken');
   });
 
   it('should not allow signup with an existing email', async () => {
-    await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(testUser)
-      .expect(400);
+    await request(app.getHttpServer()).post('/auth/signup').send(testUser).expect(400);
   });
 
   it('should login an existing user', async () => {

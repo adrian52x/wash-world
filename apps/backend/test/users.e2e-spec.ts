@@ -76,27 +76,19 @@ describe('UsersController (e2e)', () => {
   describe('GET /users', () => {
     it('should return an array of users when users exist', async () => {
       jest.spyOn(usersService, 'findAll').mockResolvedValueOnce(mockUsers);
-      const response = await request(app.getHttpServer())
-        .get('/users')
-        .expect(200);
+      const response = await request(app.getHttpServer()).get('/users').expect(200);
       expect(response.body).toEqual(mockUsers);
     });
 
     it('should return 404 when no users are found', async () => {
-      jest
-        .spyOn(usersService, 'findAll')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_NOT_FOUND),
-        );
+      jest.spyOn(usersService, 'findAll').mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_NOT_FOUND));
       await request(app.getHttpServer()).get('/users').expect(404);
     });
   });
 
   describe('GET /users/current-session', () => {
     it('should return user session info', async () => {
-      jest
-        .spyOn(usersService, 'getCurrentSession')
-        .mockResolvedValueOnce(mockSession);
+      jest.spyOn(usersService, 'getCurrentSession').mockResolvedValueOnce(mockSession);
       const response = await request(app.getHttpServer())
         .get('/users/current-session')
         .set('Authorization', 'Bearer dummy')
@@ -107,13 +99,8 @@ describe('UsersController (e2e)', () => {
     it('should return 404 if user not found', async () => {
       jest
         .spyOn(usersService, 'getCurrentSession')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_NOT_FOUND),
-        );
-      await request(app.getHttpServer())
-        .get('/users/current-session')
-        .set('Authorization', 'Bearer dummy')
-        .expect(404);
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_NOT_FOUND));
+      await request(app.getHttpServer()).get('/users/current-session').set('Authorization', 'Bearer dummy').expect(404);
     });
   });
 
@@ -138,11 +125,7 @@ describe('UsersController (e2e)', () => {
     });
 
     it('should return 404 if user to update is not found', async () => {
-      jest
-        .spyOn(usersService, 'updateUser')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_NOT_FOUND),
-        );
+      jest.spyOn(usersService, 'updateUser').mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_NOT_FOUND));
       await request(app.getHttpServer())
         .patch('/users')
         .set('Authorization', 'Bearer dummy')
@@ -154,22 +137,12 @@ describe('UsersController (e2e)', () => {
   describe('DELETE /users', () => {
     it('should delete user successfully', async () => {
       jest.spyOn(usersService, 'remove').mockResolvedValueOnce();
-      await request(app.getHttpServer())
-        .delete('/users')
-        .set('Authorization', 'Bearer dummy')
-        .expect(200);
+      await request(app.getHttpServer()).delete('/users').set('Authorization', 'Bearer dummy').expect(200);
     });
 
     it('should return 404 if user to delete is not found', async () => {
-      jest
-        .spyOn(usersService, 'remove')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_NOT_FOUND),
-        );
-      await request(app.getHttpServer())
-        .delete('/users')
-        .set('Authorization', 'Bearer dummy')
-        .expect(404);
+      jest.spyOn(usersService, 'remove').mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_NOT_FOUND));
+      await request(app.getHttpServer()).delete('/users').set('Authorization', 'Bearer dummy').expect(404);
     });
   });
 });

@@ -31,7 +31,7 @@ export const useWashSessions = () => {
   } = useQuery({
     queryKey: ['userWashSessions'],
     queryFn: () => WashesAPI.getUserWashSessions(),
-    retry: 2, 
+    retry: 2,
   });
 
   return { washSessions, loadingWashSessions, errorWashSessions, refetchWashSessions };
@@ -42,8 +42,7 @@ export const useCreateWashSession = () => {
   const queryClient = useQueryClient();
 
   const createWashSession = useMutation({
-    mutationFn: (washSession: InsertWash) =>
-      WashesAPI.createWashSession(washSession),
+    mutationFn: (washSession: InsertWash) => WashesAPI.createWashSession(washSession),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userWashSessions'] });
     },

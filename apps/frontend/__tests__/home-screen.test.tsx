@@ -5,7 +5,7 @@ import * as ExpoLocation from 'expo-location';
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
   getCurrentPositionAsync: jest.fn().mockResolvedValue({
-    coords: { latitude: 55.7, longitude: 12.6 }
+    coords: { latitude: 55.7, longitude: 12.6 },
   }),
 }));
 
@@ -28,7 +28,7 @@ describe('HomeScreen', () => {
       autoWashHalls: 0,
       selfWashHalls: 3,
       openingHours: '9:00-18:00',
-    }
+    },
   ];
 
   beforeEach(() => {
@@ -41,17 +41,17 @@ describe('HomeScreen', () => {
       loadingLocations: true,
       errorLocations: false,
     }));
-    
+
     expect(useLocationsHook.useLocations().loadingLocations).toBe(true);
   });
 
   it('should handle user location permissions correctly', async () => {
     const permissionSpy = jest.spyOn(ExpoLocation, 'requestForegroundPermissionsAsync');
     const getLocationSpy = jest.spyOn(ExpoLocation, 'getCurrentPositionAsync');
-    
+
     expect(permissionSpy).not.toHaveBeenCalled();
     expect(getLocationSpy).not.toHaveBeenCalled();
-    
+
     expect(permissionSpy).toBeDefined();
     expect(getLocationSpy).toBeDefined();
   });
@@ -69,19 +69,19 @@ describe('HomeScreen', () => {
         animateToRegion: mockAnimateToRegion,
       },
     };
-    
+
     jest.spyOn(React, 'useRef').mockReturnValue(mockMapRef);
 
     expect(mockAnimateToRegion).not.toHaveBeenCalled();
     expect(mockMapRef.current.animateToRegion).toBeDefined();
   });
-  
+
   it('should navigate to location details when a location is selected', () => {
     const mockPush = jest.fn();
     jest.spyOn(require('expo-router'), 'useRouter').mockReturnValue({
       push: mockPush,
     });
-    
+
     expect(mockPush).not.toHaveBeenCalled();
     expect(mockPush).toBeDefined();
   });

@@ -9,9 +9,7 @@ import { ScrollView, View } from 'react-native';
 export default function MemberScreen() {
   const { memberships } = useMemberships();
   const { createMembership } = useCreateMembership();
-  const [selectedType, setSelectedType] = useState<MembershipTypeEnum | null>(
-    null,
-  );
+  const [selectedType, setSelectedType] = useState<MembershipTypeEnum | null>(null);
 
   const membershipItems = memberships?.map((membership: Membership) => ({
     label: `${membership.type} - ${membership.price} DKK`,
@@ -29,12 +27,8 @@ export default function MemberScreen() {
           onContinue={() => {
             if (selectedType) {
               // extract just the membership type from the selected label
-              const membershipType = selectedType.split(
-                ' - ',
-              )[0] as MembershipTypeEnum;
-              const selectedMembership = memberships?.find(
-                (m: Membership) => m.type === membershipType,
-              );
+              const membershipType = selectedType.split(' - ')[0] as MembershipTypeEnum;
+              const selectedMembership = memberships?.find((m: Membership) => m.type === membershipType);
               if (selectedMembership) {
                 createMembership.mutate(selectedMembership.membershipId);
               }

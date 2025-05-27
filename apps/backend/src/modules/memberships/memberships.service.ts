@@ -1,12 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Membership } from '../../entities/membership.entity';
-import {
-  EntityManager,
-  FindOneOptions,
-  FindOptionsWhere,
-  Repository,
-} from 'typeorm';
+import { EntityManager, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { MembershipDTO } from './dto/membership.dto';
 import { ErrorMessages } from '../../utils/error-messages';
 import { UsersService } from '../users/users.service';
@@ -24,9 +19,7 @@ function mapToMembershipDTO(membership: Membership): MembershipDTO {
   };
 }
 
-function mapToUserMembershipDTO(
-  userMembership: UserMembership,
-): UserMembershipDTO {
+function mapToUserMembershipDTO(userMembership: UserMembership): UserMembershipDTO {
   return {
     userMembershipId: userMembership.user_membership_id,
     startDate: userMembership.start_date,
@@ -50,7 +43,7 @@ export class MembershipsService {
     @InjectRepository(UserMembership)
     private readonly userMemberShipRepository: Repository<UserMembership>,
     private readonly usersService: UsersService,
-  ) { }
+  ) {}
 
   async findUserMembership(
     trx: EntityManager,
@@ -78,85 +71,72 @@ export class MembershipsService {
     return memberships.map((membership) => mapToMembershipDTO(membership));
   }
 
-  async create(
-    userId: number,
-    membershipId: number,
-  ): Promise<UserMembershipDTO> {
+  async create(userId: number, membershipId: number): Promise<UserMembershipDTO> {
     this.logger.log('memberships: create');
 
-    return await this.userMemberShipRepository.manager.transaction(
-      async (trx) => {
-        const user = await this.usersService.findById(userId);
-        if (!user) {
-          throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
-        }
+    return await this.userMemberShipRepository.manager.transaction(async (trx) => {
+      const user = await this.usersService.findById(userId);
+      if (!user) {
+        throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+      }
 
-        const membershipType = await trx.findOne(Membership, {
-          where: { membership_id: membershipId },
-        });
-        if (membershipType == null) {
-          throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
-        }
+      const membershipType = await trx.findOne(Membership, {
+        where: { membership_id: membershipId },
+      });
+      if (membershipType == null) {
+        throw new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND);
+      }
 
-        const existingUserMembership = await this.findUserMembership(trx, {
-          user: { user_id: userId },
-        });
+      const existingUserMembership = await this.findUserMembership(trx, {
+        user: { user_id: userId },
+      });
 
-        if (existingUserMembership != null) {
-          await trx.delete(
-            UserMembership,
-            existingUserMembership.user_membership_id,
-          );
-        }
+      if (existingUserMembership != null) {
+        await trx.delete(UserMembership, existingUserMembership.user_membership_id);
+      }
 
-        const newUserMembership = trx.create(UserMembership, {
-          start_date: new Date(),
-          end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
-          user: { user_id: user.userId },
-          membership: { membership_id: membershipType.membership_id },
-        });
+      const newUserMembership = trx.create(UserMembership, {
+        start_date: new Date(),
+        end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+        user: { user_id: user.userId },
+        membership: { membership_id: membershipType.membership_id },
+      });
 
-        await trx.save(newUserMembership);
+      await trx.save(newUserMembership);
 
-        const savedUserMembership = await this.findUserMembership(
-          trx,
-          { user_membership_id: newUserMembership.user_membership_id },
-          true,
-        );
+      const savedUserMembership = await this.findUserMembership(
+        trx,
+        { user_membership_id: newUserMembership.user_membership_id },
+        true,
+      );
 
-        if (savedUserMembership == null) {
-          throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
-        }
+      if (savedUserMembership == null) {
+        throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
+      }
 
-        return mapToUserMembershipDTO(savedUserMembership);
-      },
-    );
+      return mapToUserMembershipDTO(savedUserMembership);
+    });
   }
 
   async cancel(userId: number): Promise<UserDTO> {
     this.logger.log(`Cancelling membership for user ${userId}`);
 
-    return await this.userMemberShipRepository.manager.transaction(
-      async (trx) => {
-        const existingUserMembership = await this.findUserMembership(trx, {
-          user: { user_id: userId },
-        });
+    return await this.userMemberShipRepository.manager.transaction(async (trx) => {
+      const existingUserMembership = await this.findUserMembership(trx, {
+        user: { user_id: userId },
+      });
 
-        if (!existingUserMembership) {
-          throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
-        }
+      if (!existingUserMembership) {
+        throw new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND);
+      }
 
-        await trx.delete(
-          UserMembership,
-          existingUserMembership.user_membership_id,
-        );
+      await trx.delete(UserMembership, existingUserMembership.user_membership_id);
 
-        const updatedUser = await this.usersService.updateUser(userId, {
-          role: RoleEnum.RegularUser,
-        });
+      const updatedUser = await this.usersService.updateUser(userId, {
+        role: RoleEnum.RegularUser,
+      });
 
-        return updatedUser;
-      },
-    );
+      return updatedUser;
+    });
   }
 }

@@ -1,9 +1,4 @@
-import {
-  Keyboard,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/redux/hooks';
@@ -32,11 +27,7 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View className="flex-1 items-center">
-        <Image
-          source={washWorldLogo}
-          resizeMode="contain"
-          className="h-[200px] w-[200px]"
-        />
+        <Image source={washWorldLogo} resizeMode="contain" className="h-[200px] w-[200px]" />
 
         <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
           <Mail color="#797777" />
@@ -64,10 +55,7 @@ export default function LoginScreen() {
 
         {error ? <Text className="text-red-500 mb-6">{error}</Text> : null}
 
-        <TouchableOpacity
-          className="w-full mb-4 max-w-xs px-4 py-3 bg-green-light"
-          onPress={handleLogin}
-        >
+        <TouchableOpacity className="w-full mb-4 max-w-xs px-4 py-3 bg-green-light" onPress={handleLogin}>
           <Text className="text-white font-semibold text-center">Login</Text>
         </TouchableOpacity>
 
@@ -75,9 +63,7 @@ export default function LoginScreen() {
           className="w-full max-w-xs px-4 py-3 bg-white border border-green-light"
           onPress={() => router.push('/(auth)/signup')}
         >
-          <Text className="text-green-light font-semibold text-center">
-            Sign up
-          </Text>
+          <Text className="text-green-light font-semibold text-center">Sign up</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>

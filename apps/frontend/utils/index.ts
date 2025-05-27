@@ -1,13 +1,6 @@
 import { MembershipTypeEnum, WashTypeEnum } from '@/types/enums';
 
-const commonFeatures = [
-  'Shampoo',
-  'Drying',
-  'Brush washing',
-  'High-pressure flushing',
-  'Wheel wash',
-  'Rinsing wash',
-];
+const commonFeatures = ['Shampoo', 'Drying', 'Brush washing', 'High-pressure flushing', 'Wheel wash', 'Rinsing wash'];
 
 export const getWashFeatures = (type: WashTypeEnum | MembershipTypeEnum) => {
   switch (type) {
@@ -29,13 +22,7 @@ export const getWashFeatures = (type: WashTypeEnum | MembershipTypeEnum) => {
         'Extra drying',
       ];
     case WashTypeEnum.SelfWash:
-      return [
-        'High-pressure flushing',
-        'Foam spreader',
-        'Brush washing',
-        'Rinsing with wax',
-        'Spotless rinsing',
-      ];
+      return ['High-pressure flushing', 'Foam spreader', 'Brush washing', 'Rinsing with wax', 'Spotless rinsing'];
     default:
       return;
   }
@@ -52,4 +39,4 @@ export const displayRoleUI = (role: string) => {
     default:
       return role;
   }
-}
+};

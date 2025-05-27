@@ -27,8 +27,7 @@ export const useCreateMembership = () => {
   const dispatch = useAppDispatch(); // Add this
 
   const createMembership = useMutation({
-    mutationFn: (membershipId: number) =>
-      MembershipsAPI.createMembership(membershipId),
+    mutationFn: (membershipId: number) => MembershipsAPI.createMembership(membershipId),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ['memberships'] });

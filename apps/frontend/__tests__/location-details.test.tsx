@@ -7,14 +7,19 @@ import * as useLocationsHook from '@/hooks/useLocations';
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: '1' }),
   useRouter: () => ({ push: jest.fn() }),
-  Stack: { Screen: () => null }
+  Stack: { Screen: () => null },
 }));
 
 jest.mock('@/components/ui/LoadingSpinner', () => 'LoadingSpinner');
 jest.mock('@/components/ui/InclinedButton', () => ({
-  InclinedButton: (props: React.PropsWithChildren<unknown>) => props.children
+  InclinedButton: (props: React.PropsWithChildren<unknown>) => props.children,
 }));
-jest.mock('lucide-react-native', () => ({ ChevronRight: () => null, Clock: () => null, MapPin: () => null, Play: () => null }));
+jest.mock('lucide-react-native', () => ({
+  ChevronRight: () => null,
+  Clock: () => null,
+  MapPin: () => null,
+  Play: () => null,
+}));
 jest.mock('@/assets/images/autowash-hall.png', () => '');
 jest.mock('@/assets/images/selfwash-hall.png', () => '');
 jest.mock('@/hooks/useLocations');
@@ -25,7 +30,7 @@ jest.mock('react-redux', () => ({
     user: {
       licensePlate: 'AB12345',
     },
-    token: 'mock-token'
+    token: 'mock-token',
   })),
   Provider: ({ children }: { children: React.ReactNode }) => children,
 }));
@@ -71,10 +76,10 @@ describe('LocationDetails', () => {
     });
 
     const { getByText } = renderWithRedux(<LocationDetails />);
-    
+
     const startWashButton = getByText('Start wash');
     fireEvent.press(startWashButton);
-    
+
     expect(mockRouter.push).toHaveBeenCalledWith('/location/1/wash');
   });
 
@@ -86,13 +91,11 @@ describe('LocationDetails', () => {
     });
 
     const { getByText } = renderWithRedux(<LocationDetails />);
-    
+
     const addressButton = getByText('123 Test St');
     fireEvent.press(addressButton);
-    
-    expect(Linking.openURL).toHaveBeenCalledWith(
-      'https://www.google.com/maps/search/?api=1&query=56.789,10.123'
-    );
+
+    expect(Linking.openURL).toHaveBeenCalledWith('https://www.google.com/maps/search/?api=1&query=56.789,10.123');
   });
 
   it('displays vehicle dimension information', () => {
@@ -103,7 +106,7 @@ describe('LocationDetails', () => {
     });
 
     const { getByText } = renderWithRedux(<LocationDetails />);
-    
+
     expect(getByText('Height: 2.6m')).toBeTruthy();
     expect(getByText('Side mirror to side mirror: 2.55m')).toBeTruthy();
     expect(getByText('Max. wheel width: 2.15m')).toBeTruthy();

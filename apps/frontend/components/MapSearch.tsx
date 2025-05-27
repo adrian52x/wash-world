@@ -1,13 +1,6 @@
 import { Location } from '@/types/types';
 import React, { useState } from 'react';
-import {
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Text,
-  Keyboard,
-} from 'react-native';
+import { View, TextInput, FlatList, TouchableOpacity, Text, Keyboard } from 'react-native';
 
 type Props = {
   locations: Location[];
@@ -24,11 +17,7 @@ export default function MapSearch({ locations, onSelect }: Props) {
       setResults([]);
       return;
     }
-    setResults(
-      locations.filter((loc) =>
-        loc.address.toLowerCase().includes(text.toLowerCase()),
-      ),
-    );
+    setResults(locations.filter((loc) => loc.address.toLowerCase().includes(text.toLowerCase())));
   };
 
   return (

@@ -11,7 +11,7 @@ export const useLocations = () => {
   } = useQuery({
     queryKey: ['locations'],
     queryFn: () => LocationsAPI.getLocations(),
-    retry: 2, 
+    retry: 2,
   });
 
   return {

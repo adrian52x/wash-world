@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { WashType } from './wash-type.entity';
 import { IsEnum, IsNotEmpty, IsPositive } from 'class-validator';
 import { MembershipTypeEnum } from '../utils/enums';
