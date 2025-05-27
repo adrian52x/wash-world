@@ -123,7 +123,9 @@ export default function ProfileScreen() {
         </View>
       )}
 
-      <ScrollView contentContainerClassName="p-4 space-y-2 pb-[100px]"
+      <ScrollView 
+      testID="scroll-view-refresh-control"
+      contentContainerClassName="p-4 space-y-2 pb-[100px]"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
