@@ -35,9 +35,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Validate user email' })
   @ApiResponse({ status: 200, description: 'Email validated successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async validateUserEmail(
-    @Body() validateEmailDto: ValidateEmailDTO,
-  ): Promise<{ isValid: boolean }> {
+  async validateUserEmail(@Body() validateEmailDto: ValidateEmailDTO): Promise<{ isValid: boolean }> {
     return await this.usersService.validateUserEmail(validateEmailDto.email);
   }
 }

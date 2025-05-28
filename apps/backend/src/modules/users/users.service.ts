@@ -132,10 +132,7 @@ export class UsersService {
     return mapToUserSessionDTO(user);
   }
 
-  async updateUser(
-    userId: number,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UserDTO> {
+  async updateUser(userId: number, updateUserDto: UpdateUserDto): Promise<UserDTO> {
     return await this.userRepository.manager.transaction(async (trx) => {
       this.logger.log(`users: updateUser`);
 
@@ -149,16 +146,11 @@ export class UsersService {
       }
 
       const updatedUser = {};
-      if (updateUserDto.username !== undefined)
-        updatedUser['username'] = updateUserDto.username;
-      if (updateUserDto.address !== undefined)
-        updatedUser['address'] = updateUserDto.address;
-      if (updateUserDto.phoneNumber !== undefined)
-        updatedUser['phone_number'] = updateUserDto.phoneNumber;
-      if (updateUserDto.licensePlate !== undefined)
-        updatedUser['license_plate'] = updateUserDto.licensePlate;
-      if (updateUserDto.role !== undefined)
-        updatedUser['role'] = updateUserDto.role;
+      if (updateUserDto.username !== undefined) updatedUser['username'] = updateUserDto.username;
+      if (updateUserDto.address !== undefined) updatedUser['address'] = updateUserDto.address;
+      if (updateUserDto.phoneNumber !== undefined) updatedUser['phone_number'] = updateUserDto.phoneNumber;
+      if (updateUserDto.licensePlate !== undefined) updatedUser['license_plate'] = updateUserDto.licensePlate;
+      if (updateUserDto.role !== undefined) updatedUser['role'] = updateUserDto.role;
 
       await trx.update(User, userId, updatedUser);
 

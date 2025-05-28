@@ -91,30 +91,22 @@ describe('WashesController (e2e)', () => {
 
   describe('GET /washes', () => {
     it('should return all wash types', async () => {
-      jest
-        .spyOn(washesService, 'washTypesGetAll')
-        .mockResolvedValueOnce(mockWashTypes);
-      const response = await request(app.getHttpServer())
-        .get('/washes')
-        .expect(200);
+      jest.spyOn(washesService, 'washTypesGetAll').mockResolvedValueOnce(mockWashTypes);
+      const response = await request(app.getHttpServer()).get('/washes').expect(200);
       expect(response.body).toEqual(mockWashTypes);
     });
 
     it('should return 404 if no wash types found', async () => {
       jest
         .spyOn(washesService, 'washTypesGetAll')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.WASH_TYPES_NOT_FOUND),
-        );
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.WASH_TYPES_NOT_FOUND));
       await request(app.getHttpServer()).get('/washes').expect(404);
     });
   });
 
   describe('GET /washes/user', () => {
     it('should return user washes', async () => {
-      jest
-        .spyOn(washesService, 'getUserWashes')
-        .mockResolvedValueOnce(mockUserWashes);
+      jest.spyOn(washesService, 'getUserWashes').mockResolvedValueOnce(mockUserWashes);
       const response = await request(app.getHttpServer())
         .get('/washes/user')
         .set('Authorization', 'Bearer dummy')
@@ -130,13 +122,8 @@ describe('WashesController (e2e)', () => {
     it('should return 404 if user washes not found', async () => {
       jest
         .spyOn(washesService, 'getUserWashes')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND),
-        );
-      await request(app.getHttpServer())
-        .get('/washes/user')
-        .set('Authorization', 'Bearer dummy')
-        .expect(404);
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_WASH_SESSIONS_NOT_FOUND));
+      await request(app.getHttpServer()).get('/washes/user').set('Authorization', 'Bearer dummy').expect(404);
     });
   });
 
@@ -144,9 +131,7 @@ describe('WashesController (e2e)', () => {
     const createWashSessionDto = { washTypeId: 1, locationId: 1 };
 
     it('should create wash session successfully', async () => {
-      jest
-        .spyOn(washesService, 'createWashSession')
-        .mockResolvedValueOnce({ success: true });
+      jest.spyOn(washesService, 'createWashSession').mockResolvedValueOnce({ success: true });
       const response = await request(app.getHttpServer())
         .post('/washes')
         .set('Authorization', 'Bearer dummy')
@@ -158,9 +143,7 @@ describe('WashesController (e2e)', () => {
     it('should return error if creation fails', async () => {
       jest
         .spyOn(washesService, 'createWashSession')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_NOT_FOUND),
-        );
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_NOT_FOUND));
       await request(app.getHttpServer())
         .post('/washes')
         .set('Authorization', 'Bearer dummy')

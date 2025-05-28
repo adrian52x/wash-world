@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 import { WashTypeEnum } from '../utils/enums';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 

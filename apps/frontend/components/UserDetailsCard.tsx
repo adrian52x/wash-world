@@ -10,11 +10,7 @@ interface UserDetailsCardProps {
   onLogout: () => void;
 }
 
-export const UserDetailsCard: React.FC<UserDetailsCardProps> = ({
-  userSession,
-  onUpdateProfile,
-  onLogout
-}) => (
+export const UserDetailsCard: React.FC<UserDetailsCardProps> = ({ userSession, onUpdateProfile, onLogout }) => (
   <View className="mb-4 rounded-lg bg-white shadow border border-gray-200 ">
     {/* Top bar with logout button */}
     <View className="flex-row justify-end px-4 pt-4 absolute right-0 top-0 z-10">
@@ -26,13 +22,11 @@ export const UserDetailsCard: React.FC<UserDetailsCardProps> = ({
       >
         <LogOut color="#16a34a" size={24} />
       </TouchableOpacity>
-    </View>    
+    </View>
     <View className="px-6 py-6 flex-row items-center">
       {/* Profile avatar placeholder */}
       <View className="w-16 h-16 rounded-full bg-white justify-center items-center mr-4 shadow">
-        <Text className="text-2xl font-bold text-green-600">
-          {userSession.user.username[0]?.toUpperCase() ?? "U"}
-        </Text>
+        <Text className="text-2xl font-bold text-green-600">{userSession.user.username[0]?.toUpperCase() ?? 'U'}</Text>
       </View>
       <View className="flex-1">
         <Text className="text-2xl font-bold">{userSession.user.username}</Text>
@@ -64,11 +58,7 @@ export const UserDetailsCard: React.FC<UserDetailsCardProps> = ({
       )}
     </View>
     <View className="border-t border-gray-100 px-6 py-4 bg-gray-50">
-      <Button
-        title="Update Profile"
-        onPress={onUpdateProfile}
-        color="#10b981"
-      />
+      <Button title="Update Profile" onPress={onUpdateProfile} color="#10b981" />
     </View>
   </View>
 );

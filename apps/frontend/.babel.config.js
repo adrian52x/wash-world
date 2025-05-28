@@ -1,16 +1,14 @@
 module.exports = function (api) {
   api.cache(true);
   return {
-    presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel'],
-
+    presets: ['babel-preset-expo', '@babel/preset-typescript', '@babel/preset-react'],
     plugins: [
       [
         'module-resolver',
         {
-          root: ['./'],
+          root: ['.'],
           alias: {
             '@': './',
-            'tailwind.config': './tailwind.config.js',
           },
         },
       ],

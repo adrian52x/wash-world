@@ -31,10 +31,7 @@ export default function RootLayout() {
         <AuthProvider>
           <Stack>
             {/* order of the stack matters */}
-            <Stack.Screen
-              name="splash"
-              options={{ headerShown: false, animation: 'none' }}
-            />
+            <Stack.Screen name="splash" options={{ headerShown: false, animation: 'none' }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />

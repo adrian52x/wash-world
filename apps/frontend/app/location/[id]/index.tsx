@@ -13,7 +13,6 @@ export default function LocationDetails() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const userSession = useAppSelector(selectUserSession);
-  
 
   const idStr = Array.isArray(id) ? id[0] : id;
   const { location, loadingLocation, errorLocation } = useLocationById(idStr);
@@ -63,9 +62,8 @@ export default function LocationDetails() {
       >
         <View className="flex-row items-center gap-2">
           <MapPin size={16} />
-          <Text className="font-button text-green-600"
-            numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: 290 }}>
-              {location.address}
+          <Text className="font-button text-green-600" numberOfLines={1} ellipsizeMode="tail" style={{ maxWidth: 290 }}>
+            {location.address}
           </Text>
         </View>
         <ChevronRight size={20} color="#28a626" />
@@ -91,13 +89,13 @@ export default function LocationDetails() {
 
       {location.autoWashHalls > 0 && (
         <TouchableOpacity
-          className='w-[170px] absolute right-[-20px] bottom-24'
+          className="w-[170px] absolute right-[-20px] bottom-24"
           onPress={handleStartWash}
           disabled={!userSession?.user.licensePlate}
         >
-          <InclinedButton className='flex-row gap-2' disabled={!userSession?.user.licensePlate}>
+          <InclinedButton className="flex-row gap-2" disabled={!userSession?.user.licensePlate}>
             <Play size={20} color="#ffffff" />
-            <Text className='text-white font-subheader text-button'>Start wash</Text>
+            <Text className="text-white font-subheader text-button">Start wash</Text>
           </InclinedButton>
         </TouchableOpacity>
       )}

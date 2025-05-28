@@ -1,12 +1,6 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { RoleEnum } from '../utils/enums';
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserMembership } from './user-membership.entity';
 
 @Entity('users')

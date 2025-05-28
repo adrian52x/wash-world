@@ -28,19 +28,13 @@ export default function ProfileScreen() {
   // Drag-page to refresh functionality
   const handleRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([
-      dispatch(fetchUserSession({})),
-      refetchWashStats(),
-      refetchWashSessions(),
-    ]);
+    await Promise.all([dispatch(fetchUserSession({})), refetchWashStats(), refetchWashSessions()]);
     setRefreshing(false);
   };
 
   // Check if onboarding is needed
   const needsOnboarding =
-    !userSession?.user.phoneNumber ||
-    !userSession?.user.address ||
-    !userSession?.user.licensePlate;
+    !userSession?.user.phoneNumber || !userSession?.user.address || !userSession?.user.licensePlate;
 
   // State to control the visibility of the update form
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -123,12 +117,11 @@ export default function ProfileScreen() {
         </View>
       )}
 
-      <ScrollView contentContainerClassName="p-4 space-y-2 pb-[100px]"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        }
+      <ScrollView
+        testID="scroll-view-refresh-control"
+        contentContainerClassName="p-4 space-y-2 pb-[100px]"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
       >
-        
         {/* User details */}
         {userSession && (
           <UserDetailsCard
@@ -146,17 +139,13 @@ export default function ProfileScreen() {
                 title="Upgrade to Paid User"
                 color="#10b981"
                 onPress={() =>
-                  Alert.alert(
-                    'Confirm Upgrade',
-                    'Are you sure you want to upgrade to Paid USER?',
-                    [
-                      { text: 'Cancel', style: 'cancel' },
-                      {
-                        text: 'Upgrade',
-                        onPress: () => handleUpgradeRole(RoleEnum.PaidUser),
-                      },
-                    ],
-                  )
+                  Alert.alert('Confirm Upgrade', 'Are you sure you want to upgrade to Paid USER?', [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                      text: 'Upgrade',
+                      onPress: () => handleUpgradeRole(RoleEnum.PaidUser),
+                    },
+                  ])
                 }
               />
             </View>
@@ -170,17 +159,13 @@ export default function ProfileScreen() {
             error={errorWashStats}
             stats={washStats}
             onDowngrade={() =>
-              Alert.alert(
-                'Confirm Downgrade',
-                'Are you sure you want to downgrade to Regular USER?',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  {
-                    text: 'Yes',
-                    onPress: () => handleUpgradeRole(RoleEnum.User),
-                  },
-                ],
-              )
+              Alert.alert('Confirm Downgrade', 'Are you sure you want to downgrade to Regular USER?', [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Yes',
+                  onPress: () => handleUpgradeRole(RoleEnum.User),
+                },
+              ])
             }
           />
         )}
@@ -192,7 +177,6 @@ export default function ProfileScreen() {
           error={errorWashSessions}
           onSeeAll={() => router.push('/history/wash')}
         />
-
       </ScrollView>
     </View>
   );

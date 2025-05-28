@@ -24,10 +24,7 @@ export class StatisticsService {
   ) {}
 
   private calculateTotalSpent(userWashes: UserWashDTO[]): number {
-    return userWashes.reduce(
-      (sum, wash) => sum + Number(wash.amountPaid),
-      0,
-    );
+    return userWashes.reduce((sum, wash) => sum + Number(wash.amountPaid), 0);
   }
 
   private findMostUsedLocation(userWashes: UserWashDTO[]): {
@@ -49,11 +46,10 @@ export class StatisticsService {
       return { name: '', visitCount: 0 };
     }
 
-    const mostUsed = locations.reduce(
-      (current, location) =>
-        location.count > current.count ? location : current,
-      { name: '', count: 0 },
-    );
+    const mostUsed = locations.reduce((current, location) => (location.count > current.count ? location : current), {
+      name: '',
+      count: 0,
+    });
 
     return {
       name: mostUsed.name,
@@ -80,11 +76,10 @@ export class StatisticsService {
       return { type: '', useCount: 0 };
     }
 
-    const favorite = washTypes.reduce(
-      (current, washType) =>
-        washType.count > current.count ? washType : current,
-      { type: '', count: 0 },
-    );
+    const favorite = washTypes.reduce((current, washType) => (washType.count > current.count ? washType : current), {
+      type: '',
+      count: 0,
+    });
 
     return {
       type: WashTypeEnum[favorite.type] || favorite.type,
@@ -94,11 +89,7 @@ export class StatisticsService {
 
   private calculateLastMonthWashes(userWashes: UserWashDTO[]): number {
     const now = new Date();
-    const lastMonth = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      now.getDate(),
-    );
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
 
     return userWashes.filter((wash) => {
       const washDate = new Date(wash.createdAt);
