@@ -3,8 +3,8 @@ import { fetchUserSession } from '@/redux/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+// Fetch memberships
 export const useMemberships = () => {
-  // Fetch memberships
   const {
     data: memberships,
     isLoading,
@@ -15,25 +15,37 @@ export const useMemberships = () => {
     retry: 2,
   });
 
-  return {
-    memberships,
-    isLoading,
-    error,
-  };
+  return { memberships, isLoading, error };
 };
 
+// Create user membership
 export const useCreateMembership = () => {
   const queryClient = useQueryClient();
-  const dispatch = useAppDispatch(); // Add this
+  const dispatch = useAppDispatch();
 
   const createMembership = useMutation({
     mutationFn: (membershipId: number) => MembershipsAPI.createMembership(membershipId),
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ['memberships'] });
       dispatch(fetchUserSession({}));
     },
   });
 
   return { createMembership };
+};
+
+// Cancel user membership
+export const useCancelMembership = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+
+  const cancelMembership = useMutation({
+    mutationFn: () => MembershipsAPI.cancelMembership(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['memberships'] });
+      dispatch(fetchUserSession({}));
+    },
+  });
+
+  return { cancelMembership };
 };

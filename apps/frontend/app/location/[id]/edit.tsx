@@ -26,8 +26,8 @@ export default function EditLocation() {
         name: location.name,
         address: location.address,
         openingHours: location.openingHours,
-        autoWashHalls: location.autoWashHalls.toString(),
-        selfWashHalls: location.selfWashHalls.toString(),
+        autoWashHalls: (location.autoWashHalls ?? 0).toString(),
+        selfWashHalls: (location.selfWashHalls ?? 0).toString(),
       });
     }
   }, [location]);

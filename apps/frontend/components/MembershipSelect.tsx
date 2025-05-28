@@ -4,21 +4,19 @@ import { Circle, CircleCheck, ChevronDown, ChevronUp } from 'lucide-react-native
 type SelectionItem = {
   label: string;
   extra: string[];
+  isCurrent?: boolean;
 };
 
 type SelectionListProps = {
   items: SelectionItem[];
   selectedItem: string | null;
   onSelect: (label: string) => void;
-  onContinue: () => void;
-  title: string;
   subtitle?: string;
 };
 
-export function SelectionList({ items, selectedItem, onSelect, onContinue, title, subtitle }: SelectionListProps) {
+export function MembershipSelect({ items, selectedItem, onSelect, subtitle }: SelectionListProps) {
   return (
-    <View className="flex-1 p-2">
-      <Text className="font-header text-header font-bold mb-4">{title}</Text>
+    <View className="flex-1">
       {subtitle && <Text className="font-subheader text-accent-gray-60 mb-4">{subtitle}</Text>}
 
       <View className="flex-col flex-1">
@@ -36,7 +34,11 @@ export function SelectionList({ items, selectedItem, onSelect, onContinue, title
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center gap-2">
                   <CheckIcon size={20} />
-                  <Text className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-gray-700'}`}>
+                  <Text
+                    className={`text-lg font-semibold ${
+                      isSelected ? 'text-white' : item.isCurrent ? 'text-green-light' : 'text-gray-700'
+                    }`}
+                  >
                     {item.label}
                   </Text>
                 </View>
@@ -55,10 +57,6 @@ export function SelectionList({ items, selectedItem, onSelect, onContinue, title
           );
         })}
       </View>
-
-      <TouchableOpacity className="bg-green-light px-8 py-3 rounded-lg mb-10 items-center" onPress={onContinue}>
-        <Text className="text-white text-lg font-button">Continue</Text>
-      </TouchableOpacity>
     </View>
   );
 }
