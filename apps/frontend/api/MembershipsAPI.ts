@@ -1,4 +1,5 @@
 import { store } from '@/redux/store';
+import { APIError } from './errorAPI';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -17,11 +18,11 @@ export class MembershipsAPI {
       },
     });
 
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error('Failed to fetch memberships');
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
     }
-
-    return response.json();
+    return data;
   }
 
   static async createMembership(membershipId: number) {
@@ -41,11 +42,11 @@ export class MembershipsAPI {
     });
     console.log('API Response:', response.status);
 
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error('Failed to create membership');
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
     }
-
-    return response.json();
+    return data;
   }
 
   static async cancelMembership() {
@@ -63,10 +64,10 @@ export class MembershipsAPI {
       },
     });
 
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error('Failed to cancel memberships');
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
     }
-
-    return response.json();
+    return data;
   }
 }

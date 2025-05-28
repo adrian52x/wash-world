@@ -1,6 +1,7 @@
 import { User } from '@/types/auth.types';
 import { UpdateUser, WashStats } from '@/types/types';
 import { storage } from '@/utils/storage';
+import { APIError } from './errorAPI';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -15,10 +16,11 @@ export class UsersAPI {
       },
       body: JSON.stringify(userData),
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+    
     const data = await response.json();
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
   }
 
@@ -31,8 +33,10 @@ export class UsersAPI {
         Authorization: `Bearer ${token}`,
       },
     });
+    
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const error = await response.json();
+      throw new APIError(error.message || 'Network error', error.statusCode ?? 500);
     }
     return null; // No content to return on delete
   }
@@ -46,11 +50,11 @@ export class UsersAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+    
     const data = await response.json();
-    //throw new Error('Intentionally throwing an error');
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
   }
 }
