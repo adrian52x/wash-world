@@ -34,66 +34,57 @@ export const fetchUserSession = createAsyncThunk(
 );
 
 // to hydrate the user if there's data from the secure store
-export const initializeAuth = createAsyncThunk(
-  'auth/initialize',
-  async (_, { dispatch }) => {
-    const token = await storage.getToken();
-    if (!token) throw new Error('No token found');
+export const initializeAuth = createAsyncThunk('auth/initialize', async (_, { dispatch }) => {
+  const token = await storage.getToken();
+  if (!token) throw new Error('No token found');
 
-    try {
-      // Try to fetch user session to validate token
-      await dispatch(fetchUserSession({ token })).unwrap();
-      return { token };
-    } catch (error) {
-      // If session fetch fails, token is invalid
-      await storage.removeToken();
-      throw new Error('Invalid token');
-    }
-  },
-);
+  try {
+    // Try to fetch user session to validate token
+    await dispatch(fetchUserSession({ token })).unwrap();
+    return { token };
+  } catch (error) {
+    // If session fetch fails, token is invalid
+    await storage.removeToken();
+    throw new Error('Invalid token');
+  }
+});
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 console.log('API_URL:', API_URL);
 
-export const signup = createAsyncThunk(
-  'auth/signup',
-  async (userData: SignupRequest) => {
-    const response = await fetch(`${API_URL}/auth/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
+export const signup = createAsyncThunk('auth/signup', async (userData: SignupRequest) => {
+  const response = await fetch(`${API_URL}/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
 
-    if (!response.ok) {
-      throw new Error('Sign-up failed. Try againnn');
-    }
+  if (!response.ok) {
+    throw new Error('Sign-up failed. Try againnn');
+  }
 
-    const data = await response.json();
-    await storage.setToken(data.accessToken);
-    return data.accessToken; // This includes the token now
-  },
-);
+  const data = await response.json();
+  await storage.setToken(data.accessToken);
+  return data.accessToken; // This includes the token now
+});
 
-export const login = createAsyncThunk(
-  'auth/login',
-  async (userData: LoginRequest) => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData),
-    });
+export const login = createAsyncThunk('auth/login', async (userData: LoginRequest) => {
+  const response = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data || 'Login failed');
-    }
+  if (!response.ok) {
+    throw new Error(data || 'Login failed');
+  }
 
-    await storage.setToken(data.accessToken);
-    return data.accessToken;
-  },
-);
+  await storage.setToken(data.accessToken);
+  return data.accessToken;
+});
 
 // Creaating the slice:
 const authSlice = createSlice({
@@ -150,8 +141,7 @@ const authSlice = createSlice({
       .addCase(fetchUserSession.rejected, (state, action) => {
         state.userSession = null;
         state.loading = false;
-        state.errormessage =
-          action.error.message ?? 'Failed to fetch user data';
+        state.errormessage = action.error.message ?? 'Failed to fetch user data';
       })
       .addCase(fetchUserSession.pending, (state) => {
         state.loading = true;
@@ -160,8 +150,7 @@ const authSlice = createSlice({
 });
 
 // Selector to access state anywhere in the app
-export const selectIsAuthenticated = (state: RootState) =>
-  state.auth.isAuthenticated;
+export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
 export const selectUserSession = (state: RootState) => state.auth.userSession;
 
 export default authSlice.reducer;

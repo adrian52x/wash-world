@@ -59,21 +59,15 @@ describe('LocationsController (e2e)', () => {
 
   describe('GET /locations', () => {
     it('should return an array of locations when locations exist', async () => {
-      jest
-        .spyOn(locationsService, 'getAll')
-        .mockResolvedValueOnce(mockLocations);
-      const response = await request(app.getHttpServer())
-        .get('/locations')
-        .expect(200);
+      jest.spyOn(locationsService, 'getAll').mockResolvedValueOnce(mockLocations);
+      const response = await request(app.getHttpServer()).get('/locations').expect(200);
       expect(response.body).toEqual(mockLocations);
     });
 
     it('should return 404 when no locations are found', async () => {
       jest
         .spyOn(locationsService, 'getAll')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND),
-        );
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND));
       await request(app.getHttpServer()).get('/locations').expect(404);
     });
   });

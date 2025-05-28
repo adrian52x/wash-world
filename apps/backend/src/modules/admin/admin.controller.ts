@@ -7,7 +7,7 @@ import { ErrorMessages } from '../../utils/error-messages';
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly locationsService: LocationsService) { }
+  constructor(private readonly locationsService: LocationsService) {}
 
   @Patch('locations/:id')
   @ApiOperation({ summary: 'Update user by ID' })
@@ -15,10 +15,7 @@ export class AdminController {
   @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   @ApiResponse({ status: 404, description: ErrorMessages.LOCATIONS_NOT_FOUND })
   @Admin()
-  async update(
-    @Param('id') locationId: number,
-    @Body() updateLocationDto: Partial<LocationDTO>,
-  ) {
+  async update(@Param('id') locationId: number, @Body() updateLocationDto: Partial<LocationDTO>) {
     return this.locationsService.update(locationId, updateLocationDto);
   }
 }

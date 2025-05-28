@@ -76,21 +76,15 @@ describe('MembershipsController (e2e)', () => {
 
   describe('GET /memberships', () => {
     it('should return an array of memberships when they exist', async () => {
-      jest
-        .spyOn(membershipsService, 'getAll')
-        .mockResolvedValueOnce(mockMemberships);
-      const response = await request(app.getHttpServer())
-        .get('/memberships')
-        .expect(200);
+      jest.spyOn(membershipsService, 'getAll').mockResolvedValueOnce(mockMemberships);
+      const response = await request(app.getHttpServer()).get('/memberships').expect(200);
       expect(response.body).toEqual(mockMemberships);
     });
 
     it('should return 404 when no memberships are found', async () => {
       jest
         .spyOn(membershipsService, 'getAll')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND),
-        );
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.MEMBERSHIPS_NOT_FOUND));
       await request(app.getHttpServer()).get('/memberships').expect(404);
     });
   });
@@ -99,14 +93,9 @@ describe('MembershipsController (e2e)', () => {
     it('should create a new membership for a user', async () => {
       const membershipId = 1;
       const expectedMembership = mockUserMembership;
-      jest
-        .spyOn(membershipsService, 'create')
-        .mockResolvedValueOnce(expectedMembership);
+      jest.spyOn(membershipsService, 'create').mockResolvedValueOnce(expectedMembership);
 
-      const response = await request(app.getHttpServer())
-        .post('/memberships')
-        .send({ membershipId })
-        .expect(201);
+      const response = await request(app.getHttpServer()).post('/memberships').send({ membershipId }).expect(201);
 
       expect(response.body).toMatchObject({
         userMembershipId: mockUserMembership.userMembershipId,
@@ -119,13 +108,8 @@ describe('MembershipsController (e2e)', () => {
     it('should return 404 when creating a membership fails', async () => {
       jest
         .spyOn(membershipsService, 'create')
-        .mockRejectedValueOnce(
-          new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND),
-        );
-      await request(app.getHttpServer())
-        .post('/memberships')
-        .send({ membershipId: 999 })
-        .expect(404);
+        .mockRejectedValueOnce(new NotFoundException(ErrorMessages.USER_MEMBERSHIP_NOT_FOUND));
+      await request(app.getHttpServer()).post('/memberships').send({ membershipId: 999 }).expect(404);
     });
   });
 });

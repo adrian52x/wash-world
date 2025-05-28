@@ -4,11 +4,7 @@ import { View } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 import { useAppSelector, useAppDispatch } from './hooks';
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const segments = useSegments(); // the routes
   const isAuthenticated = useAppSelector(selectIsAuthenticated);

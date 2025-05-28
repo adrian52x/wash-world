@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  TextInput,
-  Text,
-  Button,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
+import { View, TextInput, Text, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Phone, Home, Car, User, Lock } from 'lucide-react-native';
 import { UpdateUser } from '@/types/types';
 import LoadingSpinner from './ui/LoadingSpinner';
@@ -17,7 +10,7 @@ interface UpdateUserFormProps {
   onCancel?: () => void;
 
   showUsername?: boolean;
-  isPending: boolean
+  isPending: boolean;
 }
 
 export function UpdateUserForm({
@@ -39,7 +32,7 @@ export function UpdateUserForm({
     (!showUsername || username === initialValues.username);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>   
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View className="flex-1 pt-[100px] items-center p-6 bg-white">
         {/* Loading state  */}
         {isPending && (
@@ -47,7 +40,7 @@ export function UpdateUserForm({
             <LoadingSpinner />
           </View>
         )}
-                
+
         {showUsername ? (
           <Text className="text-xl font-bold mb-4">Update Your Profile</Text>
         ) : (
@@ -115,13 +108,7 @@ export function UpdateUserForm({
               ...(showUsername && { username }), // If showUsername is true, data will include the username property
             })
           }
-          disabled={
-            !phoneNumber ||
-            !address ||
-            !licensePlate ||
-            (showUsername && !username) ||
-            isUnchanged
-          }
+          disabled={!phoneNumber || !address || !licensePlate || (showUsername && !username) || isUnchanged}
         />
         {onCancel && <Button title="Cancel" color="#888" onPress={onCancel} />}
       </View>

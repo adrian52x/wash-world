@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { ErrorMessages } from '../../utils/error-messages';
 import { UsersService } from '../../modules/users/users.service';
 import { SignUpDTO } from './dto/signup.dto';
@@ -41,10 +36,7 @@ export class AuthService {
     this.logger.log('auth: login');
 
     try {
-      const validatedUser = await this.validateUser(
-        userDto.email,
-        userDto.password,
-      );
+      const validatedUser = await this.validateUser(userDto.email, userDto.password);
       const payload = {
         userId: validatedUser.user_id,
         email: validatedUser.email,
@@ -82,9 +74,7 @@ export class AuthService {
       });
 
       if (!newUser) {
-        throw new InternalServerErrorException(
-          ErrorMessages.UNKNOWN_REGISTER_ERROR,
-        );
+        throw new InternalServerErrorException(ErrorMessages.UNKNOWN_REGISTER_ERROR);
       }
 
       return this.login({
@@ -96,9 +86,7 @@ export class AuthService {
         throw error;
       }
 
-      throw new InternalServerErrorException(
-        ErrorMessages.UNKNOWN_REGISTER_ERROR,
-      );
+      throw new InternalServerErrorException(ErrorMessages.UNKNOWN_REGISTER_ERROR);
     }
   }
 }

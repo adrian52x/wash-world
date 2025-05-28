@@ -28,9 +28,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           headerTitle: `Welcome!`,
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="map.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -38,9 +36,7 @@ export default function TabLayout() {
         options={{
           title: 'Member',
           headerTitle: 'Become a member!',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="car.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="car.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -48,9 +44,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           headerTitle: 'Profile',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -58,9 +52,7 @@ export default function TabLayout() {
         options={{
           title: 'Admin',
           headerTitle: 'Admin page',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="gear.circle.fill" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gear.circle.fill" color={color} />,
         }}
       />
     </Tabs>

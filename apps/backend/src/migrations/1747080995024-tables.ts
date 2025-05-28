@@ -40,21 +40,11 @@ export class Tables1747080995024 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE "user_memberships" DROP CONSTRAINT "FK_12bfa040225db30fd3530569b5c"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_memberships" DROP CONSTRAINT "FK_b369bfb0586d848e7f52f47d492"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "memberships" DROP CONSTRAINT "FK_96e8ab4733302b3621fad138f70"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "washes" DROP CONSTRAINT "FK_2defb121999f05d045853870cc5"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "washes" DROP CONSTRAINT "FK_de0c32ea7b1eb3d6e08b11f806e"`,
-    );
+    await queryRunner.query(`ALTER TABLE "user_memberships" DROP CONSTRAINT "FK_12bfa040225db30fd3530569b5c"`);
+    await queryRunner.query(`ALTER TABLE "user_memberships" DROP CONSTRAINT "FK_b369bfb0586d848e7f52f47d492"`);
+    await queryRunner.query(`ALTER TABLE "memberships" DROP CONSTRAINT "FK_96e8ab4733302b3621fad138f70"`);
+    await queryRunner.query(`ALTER TABLE "washes" DROP CONSTRAINT "FK_2defb121999f05d045853870cc5"`);
+    await queryRunner.query(`ALTER TABLE "washes" DROP CONSTRAINT "FK_de0c32ea7b1eb3d6e08b11f806e"`);
     await queryRunner.query(`DROP TABLE "user_memberships"`);
     await queryRunner.query(`DROP TABLE "memberships"`);
     await queryRunner.query(`DROP TABLE "users"`);

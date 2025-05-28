@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MembershipsService } from './memberships.service';
 import { ErrorMessages } from '../../utils/error-messages';
@@ -15,7 +7,7 @@ import { CreateUserMembershipDTO } from './dto/create-user-membership.dto';
 
 @Controller('memberships')
 export class MembershipsController {
-  constructor(private readonly membershipsService: MembershipsService) { }
+  constructor(private readonly membershipsService: MembershipsService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all membership' })
@@ -46,10 +38,7 @@ export class MembershipsController {
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 401, description: ErrorMessages.UNAUTHORIZED })
   create(@Req() req, @Body() createUserMembershipDto: CreateUserMembershipDTO) {
-    return this.membershipsService.create(
-      req.user.userId,
-      createUserMembershipDto.membershipId,
-    );
+    return this.membershipsService.create(req.user.userId, createUserMembershipDto.membershipId);
   }
 
   @Delete()

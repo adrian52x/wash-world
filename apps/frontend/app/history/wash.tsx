@@ -9,12 +9,12 @@ export default function AllWashSessionsScreen() {
 
   return (
     <View className="flex-1 bg-white/60">
-        <Stack.Screen
-            options={{
-                headerTitle: '',
-                headerBackTitle: 'Back',
-            }}
-        />
+      <Stack.Screen
+        options={{
+          headerTitle: '',
+          headerBackTitle: 'Back',
+        }}
+      />
       <Text className="text-xl font-bold text-green-700 p-4">All Wash Sessions ({washSessions?.length})</Text>
       {loadingWashSessions ? (
         <LoadingSpinner />
@@ -23,10 +23,7 @@ export default function AllWashSessionsScreen() {
       ) : (
         <ScrollView contentContainerClassName="p-4">
           {(washSessions ?? []).map((wash) => (
-            <View
-              key={wash.washId}
-              className="mb-3 pb-3 border-b border-gray-200 flex-row items-center"
-            >
+            <View key={wash.washId} className="mb-3 pb-3 border-b border-gray-200 flex-row items-center">
               <View className="flex-1">
                 <Text className="font-semibold">{wash.location.name}</Text>
                 <Text className="text-xs text-gray-500">{wash.location.address}</Text>

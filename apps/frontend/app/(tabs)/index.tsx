@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import {
-  StyleSheet,
-  View,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import * as Location from 'expo-location';
 import washWorldMarker from '../../assets/icons/w-map-marker.png';
 import { Navigation as MyLocationIcon } from 'lucide-react-native';
@@ -28,9 +21,7 @@ const cphCoordinates = {
 
 export default function HomeScreen() {
   const mapRef = useRef<MapView>(null);
-  const [clickedLocationId, setClickedLocationId] = useState<number | null>(
-    null,
-  );
+  const [clickedLocationId, setClickedLocationId] = useState<number | null>(null);
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -99,29 +90,20 @@ export default function HomeScreen() {
   }
 
   // Filter locations based on the selected filter
-  const filteredLocations: LocationType[] = (locations ?? []).filter(
-    (loc: LocationType) =>
-      filter === 'auto'
-        ? (loc.autoWashHalls ?? 0) > 0 // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
-        : (loc.selfWashHalls ?? 0) > 0,
+  const filteredLocations: LocationType[] = (locations ?? []).filter((loc: LocationType) =>
+    filter === 'auto'
+      ? (loc.autoWashHalls ?? 0) > 0 // ?? is used to provide a default value of 0 if autoWashHalls is null or undefined
+      : (loc.selfWashHalls ?? 0) > 0,
   );
 
-  const focusedLocation = filteredLocations.find(
-    (loc: LocationType) => loc.locationId === clickedLocationId,
-  );
+  const focusedLocation = filteredLocations.find((loc: LocationType) => loc.locationId === clickedLocationId);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View>
         <MapSearch
           locations={filteredLocations}
-          onSelect={(loc) =>
-            focusOnMarker(
-              loc.locationId,
-              Number(loc.coordinates.y),
-              Number(loc.coordinates.x),
-            )
-          }
+          onSelect={(loc) => focusOnMarker(loc.locationId, Number(loc.coordinates.y), Number(loc.coordinates.x))}
         />
         {/* Filters below the search bar */}
         <MapFilters filter={filter} setFilter={setFilter} />
@@ -145,21 +127,11 @@ export default function HomeScreen() {
                 longitude: Number(loc.coordinates.x),
               }}
               title={loc.name}
-              onPress={() =>
-                focusOnMarker(
-                  loc.locationId,
-                  Number(loc.coordinates.y),
-                  Number(loc.coordinates.x),
-                )
-              }
+              onPress={() => focusOnMarker(loc.locationId, Number(loc.coordinates.y), Number(loc.coordinates.x))}
             >
               <Image
                 source={washWorldMarker}
-                style={
-                  loc.locationId === clickedLocationId
-                    ? { width: 50, height: 50 }
-                    : { width: 40, height: 40 }
-                }
+                style={loc.locationId === clickedLocationId ? { width: 50, height: 50 } : { width: 40, height: 40 }}
                 resizeMode="contain"
               />
             </Marker>
@@ -180,9 +152,7 @@ export default function HomeScreen() {
             location={focusedLocation}
             userLocation={userLocation ?? undefined}
             onClose={() => setClickedLocationId(null)}
-            onSeeMore={() =>
-              router.push(`/location/${focusedLocation.locationId}`)
-            }
+            onSeeMore={() => router.push(`/location/${focusedLocation.locationId}`)}
           />
         )}
       </View>
