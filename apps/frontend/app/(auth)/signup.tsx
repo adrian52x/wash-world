@@ -2,10 +2,12 @@ import { Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'reac
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/redux/hooks';
-import { signup } from '@/redux/authSlice';
+import { selectAuthError, selectAuthLoading, selectIsAuthenticated, signup } from '@/redux/authSlice';
 import { TextInput, Button, Text, Image } from 'react-native';
 import { Mail, Lock, User } from 'lucide-react-native';
 import washWorldLogo from '../../assets/images/WW-logo.png';
+import { useSelector } from 'react-redux';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function SignupScreen() {
   const dispatch = useAppDispatch();
@@ -13,7 +15,10 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // Move this to the top level
+
+  const loading = useSelector(selectAuthLoading);
+  const authError = useSelector(selectAuthError);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const handleSignup = async () => {
     await dispatch(signup({ username, email, password })).unwrap();
@@ -22,6 +27,11 @@ export default function SignupScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View className="flex-1 items-center">
+        {loading && 
+          <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
+            <LoadingSpinner />
+          </View>
+        }
         <Image source={washWorldLogo} resizeMode="contain" className="h-[200px] w-[200px]" />
 
         <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">
@@ -58,7 +68,8 @@ export default function SignupScreen() {
           />
         </View>
 
-        {error ? <Text className="text-red-500 mb-6">{error}</Text> : null}
+        {authError ? <Text className="text-red-500 mb-6 max-w-xs">{authError}</Text> : null}
+        {isAuthenticated ? <Text className="text-green-500 mb-6 max-w-xs">Success!</Text> : null}
 
         <TouchableOpacity className="w-full mb-4 max-w-xs px-4 py-3 bg-green-light" onPress={handleSignup}>
           <Text className="text-white font-semibold text-center">Sign Up</Text>

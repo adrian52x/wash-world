@@ -3,10 +3,11 @@ import { View, Text, Button } from 'react-native';
 import LoadingSpinner from './ui/LoadingSpinner';
 import { WashStats } from '@/types/types';
 import { Trophy } from 'lucide-react-native';
+import { APIError } from '@/api/errorAPI';
 
 interface ExtraFeaturesCardProps {
   loading: boolean;
-  error?: { message: string } | null;
+  error?: APIError | null;
   stats?: WashStats;
   onDowngrade: () => void;
 }
@@ -20,7 +21,14 @@ export const ExtraFeaturesCard: React.FC<ExtraFeaturesCardProps> = ({ loading, e
     {loading ? (
       <LoadingSpinner />
     ) : error ? (
-      <Text className="text-red-500 mb-2">{error.message}</Text>
+      error.statusCode === 404 ? (
+        <>
+          <Text className="text-gray-400 mb-2">No wash sessions/stats yet.</Text>
+          <Button title="Downgrade to Regular User" color="#10b981" onPress={onDowngrade} />
+        </>
+      ) : (
+        <Text className="text-red-500 mb-2">{error.message}</Text>
+      )
     ) : (
       <>
         <View className="gap-2 mb-2">

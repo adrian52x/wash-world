@@ -1,5 +1,6 @@
 import { InsertWash, WashSession, WashType } from '@/types/types';
 import { storage } from '@/utils/storage';
+import { APIError } from './errorAPI';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -12,10 +13,11 @@ export class WashesAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+
     const data = await response.json();
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
   }
 
@@ -27,12 +29,11 @@ export class WashesAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+
     const data = await response.json();
-    //await new Promise(resolve => setTimeout(resolve, 3000)); // simulate network delay -- to see loading state in UI
-    //throw new Error('test error');
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
   }
 
@@ -47,10 +48,10 @@ export class WashesAPI {
       body: JSON.stringify(washSession),
     });
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
   }
 }

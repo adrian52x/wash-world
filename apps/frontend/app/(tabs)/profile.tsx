@@ -8,9 +8,9 @@ import { useWashSessions } from '@/hooks/useWashSessions';
 import { fetchUserSession, logout, selectUserSession } from '@/redux/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { RoleEnum } from '@/types/enums';
-import { UpdateUser, WashSession } from '@/types/types';
+import { UpdateUser } from '@/types/types';
 import { useRouter } from 'expo-router';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, View, Text, Button, Alert, RefreshControl } from 'react-native';
 
 export default function ProfileScreen() {
@@ -69,6 +69,7 @@ export default function ProfileScreen() {
       { role },
       {
         onSuccess: () => {
+          refetchWashStats(),
           dispatch(fetchUserSession({}));
         },
       },

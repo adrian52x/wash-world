@@ -1,5 +1,6 @@
+import { APIError } from '@/api/errorAPI';
 import { WashesAPI } from '@/api/WashesAPI';
-import { InsertWash } from '@/types/types';
+import { InsertWash, WashSession } from '@/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // Fetch wash types
@@ -28,7 +29,7 @@ export const useWashSessions = () => {
     isLoading: loadingWashSessions,
     error: errorWashSessions,
     refetch: refetchWashSessions,
-  } = useQuery({
+  } = useQuery<WashSession[], APIError>({
     queryKey: ['userWashSessions'],
     queryFn: () => WashesAPI.getUserWashSessions(),
     retry: 2,

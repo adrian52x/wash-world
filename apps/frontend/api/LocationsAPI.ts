@@ -1,5 +1,6 @@
 import { Location } from '@/types/types';
 import { storage } from '@/utils/storage';
+import { APIError } from './errorAPI';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -12,13 +13,13 @@ export class LocationsAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+
     const data = await response.json();
-    //await new Promise(resolve => setTimeout(resolve, 12000));
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
-  }
+  }   
 
   static async getLocationById(id: string): Promise<Location> {
     const token = await storage.getToken();
@@ -28,14 +29,15 @@ export class LocationsAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
+    
     const data = await response.json();
+    if (!response.ok) {
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+    }
     return data;
   }
 
-  static async updateLocation(locationId: number, data: Partial<Location>): Promise<Location> {
+  static async updateLocation(locationId: number, locationData: Partial<Location>): Promise<Location> {
     const token = await storage.getToken();
     const response = await fetch(`${API_URL}/admin/locations/${locationId}`, {
       method: 'PATCH',
@@ -43,14 +45,13 @@ export class LocationsAPI {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(locationData),
     });
 
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error('Failed to update location');
+      throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
     }
-
-    const updatedLocation = await response.json();
-    return updatedLocation;
+    return data;
   }
 }

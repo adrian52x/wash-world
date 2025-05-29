@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { WashSession } from '@/types/types';
 import LoadingSpinner from './ui/LoadingSpinner';
 import { Sparkles } from 'lucide-react-native';
+import { APIError } from '@/api/errorAPI';
 
 interface WashSessionsCardProps {
   sessions: WashSession[];
   loading: boolean;
-  error?: { message: string } | null;
+  error?: APIError | null;
   onSeeAll: () => void;
 }
 
@@ -20,7 +21,11 @@ export const WashSessionsCard: React.FC<WashSessionsCardProps> = ({ sessions, lo
     {loading ? (
       <LoadingSpinner />
     ) : error ? (
-      <Text className="text-red-500 mb-2">{error.message}</Text>
+      error.statusCode === 404 ? (
+        <Text className="text-gray-400 mb-2">No wash sessions yet.</Text>
+      ) : (
+        <Text className="text-red-500 mb-2">{error.message}</Text>
+      )
     ) : (
       <>
         {(sessions ?? []).slice(0, 3).map((wash) => (
