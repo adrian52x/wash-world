@@ -21,7 +21,7 @@ export interface LoginRequest {
 export interface AuthState {
   token: string | null;
   loading: boolean;
-  errormessage: string | null;
+  errorMessage: string | null;
   isAuthenticated: boolean;
   userSession: UserSessionData | null;
 }

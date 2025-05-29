@@ -20,12 +20,12 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
 
-    if (!user) {
-      throw new BadRequestException(ErrorMessages.USER_NOT_FOUND);
-    }
-    const isMatch: boolean = await bcrypt.compare(password, user.password);
+    // If user does not exist or password is incorrect, throw same error
+    const isMatch: boolean = user
+      ? await bcrypt.compare(password, user.password)
+      : false;
 
-    if (!isMatch) {
+    if (!user || !isMatch) {
       throw new BadRequestException(ErrorMessages.INVALID_CREDENTIALS);
     }
 

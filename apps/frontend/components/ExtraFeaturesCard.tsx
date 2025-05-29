@@ -22,7 +22,10 @@ export const ExtraFeaturesCard: React.FC<ExtraFeaturesCardProps> = ({ loading, e
       <LoadingSpinner />
     ) : error ? (
       error.statusCode === 404 ? (
-        <Text className="text-gray-400 mb-2">No wash sessions/stats yet.</Text>
+        <>
+          <Text className="text-gray-400 mb-2">No wash sessions/stats yet.</Text>
+          <Button title="Downgrade to Regular User" color="#10b981" onPress={onDowngrade} />
+        </>
       ) : (
         <Text className="text-red-500 mb-2">{error.message}</Text>
       )

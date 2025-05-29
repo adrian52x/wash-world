@@ -2,12 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { storage } from '@/utils/storage';
 import { AuthState, LoginRequest, SignupRequest } from '@/types/auth.types';
+import { APIError } from '@/api/errorAPI';
 
 // initial state of auth
 const initialState: AuthState = {
   token: null,
   loading: false,
-  errormessage: null,
+  errorMessage: null,
   isAuthenticated: false,
   userSession: null,
 };
@@ -60,11 +61,13 @@ export const signup = createAsyncThunk('auth/signup', async (userData: SignupReq
     body: JSON.stringify(userData),
   });
 
-  if (!response.ok) {
-    throw new Error('Sign-up failed. Try againnn');
-  }
-
   const data = await response.json();
+
+  if (!response.ok) {
+    throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
+  }
+  
+  await new Promise((resolve) => setTimeout(resolve, 600)); // simulate delay
   await storage.setToken(data.accessToken);
   return data.accessToken; // This includes the token now
 });
@@ -79,9 +82,10 @@ export const login = createAsyncThunk('auth/login', async (userData: LoginReques
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data || 'Login failed');
+    throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
   }
 
+  await new Promise((resolve) => setTimeout(resolve, 600)); // simulate delay
   await storage.setToken(data.accessToken);
   return data.accessToken;
 });
@@ -94,7 +98,7 @@ const authSlice = createSlice({
     logout: (state) => {
       storage.removeToken();
       state.token = null;
-      state.errormessage = null;
+      state.errorMessage = null;
       state.isAuthenticated = false;
       state.userSession = null;
     },
@@ -105,23 +109,35 @@ const authSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         state.token = action.payload;
         state.isAuthenticated = true;
-        state.errormessage = null;
+        state.loading = false;
+        state.errorMessage = null;
+      })
+      .addCase(signup.pending, (state) => {
+        state.loading = true;
+        state.errorMessage = null;
       })
       .addCase(signup.rejected, (state, action) => {
         state.token = null;
         state.isAuthenticated = false;
-        state.errormessage = action.error.message ?? 'Registration failed';
+        state.loading = false;
+        state.errorMessage = action.error.message ?? 'Registration failed';
       })
       //login
       .addCase(login.fulfilled, (state, action) => {
         state.token = action.payload;
         state.isAuthenticated = true;
-        state.errormessage = null;
+        state.loading = false;
+        state.errorMessage = null;
+      })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.errorMessage = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.token = null;
         state.isAuthenticated = false;
-        state.errormessage = action.error.message ?? 'Registration failed';
+        state.loading = false;
+        state.errorMessage = action.error.message ?? 'Login failed';
       })
       //initialiizeAuth
       .addCase(initializeAuth.fulfilled, (state, action) => {
@@ -136,12 +152,12 @@ const authSlice = createSlice({
       .addCase(fetchUserSession.fulfilled, (state, action) => {
         state.userSession = action.payload;
         state.loading = false;
-        state.errormessage = null;
+        state.errorMessage = null;
       })
       .addCase(fetchUserSession.rejected, (state, action) => {
         state.userSession = null;
         state.loading = false;
-        state.errormessage = action.error.message ?? 'Failed to fetch user data';
+        state.errorMessage = action.error.message ?? 'Failed to fetch user data';
       })
       .addCase(fetchUserSession.pending, (state) => {
         state.loading = true;
@@ -152,6 +168,8 @@ const authSlice = createSlice({
 // Selector to access state anywhere in the app
 export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
 export const selectUserSession = (state: RootState) => state.auth.userSession;
+export const selectAuthLoading = (state: RootState) => state.auth.loading;
+export const selectAuthError = (state: RootState) => state.auth.errorMessage;
 
 export default authSlice.reducer;
 export const { logout } = authSlice.actions;

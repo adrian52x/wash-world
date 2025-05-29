@@ -18,7 +18,6 @@ export class LocationsAPI {
     if (!response.ok) {
       throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
     }
-    //await new Promise(resolve => setTimeout(resolve, 10000));
     return data;
   }   
 

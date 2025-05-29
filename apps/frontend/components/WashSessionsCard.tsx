@@ -12,9 +12,7 @@ interface WashSessionsCardProps {
   onSeeAll: () => void;
 }
 
-export const WashSessionsCard: React.FC<WashSessionsCardProps> = ({ sessions, loading, error, onSeeAll }) => {
-
-  return (
+export const WashSessionsCard: React.FC<WashSessionsCardProps> = ({ sessions, loading, error, onSeeAll }) => (
   <View className="mb-6 p-6 rounded-lg bg-white shadow border border-gray-100">
     <View className="flex-row items-center mb-2 gap-1">
       <Sparkles color="#16a34a" size={20} />
@@ -51,5 +49,4 @@ export const WashSessionsCard: React.FC<WashSessionsCardProps> = ({ sessions, lo
       </>
     )}
   </View>
-  )
-};
+);
