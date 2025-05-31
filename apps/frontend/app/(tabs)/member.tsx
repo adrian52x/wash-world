@@ -37,7 +37,7 @@ export default function MemberScreen() {
         subtitle="Select a membership type to get unlimited washes for a month:"
       />
       <View className="mt-20">
-        {/* become a member btn: */}
+        {/* become a member btn */}
         <TouchableOpacity
           disabled={isCurrentMembership}
           className={`px-8 py-3 rounded-lg items-center ${isCurrentMembership ? 'bg-gray-400' : 'bg-green-light'}`}
