@@ -21,9 +21,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     // If user does not exist or password is incorrect, throw same error
-    const isMatch: boolean = user
-      ? await bcrypt.compare(password, user.password)
-      : false;
+    const isMatch: boolean = user ? await bcrypt.compare(password, user.password) : false;
 
     if (!user || !isMatch) {
       throw new BadRequestException(ErrorMessages.INVALID_CREDENTIALS);

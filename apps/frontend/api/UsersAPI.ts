@@ -16,7 +16,7 @@ export class UsersAPI {
       },
       body: JSON.stringify(userData),
     });
-    
+
     const data = await response.json();
     if (!response.ok) {
       throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
@@ -33,7 +33,7 @@ export class UsersAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new APIError(error.message || 'Network error', error.statusCode ?? 500);
@@ -50,7 +50,7 @@ export class UsersAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    
+
     const data = await response.json();
     if (!response.ok) {
       throw new APIError(data.message || 'Network error', data.statusCode ?? 500);

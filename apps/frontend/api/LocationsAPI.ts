@@ -19,7 +19,7 @@ export class LocationsAPI {
       throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
     }
     return data;
-  }   
+  }
 
   static async getLocationById(id: string): Promise<Location> {
     const token = await storage.getToken();
@@ -29,7 +29,7 @@ export class LocationsAPI {
         Authorization: `Bearer ${token}`,
       },
     });
-    
+
     const data = await response.json();
     if (!response.ok) {
       throw new APIError(data.message || 'Network error', data.statusCode ?? 500);

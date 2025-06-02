@@ -66,7 +66,7 @@ export const signup = createAsyncThunk('auth/signup', async (userData: SignupReq
   if (!response.ok) {
     throw new APIError(data.message || 'Network error', data.statusCode ?? 500);
   }
-  
+
   await new Promise((resolve) => setTimeout(resolve, 600)); // simulate delay
   await storage.setToken(data.accessToken);
   return data.accessToken; // This includes the token now

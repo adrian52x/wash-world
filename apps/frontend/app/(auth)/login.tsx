@@ -28,11 +28,11 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View className="flex-1 items-center">
-        {loading && 
+        {loading && (
           <View className="absolute inset-0 z-50 justify-center items-center bg-white/60">
             <LoadingSpinner />
           </View>
-        }
+        )}
         <Image source={washWorldLogo} resizeMode="contain" className="h-[200px] w-[200px]" />
 
         <View className="flex-row items-center border border-gray-300 rounded px-2 py-3 mb-3 w-full max-w-xs bg-white">

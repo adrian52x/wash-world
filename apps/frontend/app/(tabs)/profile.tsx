@@ -69,8 +69,7 @@ export default function ProfileScreen() {
       { role },
       {
         onSuccess: () => {
-          refetchWashStats(),
-          dispatch(fetchUserSession({}));
+          refetchWashStats(), dispatch(fetchUserSession({}));
         },
       },
     );
