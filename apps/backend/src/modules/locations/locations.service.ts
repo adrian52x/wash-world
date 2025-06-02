@@ -24,12 +24,12 @@ export class LocationsService {
   constructor(
     @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>,
-  ) {}
+  ) { }
 
   async getAll(): Promise<LocationDTO[]> {
     this.logger.log('locations: getAll');
 
-    const locations = await this.locationRepository.find();
+    const locations = await this.locationRepository.find({ order: { location_id: 'DESC' }, });
 
     if (!locations || locations.length === 0) {
       throw new NotFoundException(ErrorMessages.LOCATIONS_NOT_FOUND);

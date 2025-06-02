@@ -28,7 +28,7 @@ export default function MemberScreen() {
   }));
 
   return (
-    <View className="flex-1 p-4">
+    <View className="flex-1 p-4 pb-[100px]">
       {/* membership types */}
       <MembershipSelect
         items={membershipItems ?? []}
